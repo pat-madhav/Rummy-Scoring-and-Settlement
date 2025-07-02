@@ -96,8 +96,19 @@ The application uses a relational database structure with the following key tabl
 
 ## Changelog
 
-- July 02, 2025. Initial setup
+- July 02, 2025. Initial setup and complete rummy scoring application implementation
+- July 02, 2025. UI/UX improvements: updated headers, game settings section, full-count options, localStorage persistence for game options
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Recent Updates
+
+- Updated UI labels: "Points" → "Game Settings", "For Points" → "Max Points", "Set CLUB Game Rules" → "Set Game Rules"
+- Enhanced Full-Count selection with 80/Full-Count button options
+- Fixed pack calculation to use ROUNDDOWN formula (Math.floor)
+- Improved Advanced Settings with proper joker type options and sequence count buttons
+- Added localStorage persistence for buy-in amounts and all game options
+- Fixed routing issues for game ID parameters
+- Added "Other Settings" section organization in Advanced Settings

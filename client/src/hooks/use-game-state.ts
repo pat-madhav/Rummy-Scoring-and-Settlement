@@ -23,25 +23,48 @@ export interface GameOptions {
 export function useGameState() {
   const queryClient = useQueryClient();
   const [currentGameId, setCurrentGameId] = useState<number | null>(null);
-  const [gameOptions, setGameOptions] = useState<Partial<GameOptions>>({
-    playerCount: 3,
-    forPoints: 101,
-    buyInAmount: "",
-    currency: "$",
-    packPoints: 25,
-    midPackPoints: 50,
-    fullCountPoints: 80,
-    jokerType: "opposite",
-    sequenceCount: 2,
-    allTripsDoublePoints: true,
-    allSeqsDoublePoints: false,
-    allJokersFullMoney: false,
-    reEntryAllowed: true,
-    playerNames: [],
-  });
+  
+  // Load game options from localStorage on initial load
+  const loadGameOptions = (): Partial<GameOptions> => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('rummy-game-options');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          // If parsing fails, return defaults
+        }
+      }
+    }
+    return {
+      playerCount: 3,
+      forPoints: 101,
+      buyInAmount: "",
+      currency: "$",
+      packPoints: 25,
+      midPackPoints: 50,
+      fullCountPoints: 80,
+      jokerType: "opposite",
+      sequenceCount: 2,
+      allTripsDoublePoints: true,
+      allSeqsDoublePoints: false,
+      allJokersFullMoney: false,
+      reEntryAllowed: true,
+      playerNames: [],
+    };
+  };
+
+  const [gameOptions, setGameOptions] = useState<Partial<GameOptions>>(loadGameOptions);
 
   const updateGameOptions = useCallback((updates: Partial<GameOptions>) => {
-    setGameOptions(prev => ({ ...prev, ...updates }));
+    setGameOptions(prev => {
+      const newOptions = { ...prev, ...updates };
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('rummy-game-options', JSON.stringify(newOptions));
+      }
+      return newOptions;
+    });
   }, []);
 
   const createGameMutation = useMutation({

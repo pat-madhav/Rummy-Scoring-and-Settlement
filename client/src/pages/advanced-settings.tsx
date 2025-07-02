@@ -87,28 +87,43 @@ export default function AdvancedSettingsScreen() {
                     <RadioGroupItem value="opposite" id="opposite" />
                     <Label htmlFor="opposite">Opposite Joker</Label>
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="all" id="all" />
+                    <Label htmlFor="all">All Jokers (Open/Closed)</Label>
+                  </div>
                 </RadioGroup>
               </div>
 
               {/* Number of Sequences */}
               <div>
-                <Label htmlFor="sequences" className="text-lg font-semibold text-gray-900 dark:text-white mb-3 block">
+                <Label className="text-lg font-semibold text-gray-900 dark:text-white mb-3 block">
                   # of Sequences
                 </Label>
-                <Input
-                  id="sequences"
-                  type="number"
-                  min="1"
-                  max="3"
-                  value={gameOptions.sequenceCount}
-                  onChange={(e) => handleSequenceCountChange(e.target.value)}
-                  className="w-20 text-center"
-                />
+                <div className="flex space-x-3">
+                  <Button
+                    variant={gameOptions.sequenceCount === 2 ? "default" : "outline"}
+                    onClick={() => updateGameOptions({ sequenceCount: 2 })}
+                    className="px-4 py-2"
+                    size="sm"
+                  >
+                    2
+                  </Button>
+                  <Button
+                    variant={gameOptions.sequenceCount === 3 ? "default" : "outline"}
+                    onClick={() => updateGameOptions({ sequenceCount: 3 })}
+                    className="px-4 py-2"
+                    size="sm"
+                  >
+                    3
+                  </Button>
+                </div>
               </div>
 
-              {/* Bonus Rules */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+              {/* Other Settings */}
+              <div>
+                <Label className="text-lg font-semibold text-gray-900 dark:text-white mb-4 block">Other Settings</Label>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
                   <Label htmlFor="trips-double" className="text-gray-700 dark:text-gray-300">
                     All TRIPs w/o 🃏 - Dbl pts?
                   </Label>
@@ -172,6 +187,7 @@ export default function AdvancedSettingsScreen() {
                   </div>
                 </div>
               </div>
+            </div>
             </div>
 
             <div className="mt-8">

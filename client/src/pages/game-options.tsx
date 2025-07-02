@@ -96,7 +96,7 @@ export default function GameOptionsScreen() {
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto p-4 py-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Set CLUB Game Rules</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Set Game Rules</h2>
         
         <div className="space-y-8">
           {/* Number of Players */}
@@ -123,7 +123,7 @@ export default function GameOptionsScreen() {
           {/* Points Target */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">For Points</CardTitle>
+              <CardTitle className="text-lg">Max Points</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-3 mb-4">
@@ -196,7 +196,7 @@ export default function GameOptionsScreen() {
           {/* Pack Values */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Points</CardTitle>
+              <CardTitle className="text-lg">Game Settings</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -223,14 +223,22 @@ export default function GameOptionsScreen() {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="fullcount">Full-Count</Label>
                   <div className="flex items-center space-x-2">
-                    <Input
-                      id="fullcount"
-                      type="number"
-                      value={gameOptions.fullCountPoints}
-                      onChange={(e) => handlePackPointsChange("fullCountPoints", e.target.value)}
-                      className="w-20 text-center"
-                    />
-                    <span className="text-sm text-gray-500 dark:text-gray-400">FC</span>
+                    <Button
+                      variant={gameOptions.fullCountPoints === 80 ? "default" : "outline"}
+                      onClick={() => updateGameOptions({ fullCountPoints: 80 })}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      80
+                    </Button>
+                    <Button
+                      variant={gameOptions.fullCountPoints !== 80 ? "default" : "outline"}
+                      onClick={() => updateGameOptions({ fullCountPoints: gameOptions.forPoints || 101 })}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      Full-Count
+                    </Button>
                   </div>
                 </div>
               </div>

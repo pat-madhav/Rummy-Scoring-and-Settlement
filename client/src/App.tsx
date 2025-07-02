@@ -20,9 +20,9 @@ function Router() {
       <Route path="/game-options" component={GameOptionsScreen} />
       <Route path="/advanced-settings" component={AdvancedSettingsScreen} />
       <Route path="/player-names" component={PlayerNamesScreen} />
-      <Route path="/scoring/:gameId" component={ScoringScreen} />
-      <Route path="/settlement/:gameId" component={SettlementScreen} />
-      <Route path="/post-game/:gameId" component={PostGameScreen} />
+      <Route path="/scoring/:gameId">{(params) => <ScoringScreen gameId={params.gameId!} />}</Route>
+      <Route path="/settlement/:gameId">{(params) => <SettlementScreen gameId={params.gameId!} />}</Route>
+      <Route path="/post-game/:gameId">{(params) => <PostGameScreen gameId={params.gameId!} />}</Route>
       <Route component={NotFound} />
     </Switch>
   );

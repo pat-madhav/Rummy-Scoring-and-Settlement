@@ -1,0 +1,69 @@
+import { useLocation } from "wouter";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/theme-provider";
+import { Moon, Sun, Play } from "lucide-react";
+
+export default function WelcomeScreen() {
+  const [, setLocation] = useLocation();
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm font-bold">♠</span>
+              </div>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Rummy Scorer</h1>
+            </div>
+            
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5 text-yellow-500" />
+              ) : (
+                <Moon className="h-5 w-5 text-gray-600" />
+              )}
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
+          <CardContent className="p-8">
+            <div className="text-center mb-8">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">
+                <span className="text-white text-3xl font-bold">♠♥</span>
+              </div>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Rummy</h2>
+              <h3 className="text-2xl font-medium text-gray-600 dark:text-gray-300 mb-4">Scorer</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">Professional scoring made simple</p>
+            </div>
+            
+            <Button
+              onClick={() => setLocation("/game-options")}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg"
+            >
+              <Play className="w-5 h-5 mr-3" />
+              Begin
+            </Button>
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  );
+}

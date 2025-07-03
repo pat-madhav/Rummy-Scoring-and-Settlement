@@ -99,7 +99,7 @@ export default function GameOptionsScreen() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Set Game Rules</h2>
         
         <div className="space-y-8">
-          {/* Game Settings - Merged section at the top */}
+          {/* Game Settings - Merged section with all settings */}
           <Card className="bg-gray-900/50 border-gray-800">
             <CardHeader>
               <CardTitle className="text-white">Game Settings</CardTitle>
@@ -195,33 +195,51 @@ export default function GameOptionsScreen() {
                   </div>
                 </div>
 
-                {/* Pack */}
+                {/* Pack Points */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-white">Pack</Label>
-                  <Input
-                    id="pack"
-                    type="number"
-                    value={gameOptions.packPoints}
-                    onChange={(e) => handlePackPointsChange("packPoints", e.target.value)}
-                    className="w-20 text-center"
-                  />
+                  <Label className="text-white">Pack Points</Label>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant={gameOptions.packPoints === 25 ? "default" : "outline"}
+                      onClick={() => updateGameOptions({ packPoints: 25 })}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      25
+                    </Button>
+                    <Input
+                      type="number"
+                      value={gameOptions.packPoints}
+                      onChange={(e) => handlePackPointsChange("packPoints", e.target.value)}
+                      className="w-20 text-center"
+                    />
+                  </div>
                 </div>
 
-                {/* Mid-Pack */}
+                {/* Mid-Pack Points */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-white">Mid-Pack</Label>
-                  <Input
-                    id="midpack"
-                    type="number"
-                    value={gameOptions.midPackPoints}
-                    onChange={(e) => handlePackPointsChange("midPackPoints", e.target.value)}
-                    className="w-20 text-center"
-                  />
+                  <Label className="text-white">Mid-Pack Points</Label>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant={gameOptions.midPackPoints === 50 ? "default" : "outline"}
+                      onClick={() => updateGameOptions({ midPackPoints: 50 })}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      50
+                    </Button>
+                    <Input
+                      type="number"
+                      value={gameOptions.midPackPoints}
+                      onChange={(e) => handlePackPointsChange("midPackPoints", e.target.value)}
+                      className="w-20 text-center"
+                    />
+                  </div>
                 </div>
 
-                {/* Full-Count */}
+                {/* Full-Count Points */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-white">Full-Count</Label>
+                  <Label className="text-white">Full-Count Points</Label>
                   <div className="flex items-center space-x-2">
                     <Button
                       variant={gameOptions.fullCountPoints === 80 ? "default" : "outline"}
@@ -241,56 +259,28 @@ export default function GameOptionsScreen() {
                     </Button>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Buy-In */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Buy-In</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="currency" className="text-sm font-medium mb-2 block">Currency</Label>
-                  <Select
-                    value={gameOptions.currency}
-                    onValueChange={(value) => updateGameOptions({ currency: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="$">$ (USD)</SelectItem>
-                      <SelectItem value="₹">₹ (INR)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="amount" className="text-sm font-medium mb-2 block">Amount</Label>
+                {/* Buy-In */}
+                <div className="flex items-center justify-between">
+                  <Label className="text-white">Buy-In</Label>
                   <Input
-                    id="amount"
                     type="number"
                     placeholder="Enter amount"
                     value={gameOptions.buyInAmount}
                     onChange={(e) => updateGameOptions({ buyInAmount: e.target.value })}
+                    className="w-32 text-center"
                   />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Indirect Game Settings */}
-          <Card className="bg-gray-900/50 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Indirect Game Settings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <p className="text-sm text-blue-700 dark:text-blue-300">
-                  {packsPerGame} packs / game
-                </p>
+                {/* Implied Game Rules */}
+                <div className="pt-2 border-t border-gray-700">
+                  <h4 className="text-sm font-medium text-white mb-2">Implied Game Rules</h4>
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      {packsPerGame} packs / game
+                    </p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

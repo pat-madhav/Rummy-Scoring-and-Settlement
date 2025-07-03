@@ -20,7 +20,7 @@ export function calculatePlayerStats(
 }
 
 export function calculatePacksPerGame(forPoints: number, packPoints: number): number {
-  return Math.floor(forPoints / packPoints);
+  return Math.floor((forPoints - 1) / packPoints);
 }
 
 export function validateReEntryConditions(

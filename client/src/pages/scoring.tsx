@@ -247,6 +247,17 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     const totalScore = calculatePlayerTotal(playerId);
     const packsRemaining = calculatePacksRemaining(playerId);
     
+    // Calculate active players first
+    const activePlayers = players.filter(p => {
+      const pTotal = calculatePlayerTotal(p.id);
+      return pTotal < game.forPoints && p.isActive;
+    });
+    
+    // Check if player is the winner (only one active player left) - this overrides all other states
+    if (activePlayers.length === 1 && activePlayers[0].id === playerId) {
+      return { state: "Winner", color: "bg-green-800 dark:bg-green-900" };
+    }
+    
     // Check if player is "Out" - total score >= max score
     if (totalScore >= game.forPoints) {
       return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
@@ -257,34 +268,22 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if player has "Least" - only apply after round completion
-    const activePlayers = players.filter(p => {
-      const pTotal = calculatePlayerTotal(p.id);
-      return pTotal < game.forPoints && p.isActive;
-    });
+    // Check if any rounds are completed (at least round 1 finished)
+    let roundCompleted = false;
     
-    // Find if previous round is complete (check if current round > 1 and all active players have scores for previous round)
-    const hasCompletedRounds = currentRound > 1;
-    let previousRoundComplete = false;
-    
-    if (hasCompletedRounds) {
-      const previousRound = currentRound - 1;
-      const playersWithPreviousRoundScores = activePlayers.filter(p => scores[p.id]?.[previousRound]);
-      previousRoundComplete = playersWithPreviousRoundScores.length === activePlayers.length;
+    if (currentRound > 1) {
+      // Check if all active players have scores for round 1
+      const playersWithRound1Scores = activePlayers.filter(p => scores[p.id]?.[1]);
+      roundCompleted = playersWithRound1Scores.length === activePlayers.length;
     }
     
-    if (previousRoundComplete && activePlayers.length > 1) {
+    if (roundCompleted && activePlayers.length > 1) {
       const activeTotals = activePlayers.map(p => calculatePlayerTotal(p.id));
       const minTotal = Math.min(...activeTotals);
       
       if (totalScore === minTotal && totalScore > 0) {
         return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
       }
-    }
-    
-    // Check if player is the winner (only one active player left)
-    if (activePlayers.length === 1 && activePlayers[0].id === playerId) {
-      return { state: "Winner", color: "bg-green-400 dark:bg-green-600" };
     }
     
     return { state: "", color: "" };
@@ -462,7 +461,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   </tr>
                   {/* Player State Row */}
                   <tr className="bg-gray-100 dark:bg-gray-800">
-                    <th className="px-4 py-2 text-left text-xs text-gray-600 dark:text-gray-400">State</th>
+                    <th className="px-4 py-2 text-left text-xs text-gray-600 dark:text-gray-400"></th>
                     {players.map((player) => {
                       const playerState = getPlayerState(player.id);
                       
@@ -602,7 +601,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   value={scores[player.id]?.[currentRound] || ""}
                                   onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
                                   onFocus={(e) => e.target.select()}
-                                  className="w-full text-center h-10 cursor-pointer text-sm"
+                                  className={`w-full text-center h-10 cursor-pointer text-sm min-w-20 ${!scores[player.id]?.[currentRound] ? "border-blue-500 dark:border-blue-400 border-2" : ""}`}
                                 />
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="center">
@@ -674,7 +673,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 
                 {/* Summary Rows */}
                 <tfoot className="bg-gray-50 dark:bg-gray-700">
-                  <tr className="font-semibold">
+                  <tr className="font-semibold border-t-4 border-b-4 border-gray-800 dark:border-gray-200">
                     <td className="px-4 py-3 text-lg font-bold text-gray-900 dark:text-white">Total</td>
                     {players.map((player) => (
                       <td key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>

@@ -32,6 +32,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [currentRound, setCurrentRound] = useState(1);
   const [showReEntryModal, setShowReEntryModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerWithScores | null>(null);
+  const [editingRound, setEditingRound] = useState<number | null>(null);
+  const [hoveredRound, setHoveredRound] = useState<number | null>(null);
 
   const gameStateQuery = useQuery({
     queryKey: [`/api/games/${gameId}/state`],
@@ -356,17 +358,96 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   {/* Completed rounds */}
                   {Array.from({ length: currentRound - 1 }, (_, index) => {
                     const roundNumber = index + 1;
+                    const isEditing = editingRound === roundNumber;
+                    
                     return (
-                      <tr key={roundNumber} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{roundNumber}</td>
+                      <tr 
+                        key={roundNumber} 
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700/50 group"
+                        onMouseEnter={() => setHoveredRound(roundNumber)}
+                        onMouseLeave={() => setHoveredRound(null)}
+                        onClick={() => setHoveredRound(roundNumber)} // For mobile tap
+                      >
+                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white relative">
+                          {roundNumber}
+                          {/* Edit button - appears on hover/tap */}
+                          {(hoveredRound === roundNumber || isEditing) && (
+                            <Button
+                              size="sm"
+                              className="absolute -right-2 top-1/2 transform -translate-y-1/2 bg-orange-400 hover:bg-orange-500 text-white text-xs px-2 py-1 h-6 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingRound(isEditing ? null : roundNumber);
+                              }}
+                            >
+                              {isEditing ? "Save" : "Edit"}
+                            </Button>
+                          )}
+                        </td>
                         {players.map((player) => {
                           const savedScore = scores[player.id]?.[roundNumber];
                           const displayScore = savedScore ? parseInt(savedScore) : 0;
                           return (
                             <td key={player.id} className="px-4 py-3">
-                              <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border">
-                                {displayScore}
-                              </div>
+                              {isEditing ? (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="w-full text-center h-8 justify-center"
+                                    >
+                                      {displayScore || "Edit"}
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="center">
+                                    <DropdownMenuItem
+                                      onClick={() => handleScoreOption(player.id, roundNumber, "rummy")}
+                                    >
+                                      Rummy (0)
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() => handleScoreOption(player.id, roundNumber, "pack")}
+                                    >
+                                      Pack ({game.packPoints})
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() => handleScoreOption(player.id, roundNumber, "mid-pack")}
+                                    >
+                                      Mid-Pack ({game.midPackPoints})
+                                    </DropdownMenuItem>
+                                    {game.fullCountPoints === 80 && (
+                                      <DropdownMenuItem
+                                        onClick={() => handleScoreOption(player.id, roundNumber, "full-count")}
+                                      >
+                                        Full-Count ({game.fullCountPoints})
+                                      </DropdownMenuItem>
+                                    )}
+                                    <DropdownMenuItem asChild>
+                                      <div className="px-2 py-1">
+                                        <Input
+                                          type="number"
+                                          placeholder="Enter custom score"
+                                          className="w-full text-center h-8"
+                                          defaultValue={savedScore || ""}
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                              const value = (e.target as HTMLInputElement).value;
+                                              if (value) {
+                                                handleScoreChange(player.id, roundNumber, value);
+                                              }
+                                            }
+                                          }}
+                                        />
+                                      </div>
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              ) : (
+                                <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border">
+                                  {displayScore}
+                                </div>
+                              )}
                             </td>
                           );
                         })}
@@ -411,6 +492,23 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                 Full-Count ({game.fullCountPoints})
                               </DropdownMenuItem>
                             )}
+                            <DropdownMenuItem asChild>
+                              <div className="px-2 py-1">
+                                <Input
+                                  type="number"
+                                  placeholder="Enter custom score"
+                                  className="w-full text-center h-8"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      const value = (e.target as HTMLInputElement).value;
+                                      if (value) {
+                                        handleScoreChange(player.id, currentRound, value);
+                                      }
+                                    }
+                                  }}
+                                />
+                              </div>
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </td>

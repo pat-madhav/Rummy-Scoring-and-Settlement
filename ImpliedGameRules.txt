@@ -1,7 +1,0 @@
-• Each player is dealt 13 cards. To show and get minimum score (0), Assemble all 13 cards based on...
-› Create 2 or more sequences of 3 or 4 cards (same suite)
-› other cards can be assembled into triplets of 3 or 4 cards (all cards are same number of different suite)
-• Minimum number of sequences to avoid full count = 2
-› 1 original sequence & 1 non-original sequence w/ a joker is allowed
-› 2 non-original sequences are allowed when player has 2 jokers
-› Unless all triplets without joker is showed by a player

@@ -99,61 +99,120 @@ export default function GameOptionsScreen() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Set Game Rules</h2>
         
         <div className="space-y-8">
-          {/* Number of Players */}
-          <Card>
+          {/* Game Settings - Merged section at the top */}
+          <Card className="bg-gray-900/50 border-gray-800">
             <CardHeader>
-              <CardTitle className="text-lg"># of Players</CardTitle>
+              <CardTitle className="text-white">Game Settings</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                {[2, 3, 4, 5, 6, 7].map((count) => (
-                  <Button
-                    key={count}
-                    variant={gameOptions.playerCount === count ? "default" : "outline"}
-                    onClick={() => handlePlayerCountChange(count)}
-                    className="h-12"
-                  >
-                    {count}
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+              <div className="space-y-4">
+                {/* # of Players */}
+                <div className="flex items-center justify-between">
+                  <Label className="text-white"># of Players</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[2, 3, 4, 5, 6, 7].map((count) => (
+                      <Button
+                        key={count}
+                        variant={gameOptions.playerCount === count ? "default" : "outline"}
+                        onClick={() => handlePlayerCountChange(count)}
+                        className="h-8 px-3 text-sm"
+                        size="sm"
+                      >
+                        {count}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
 
-          {/* Points Target */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Max Points</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                {[100, 101].map((points) => (
-                  <Button
-                    key={points}
-                    variant={gameOptions.forPoints === points ? "default" : "outline"}
-                    onClick={() => handlePointsChange(points)}
-                    className="h-12"
-                  >
-                    {points}
-                  </Button>
-                ))}
-                <Button
-                  variant={showCustomPoints ? "default" : "outline"}
-                  onClick={() => handlePointsChange("custom")}
-                  className="h-12"
-                >
-                  Custom
-                </Button>
+                {/* Max Points */}
+                <div className="flex items-center justify-between">
+                  <Label className="text-white">Max Points</Label>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant={gameOptions.forPoints === 100 ? "default" : "outline"}
+                      onClick={() => handlePointsChange(100)}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      100
+                    </Button>
+                    <Button
+                      variant={gameOptions.forPoints === 101 ? "default" : "outline"}
+                      onClick={() => handlePointsChange(101)}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      101
+                    </Button>
+                    <Button
+                      variant={showCustomPoints ? "default" : "outline"}
+                      onClick={() => handlePointsChange("custom")}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      Custom
+                    </Button>
+                  </div>
+                </div>
+                {showCustomPoints && (
+                  <div className="flex items-center justify-end">
+                    <Input
+                      type="number"
+                      placeholder="Enter custom points"
+                      value={customPoints}
+                      onChange={(e) => handleCustomPointsChange(e.target.value)}
+                      className="w-32 text-center"
+                    />
+                  </div>
+                )}
+
+                {/* Pack */}
+                <div className="flex items-center justify-between">
+                  <Label className="text-white">Pack</Label>
+                  <Input
+                    id="pack"
+                    type="number"
+                    value={gameOptions.packPoints}
+                    onChange={(e) => handlePackPointsChange("packPoints", e.target.value)}
+                    className="w-20 text-center"
+                  />
+                </div>
+
+                {/* Mid-Pack */}
+                <div className="flex items-center justify-between">
+                  <Label className="text-white">Mid-Pack</Label>
+                  <Input
+                    id="midpack"
+                    type="number"
+                    value={gameOptions.midPackPoints}
+                    onChange={(e) => handlePackPointsChange("midPackPoints", e.target.value)}
+                    className="w-20 text-center"
+                  />
+                </div>
+
+                {/* Full-Count */}
+                <div className="flex items-center justify-between">
+                  <Label className="text-white">Full-Count</Label>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant={gameOptions.fullCountPoints === 80 ? "default" : "outline"}
+                      onClick={() => updateGameOptions({ fullCountPoints: 80 })}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      80
+                    </Button>
+                    <Button
+                      variant={gameOptions.fullCountPoints !== 80 ? "default" : "outline"}
+                      onClick={() => updateGameOptions({ fullCountPoints: gameOptions.forPoints || 101 })}
+                      className="px-3 py-1 text-sm"
+                      size="sm"
+                    >
+                      Full-Count
+                    </Button>
+                  </div>
+                </div>
               </div>
-              {showCustomPoints && (
-                <Input
-                  type="number"
-                  placeholder="Enter custom points"
-                  value={customPoints}
-                  onChange={(e) => handleCustomPointsChange(e.target.value)}
-                  className="w-full"
-                />
-              )}
             </CardContent>
           </Card>
 
@@ -188,58 +247,6 @@ export default function GameOptionsScreen() {
                     value={gameOptions.buyInAmount}
                     onChange={(e) => updateGameOptions({ buyInAmount: e.target.value })}
                   />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Pack Values */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Game Settings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="pack">Pack</Label>
-                  <Input
-                    id="pack"
-                    type="number"
-                    value={gameOptions.packPoints}
-                    onChange={(e) => handlePackPointsChange("packPoints", e.target.value)}
-                    className="w-20 text-center"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="midpack">Mid-Pack</Label>
-                  <Input
-                    id="midpack"
-                    type="number"
-                    value={gameOptions.midPackPoints}
-                    onChange={(e) => handlePackPointsChange("midPackPoints", e.target.value)}
-                    className="w-20 text-center"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="fullcount">Full-Count</Label>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant={gameOptions.fullCountPoints === 80 ? "default" : "outline"}
-                      onClick={() => updateGameOptions({ fullCountPoints: 80 })}
-                      className="px-3 py-1 text-sm"
-                      size="sm"
-                    >
-                      80
-                    </Button>
-                    <Button
-                      variant={gameOptions.fullCountPoints !== 80 ? "default" : "outline"}
-                      onClick={() => updateGameOptions({ fullCountPoints: gameOptions.forPoints || 101 })}
-                      className="px-3 py-1 text-sm"
-                      size="sm"
-                    >
-                      Full-Count
-                    </Button>
-                  </div>
                 </div>
               </div>
             </CardContent>

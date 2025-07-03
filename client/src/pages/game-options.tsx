@@ -109,13 +109,13 @@ export default function GameOptionsScreen() {
                 {/* # of Players */}
                 <div className="flex items-center justify-between">
                   <Label className="text-white"># of Players</Label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="flex items-center space-x-2">
                     {[2, 3, 4, 5, 6, 7].map((count) => (
                       <Button
                         key={count}
                         variant={gameOptions.playerCount === count ? "default" : "outline"}
                         onClick={() => handlePlayerCountChange(count)}
-                        className="h-8 px-3 text-sm"
+                        className="px-3 py-1 text-sm"
                         size="sm"
                       >
                         {count}

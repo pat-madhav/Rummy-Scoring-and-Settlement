@@ -255,6 +255,47 @@
     animation: slide-up-gradient 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
+  /* Implied rule slide animations */
+  @keyframes implied-rule-slide-down {
+    from {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-5px);
+      margin-top: 0;
+    }
+    to {
+      max-height: 50px;
+      opacity: 1;
+      transform: translateY(0);
+      margin-top: 0.25rem;
+    }
+  }
+
+  @keyframes implied-rule-slide-up {
+    from {
+      max-height: 50px;
+      opacity: 1;
+      transform: translateY(0);
+      margin-top: 0.25rem;
+    }
+    to {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-5px);
+      margin-top: 0;
+    }
+  }
+
+  .implied-rule-enter {
+    animation: implied-rule-slide-down 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    overflow: hidden;
+  }
+
+  .implied-rule-exit {
+    animation: implied-rule-slide-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    overflow: hidden;
+  }
+
   /* Enhanced button styling for better contrast */
   .btn-primary {
     @apply bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;

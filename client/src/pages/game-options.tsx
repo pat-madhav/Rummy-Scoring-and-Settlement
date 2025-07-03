@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,8 @@ export default function GameOptionsScreen() {
   const [customMidPackPoints, setCustomMidPackPoints] = useState("");
   const [showCustomMidPackPoints, setShowCustomMidPackPoints] = useState(false);
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
+  const [showFullCountRule, setShowFullCountRule] = useState(false);
+  const [fullCountRuleAnimation, setFullCountRuleAnimation] = useState("");
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -90,6 +92,30 @@ export default function GameOptionsScreen() {
   };
 
   const packsPerGame = calculatePacksPerGame(gameOptions.forPoints || 101, gameOptions.packPoints || 25);
+
+  // Handle Full-Count rule animation
+  useEffect(() => {
+    const shouldShow = gameOptions.fullCountPoints !== 80;
+    
+    if (shouldShow && !showFullCountRule) {
+      setShowFullCountRule(true);
+      setFullCountRuleAnimation("implied-rule-enter");
+    } else if (!shouldShow && showFullCountRule) {
+      setFullCountRuleAnimation("implied-rule-exit");
+      setTimeout(() => {
+        setShowFullCountRule(false);
+        setFullCountRuleAnimation("");
+      }, 600); // Match animation duration
+    }
+  }, [gameOptions.fullCountPoints, showFullCountRule]);
+
+  const handleFullCountChange = (value: number | "fullCount") => {
+    if (value === "fullCount") {
+      updateGameOptions({ fullCountPoints: gameOptions.forPoints || 101 });
+    } else {
+      updateGameOptions({ fullCountPoints: value });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -368,7 +394,7 @@ export default function GameOptionsScreen() {
                   <div className="flex items-center space-x-2">
                     <Button
                       variant={gameOptions.fullCountPoints === 80 ? "default" : "outline"}
-                      onClick={() => updateGameOptions({ fullCountPoints: 80 })}
+                      onClick={() => handleFullCountChange(80)}
                       className="px-3 py-1 text-sm"
                       size="sm"
                     >
@@ -376,7 +402,7 @@ export default function GameOptionsScreen() {
                     </Button>
                     <Button
                       variant={gameOptions.fullCountPoints !== 80 ? "default" : "outline"}
-                      onClick={() => updateGameOptions({ fullCountPoints: gameOptions.forPoints || 101 })}
+                      onClick={() => handleFullCountChange("fullCount")}
                       className="px-3 py-1 text-sm"
                       size="sm"
                     >
@@ -518,8 +544,10 @@ export default function GameOptionsScreen() {
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
                       <li>• Packs/Game = {packsPerGame}</li>
-                      {gameOptions.fullCountPoints !== 80 && (
-                        <li>• Full-Count points = Sum of all cards in player's hands</li>
+                      {showFullCountRule && (
+                        <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
+                          • Full-Count points = Sum of all cards in player's hands
+                        </li>
                       )}
                     </ul>
                   </div>

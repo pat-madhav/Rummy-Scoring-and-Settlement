@@ -246,6 +246,9 @@ export default function GameOptionsScreen() {
                 <p className="text-sm text-blue-700 dark:text-blue-300">
                   {packsPerGame} packs / game
                 </p>
+                <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                  Formula: ROUNDDOWN((Max Points - 1) / Pack Points)
+                </p>
               </div>
             </CardContent>
           </Card>

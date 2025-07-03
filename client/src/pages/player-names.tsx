@@ -117,21 +117,24 @@ export default function PlayerNamesScreen() {
         <Card>
           <CardContent className="p-6">
             <div className="space-y-4">
-              {Array.from({ length: gameOptions.playerCount || 3 }).map((_, index) => (
-                <div key={index} className="flex items-center space-x-4">
-                  <Label className="w-20 text-gray-700 dark:text-gray-300 font-medium">
-                    Player {index + 1}
-                  </Label>
-                  <Input
-                    type="text"
-                    placeholder="Enter name"
-                    value={playerNames[index] || ""}
-                    onChange={(e) => handleNameChange(index, e.target.value)}
-                    onFocus={(e) => e.target.select()}
-                    className="flex-1"
-                  />
-                </div>
-              ))}
+              {Array.from({ length: gameOptions.playerCount || 3 }).map((_, index) => {
+                const isEmpty = !playerNames[index] || playerNames[index].trim() === "";
+                return (
+                  <div key={index} className="flex items-center space-x-4">
+                    <Label className="w-20 text-gray-700 dark:text-gray-300 font-medium">
+                      Player {index + 1}
+                    </Label>
+                    <Input
+                      type="text"
+                      placeholder="Enter name"
+                      value={playerNames[index] || ""}
+                      onChange={(e) => handleNameChange(index, e.target.value)}
+                      onFocus={(e) => e.target.select()}
+                      className={`flex-1 ${isEmpty ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400" : ""}`}
+                    />
+                  </div>
+                );
+              })}
             </div>
 
             <div className="mt-6 flex space-x-3">

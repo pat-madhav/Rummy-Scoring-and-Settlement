@@ -124,8 +124,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         
         if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
           // Validate minimum 1 Rummy rule
-          const hasRummy = Object.values(currentRoundScores).some(scoreStr => parseInt(scoreStr) === 0);
-          if (!hasRummy) {
+          const rummyScores = Object.values(currentRoundScores).filter(scoreStr => parseInt(scoreStr) === 0);
+          if (rummyScores.length === 0) {
             toast({
               title: "Invalid Round",
               description: "At least one player must have a Rummy (0 points) in each round",
@@ -134,9 +134,22 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
             return prev;
           }
           
+          // Validate maximum 1 Rummy rule
+          if (rummyScores.length > 1) {
+            toast({
+              title: "Invalid Round",
+              description: "Only one player can have a Rummy (0 points) in each round",
+              variant: "destructive",
+            });
+            return prev;
+          }
+          
           // Check if game should continue (more than 1 player remaining)
           if (playersNotOut.length > 1) {
-            setCurrentRound(prev => prev + 1);
+            // Debounce round advancement to prevent premature creation
+            setTimeout(() => {
+              setCurrentRound(prev => prev + 1);
+            }, 500);
           }
         }
       }
@@ -212,11 +225,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const handleSettleGame = () => {
     if (!gameStateQuery.data) return;
 
-    const activePlayers = gameStateQuery.data.players.filter(p => p.isActive);
-    if (!shouldShowSettlement(activePlayers)) {
+    const activePlayers = gameStateQuery.data.players.filter(p => {
+      const playerTotal = calculatePlayerTotal(p.id);
+      return playerTotal < game.forPoints && p.isActive;
+    });
+    
+    if (activePlayers.length < 2) {
       toast({
         title: "Cannot Settle Game",
-        description: "Settlement is only available when 4 or fewer players remain",
+        description: "Settlement requires at least 2 active players",
         variant: "destructive",
       });
       return;
@@ -240,17 +257,32 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if player has "Least" (minimum total score among all players) - only if game has progressed
-    const allTotals = players.map(p => calculatePlayerTotal(p.id));
-    const gameHasProgressed = allTotals.some(total => total > 0);
-    const minTotal = Math.min(...allTotals);
+    // Check if player has "Least" - only apply after round completion
+    const activePlayers = players.filter(p => {
+      const pTotal = calculatePlayerTotal(p.id);
+      return pTotal < game.forPoints && p.isActive;
+    });
     
-    if (gameHasProgressed && totalScore === minTotal && totalScore > 0) {
-      return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
+    // Find if previous round is complete (check if current round > 1 and all active players have scores for previous round)
+    const hasCompletedRounds = currentRound > 1;
+    let previousRoundComplete = false;
+    
+    if (hasCompletedRounds) {
+      const previousRound = currentRound - 1;
+      const playersWithPreviousRoundScores = activePlayers.filter(p => scores[p.id]?.[previousRound]);
+      previousRoundComplete = playersWithPreviousRoundScores.length === activePlayers.length;
+    }
+    
+    if (previousRoundComplete && activePlayers.length > 1) {
+      const activeTotals = activePlayers.map(p => calculatePlayerTotal(p.id));
+      const minTotal = Math.min(...activeTotals);
+      
+      if (totalScore === minTotal && totalScore > 0) {
+        return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
+      }
     }
     
     // Check if player is the winner (only one active player left)
-    const activePlayers = players.filter(p => calculatePlayerTotal(p.id) < game.forPoints);
     if (activePlayers.length === 1 && activePlayers[0].id === playerId) {
       return { state: "Winner", color: "bg-green-400 dark:bg-green-600" };
     }
@@ -549,10 +581,19 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{currentRound}</td>
                     {players.map((player) => {
+                      const currentTotalScore = calculatePlayerTotal(player.id);
                       const isPlayerOut = getPlayerState(player.id).state === "Out";
+                      
+                      // Check if player will become out with this round's score
+                      const currentScore = scores[player.id]?.[currentRound];
+                      const willBecomeOut = currentScore && (currentTotalScore >= game.forPoints);
+                      
+                      // Show input if player is not out yet, or if they're becoming out in this round
+                      const showInput = !isPlayerOut || (willBecomeOut && currentScore);
+                      
                       return (
                         <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
-                          {!isPlayerOut ? (
+                          {showInput ? (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Input
@@ -652,13 +693,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   <tr className="text-sm">
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Packs Remaining</td>
                     {players.map((player) => (
-                      <td key={player.id} className={`px-4 py-3 text-center ${getPlayerState(player.id).color}`}>
-                        <div className="flex flex-col items-center">
-                          <span className="text-gray-700 dark:text-gray-300">
-                            {calculatePacksRemaining(player.id)}
-                          </span>
-                          <ChevronDown className="w-3 h-3 text-gray-400 mt-1" />
-                        </div>
+                      <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
+                        {calculatePacksRemaining(player.id)}
                       </td>
                     ))}
                   </tr>

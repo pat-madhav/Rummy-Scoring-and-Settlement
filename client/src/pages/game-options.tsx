@@ -46,9 +46,14 @@ export default function GameOptionsScreen() {
   };
 
   const handlePackPointsChange = (field: string, value: string) => {
-    const numValue = parseInt(value);
-    if (!isNaN(numValue)) {
-      updateGameOptions({ [field]: numValue });
+    if (value === '') {
+      // Allow clearing the field
+      updateGameOptions({ [field]: '' });
+    } else {
+      const numValue = parseInt(value);
+      if (!isNaN(numValue) && numValue > 0) {
+        updateGameOptions({ [field]: numValue });
+      }
     }
   };
 
@@ -209,9 +214,12 @@ export default function GameOptionsScreen() {
                     </Button>
                     <Input
                       type="number"
-                      value={gameOptions.packPoints}
+                      value={gameOptions.packPoints || ''}
                       onChange={(e) => handlePackPointsChange("packPoints", e.target.value)}
                       className="w-20 text-center"
+                      placeholder="25"
+                      onFocus={(e) => e.target.select()}
+                      min="1"
                     />
                   </div>
                 </div>
@@ -230,9 +238,12 @@ export default function GameOptionsScreen() {
                     </Button>
                     <Input
                       type="number"
-                      value={gameOptions.midPackPoints}
+                      value={gameOptions.midPackPoints || ''}
                       onChange={(e) => handlePackPointsChange("midPackPoints", e.target.value)}
                       className="w-20 text-center"
+                      placeholder="50"
+                      onFocus={(e) => e.target.select()}
+                      min="1"
                     />
                   </div>
                 </div>
@@ -273,8 +284,8 @@ export default function GameOptionsScreen() {
                 </div>
 
                 {/* Implied Game Rules */}
-                <div className="pt-2 border-t border-gray-700">
-                  <h4 className="text-sm font-medium text-white mb-2">Implied Game Rules</h4>
+                <div className="pt-4 border-t border-gray-700">
+                  <h3 className="text-lg font-semibold text-white mb-3">Implied Game Rules</h3>
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <p className="text-sm text-blue-700 dark:text-blue-300">
                       {packsPerGame} packs / game

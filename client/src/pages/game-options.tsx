@@ -242,12 +242,18 @@ export default function GameOptionsScreen() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            </CardContent>
+          </Card>
+
+          {/* Indirect Game Settings */}
+          <Card className="bg-gray-900/50 border-gray-800">
+            <CardHeader>
+              <CardTitle className="text-white">Indirect Game Settings</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                 <p className="text-sm text-blue-700 dark:text-blue-300">
                   {packsPerGame} packs / game
-                </p>
-                <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                  Formula: ROUNDDOWN((Max Points - 1) / Pack Points)
                 </p>
               </div>
             </CardContent>

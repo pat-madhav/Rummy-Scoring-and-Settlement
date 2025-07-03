@@ -38,7 +38,7 @@ export function useGameState() {
       }
     }
     return {
-      playerCount: 3,
+      playerCount: 0, // No default selection
       forPoints: 101,
       buyInAmount: "",
       currency: "$",

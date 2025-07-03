@@ -25,6 +25,8 @@ export default function GameOptionsScreen() {
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
   const [showFullCountRule, setShowFullCountRule] = useState(false);
   const [fullCountRuleAnimation, setFullCountRuleAnimation] = useState("");
+  const [showJokerSubOptions, setShowJokerSubOptions] = useState(false);
+  const [jokerSubOptionsAnimation, setJokerSubOptionsAnimation] = useState("");
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -109,11 +111,38 @@ export default function GameOptionsScreen() {
     }
   }, [gameOptions.fullCountPoints, showFullCountRule]);
 
+  // Handle Joker sub-options animation
+  useEffect(() => {
+    const shouldShow = gameOptions.jokerType === "All";
+    
+    if (shouldShow && !showJokerSubOptions) {
+      setShowJokerSubOptions(true);
+      setJokerSubOptionsAnimation("implied-rule-enter");
+    } else if (!shouldShow && showJokerSubOptions) {
+      setJokerSubOptionsAnimation("implied-rule-exit");
+      setTimeout(() => {
+        setShowJokerSubOptions(false);
+        setJokerSubOptionsAnimation("");
+      }, 600); // Match animation duration
+    }
+  }, [gameOptions.jokerType, showJokerSubOptions]);
+
   const handleFullCountChange = (value: number | "fullCount") => {
     if (value === "fullCount") {
       updateGameOptions({ fullCountPoints: gameOptions.forPoints || 101 });
     } else {
       updateGameOptions({ fullCountPoints: value });
+    }
+  };
+
+  const handleJokerTypeChange = (type: string) => {
+    if (type === "All") {
+      updateGameOptions({ 
+        jokerType: type,
+        allJokersType: "Closed" // Default to Closed when All is selected
+      });
+    } else {
+      updateGameOptions({ jokerType: type });
     }
   };
 
@@ -165,7 +194,7 @@ export default function GameOptionsScreen() {
           {/* Game Settings - Merged section with all settings */}
           <Card className="bg-gray-900/50 border-gray-800">
             <CardHeader>
-              <CardTitle className="text-white">Game Settings</CardTitle>
+              <CardTitle className="text-lg font-semibold text-white">Main Settings</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -439,34 +468,55 @@ export default function GameOptionsScreen() {
                     </CollapsibleTrigger>
                     <CollapsibleContent className="collapsible-content space-y-4 transition-all duration-700 ease-out overflow-hidden">
                       {/* Joker Type */}
-                      <div className="flex items-center justify-between">
-                        <Label className="text-white">Joker Type</Label>
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant={gameOptions.jokerType === "Normal" ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ jokerType: "Normal" })}
-                            className="px-3 py-1 text-sm"
-                            size="sm"
-                          >
-                            Normal
-                          </Button>
-                          <Button
-                            variant={gameOptions.jokerType === "Paplu" ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ jokerType: "Paplu" })}
-                            className="px-3 py-1 text-sm"
-                            size="sm"
-                          >
-                            Paplu
-                          </Button>
-                          <Button
-                            variant={gameOptions.jokerType === "Muflis" ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ jokerType: "Muflis" })}
-                            className="px-3 py-1 text-sm"
-                            size="sm"
-                          >
-                            Muflis
-                          </Button>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-white">Joker Type</Label>
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              variant={gameOptions.jokerType === "Opposite" ? "default" : "outline"}
+                              onClick={() => handleJokerTypeChange("Opposite")}
+                              className="px-3 py-1 text-sm"
+                              size="sm"
+                            >
+                              Opposite
+                            </Button>
+                            <Button
+                              variant={gameOptions.jokerType === "All" ? "default" : "outline"}
+                              onClick={() => handleJokerTypeChange("All")}
+                              className="px-3 py-1 text-sm"
+                              size="sm"
+                            >
+                              All
+                            </Button>
+                          </div>
                         </div>
+                        
+                        {/* All Jokers Sub-options */}
+                        {showJokerSubOptions && (
+                          <div className={`ml-6 transition-all duration-800 ease-out ${jokerSubOptionsAnimation}`}>
+                            <div className="flex items-center justify-between">
+                              <Label className="text-white text-sm opacity-80">All Jokers Type</Label>
+                              <div className="flex items-center space-x-2">
+                                <Button
+                                  variant={gameOptions.allJokersType === "Closed" ? "default" : "outline"}
+                                  onClick={() => updateGameOptions({ allJokersType: "Closed" })}
+                                  className="px-2 py-1 text-xs"
+                                  size="sm"
+                                >
+                                  Closed
+                                </Button>
+                                <Button
+                                  variant={gameOptions.allJokersType === "Open" ? "default" : "outline"}
+                                  onClick={() => updateGameOptions({ allJokersType: "Open" })}
+                                  className="px-2 py-1 text-xs"
+                                  size="sm"
+                                >
+                                  Open
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       {/* Sequence Count */}

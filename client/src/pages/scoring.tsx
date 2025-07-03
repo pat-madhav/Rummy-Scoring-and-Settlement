@@ -22,7 +22,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [scores, setScores] = useState<Record<string, Record<number, number>>>({}); // playerId -> roundNumber -> score
+  const [scores, setScores] = useState<Record<number, Record<number, string>>>({}); // playerId -> roundNumber -> score
   const [currentRound, setCurrentRound] = useState(1);
   const [showReEntryModal, setShowReEntryModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerWithScores | null>(null);
@@ -69,14 +69,34 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   };
 
   const handleScoreChange = (playerId: number, roundNumber: number, score: string) => {
-    const numScore = parseInt(score) || 0;
-    setScores(prev => ({
-      ...prev,
-      [playerId]: {
-        ...prev[playerId],
-        [roundNumber]: numScore,
-      },
-    }));
+    setScores(prev => {
+      const newScores = {
+        ...prev,
+        [playerId]: {
+          ...prev[playerId],
+          [roundNumber]: score,
+        },
+      };
+      
+      // Check if current round is complete (all players have entered scores)
+      if (roundNumber === currentRound) {
+        const currentRoundScores = Object.keys(newScores).reduce((acc, playerIdStr) => {
+          const playerScore = newScores[playerIdStr]?.[roundNumber];
+          if (playerScore && playerScore !== "") {
+            acc[playerIdStr] = playerScore;
+          }
+          return acc;
+        }, {} as Record<string, string>);
+        
+        // If all active players have entered scores for current round, advance to next round
+        const activePlayers = playersWithScoresQuery.data?.filter(p => p.isActive) || [];
+        if (activePlayers.length > 0 && Object.keys(currentRoundScores).length === activePlayers.length) {
+          setCurrentRound(prev => prev + 1);
+        }
+      }
+      
+      return newScores;
+    });
   };
 
   const handleReEntryClick = (player: PlayerWithScores) => {
@@ -179,6 +199,30 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
   const { game, players } = gameStateQuery.data;
   const playersWithScores = playersWithScoresQuery.data || [];
+  
+  // Calculate current totals from scores state
+  const calculatePlayerTotal = (playerId: number) => {
+    const playerScores = scores[playerId] || {};
+    return Object.values(playerScores).reduce((total, score) => {
+      const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
+      return total + numScore;
+    }, 0);
+  };
+  
+  const calculatePointsLeft = (playerId: number) => {
+    const total = calculatePlayerTotal(playerId);
+    return Math.max(0, game.forPoints - total);
+  };
+  
+  const calculatePacksRemaining = (playerId: number) => {
+    const pointsLeft = calculatePointsLeft(playerId);
+    return Math.floor(pointsLeft / game.packPoints);
+  };
+  
+  const calculateResidualPoints = (playerId: number) => {
+    const pointsLeft = calculatePointsLeft(playerId);
+    return pointsLeft % game.packPoints;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -266,35 +310,35 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                  {/* Existing rounds */}
-                  {Array.from({ length: Math.max(currentRound - 1, 2) }, (_, index) => (
-                    <tr key={index + 1} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{index + 1}</td>
-                      {players.map((player) => {
-                        const playerWithScores = playersWithScores.find(p => p.id === player.id);
-                        const roundScore = playerWithScores?.scores.find(s => s.roundId === index + 1)?.score || 0;
-                        return (
-                          <td key={player.id} className="px-4 py-3">
-                            <Input
-                              type="number"
-                              value={roundScore}
-                              onChange={(e) => handleScoreChange(player.id, index + 1, e.target.value)}
-                              className="w-full text-center"
-                            />
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
+                  {/* Completed rounds */}
+                  {Array.from({ length: currentRound - 1 }, (_, index) => {
+                    const roundNumber = index + 1;
+                    return (
+                      <tr key={roundNumber} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{roundNumber}</td>
+                        {players.map((player) => {
+                          const savedScore = scores[player.id]?.[roundNumber];
+                          const displayScore = savedScore ? parseInt(savedScore) : 0;
+                          return (
+                            <td key={player.id} className="px-4 py-3">
+                              <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border">
+                                {displayScore}
+                              </div>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
                   
-                  {/* New round input */}
+                  {/* Current round input - only one empty row */}
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{currentRound}</td>
                     {players.map((player) => (
                       <td key={player.id} className="px-4 py-3">
                         <Input
                           type="number"
-                          placeholder="0"
+                          placeholder="Enter score"
                           value={scores[player.id]?.[currentRound] || ""}
                           onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
                           className="w-full text-center"
@@ -308,52 +352,40 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 <tfoot className="bg-gray-50 dark:bg-gray-700">
                   <tr className="font-semibold">
                     <td className="px-4 py-3 text-gray-900 dark:text-white">Total</td>
-                    {players.map((player) => {
-                      const playerWithScores = playersWithScores.find(p => p.id === player.id);
-                      return (
-                        <td key={player.id} className="px-4 py-3 text-center text-gray-900 dark:text-white">
-                          {playerWithScores?.totalScore || 0}
-                        </td>
-                      );
-                    })}
+                    {players.map((player) => (
+                      <td key={player.id} className="px-4 py-3 text-center text-gray-900 dark:text-white">
+                        {calculatePlayerTotal(player.id)}
+                      </td>
+                    ))}
                   </tr>
                   <tr className="text-sm">
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Points left</td>
-                    {players.map((player) => {
-                      const playerWithScores = playersWithScores.find(p => p.id === player.id);
-                      return (
-                        <td key={player.id} className="px-4 py-3 text-center text-gray-700 dark:text-gray-300">
-                          {playerWithScores?.pointsLeft || 0}
-                        </td>
-                      );
-                    })}
+                    {players.map((player) => (
+                      <td key={player.id} className="px-4 py-3 text-center text-gray-700 dark:text-gray-300">
+                        {calculatePointsLeft(player.id)}
+                      </td>
+                    ))}
                   </tr>
                   <tr className="text-sm">
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Packs rmng</td>
-                    {players.map((player) => {
-                      const playerWithScores = playersWithScores.find(p => p.id === player.id);
-                      return (
-                        <td key={player.id} className="px-4 py-3 text-center">
-                          <div className="flex flex-col items-center">
-                            <span className="text-gray-700 dark:text-gray-300">
-                              {playerWithScores?.packsRemaining || 0}
-                            </span>
-                            <ChevronDown className="w-3 h-3 text-gray-400 mt-1" />
-                          </div>
-                        </td>
-                      );
-                    })}
+                    {players.map((player) => (
+                      <td key={player.id} className="px-4 py-3 text-center">
+                        <div className="flex flex-col items-center">
+                          <span className="text-gray-700 dark:text-gray-300">
+                            {calculatePacksRemaining(player.id)}
+                          </span>
+                          <ChevronDown className="w-3 h-3 text-gray-400 mt-1" />
+                        </div>
+                      </td>
+                    ))}
                   </tr>
                   <tr className="text-sm">
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Residual points rmng</td>
-                    {players.map((player) => {
-                      const playerWithScores = playersWithScores.find(p => p.id === player.id);
-                      return (
-                        <td key={player.id} className="px-4 py-3 text-center text-gray-700 dark:text-gray-300">
-                          {playerWithScores?.residualPoints || 0}
-                        </td>
-                      );
-                    })}
+                    {players.map((player) => (
+                      <td key={player.id} className="px-4 py-3 text-center text-gray-700 dark:text-gray-300">
+                        {calculateResidualPoints(player.id)}
+                      </td>
+                    ))}
                   </tr>
                 </tfoot>
               </table>

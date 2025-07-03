@@ -268,16 +268,23 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if the current round is completed (all active players have scores for current round)
-    let currentRoundCompleted = false;
+    // Check if any completed round exists for state highlighting
+    let canApplyStateHighlighting = false;
     
-    if (currentRound >= 1) {
-      const playersWithCurrentRoundScores = activePlayers.filter(p => scores[p.id]?.[currentRound]);
-      currentRoundCompleted = playersWithCurrentRoundScores.length === activePlayers.length;
+    // For round 1: check if all players have completed round 1
+    if (currentRound === 1) {
+      const playersWithRound1Scores = activePlayers.filter(p => scores[p.id]?.[1]);
+      canApplyStateHighlighting = playersWithRound1Scores.length === activePlayers.length;
+    }
+    // For round 2+: check if the previous round is completed
+    else if (currentRound > 1) {
+      const previousRound = currentRound - 1;
+      const playersWithPreviousRoundScores = activePlayers.filter(p => scores[p.id]?.[previousRound]);
+      canApplyStateHighlighting = playersWithPreviousRoundScores.length === activePlayers.length;
     }
     
-    // Apply "Least" highlighting only if current round is completed and there are multiple active players
-    if (currentRoundCompleted && activePlayers.length > 1) {
+    // Apply "Least" highlighting only if we can apply state highlighting and there are multiple active players
+    if (canApplyStateHighlighting && activePlayers.length > 1) {
       const activeTotals = activePlayers.map(p => calculatePlayerTotal(p.id));
       const minTotal = Math.min(...activeTotals);
       

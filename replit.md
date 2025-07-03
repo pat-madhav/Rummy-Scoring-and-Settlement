@@ -112,3 +112,6 @@ Preferred communication style: Simple, everyday language.
 - Added localStorage persistence for buy-in amounts and all game options
 - Fixed routing issues for game ID parameters
 - Added "Other Settings" section organization in Advanced Settings
+- July 03, 2025: Implemented select-all functionality for all text inputs and textareas
+- July 03, 2025: Removed "Min Sequences Count" setting, replaced with detailed implied Rule 1 about sequence requirements
+- July 03, 2025: Added comprehensive sequence rules with bulleted sub-points explaining joker allowances and exceptions

@@ -3,7 +3,16 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, type, onClick, ...props }, ref) => {
+    const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+      // Select all text when input is clicked
+      e.currentTarget.select();
+      // Call the original onClick handler if provided
+      if (onClick) {
+        onClick(e);
+      }
+    };
+
     return (
       <input
         type={type}
@@ -12,6 +21,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           className
         )}
         ref={ref}
+        onClick={handleClick}
         {...props}
       />
     )

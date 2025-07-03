@@ -13,7 +13,6 @@ export interface GameOptions {
   fullCountPoints: number;
   jokerType: string;
   allJokersType?: string;
-  sequenceCount: number;
   allTripsDoublePoints: boolean;
   allSeqsDoublePoints: boolean;
   allJokersFullMoney: boolean;
@@ -47,7 +46,6 @@ export function useGameState() {
       fullCountPoints: 80,
       jokerType: "opposite",
       allJokersType: "open",
-      sequenceCount: 2,
       allTripsDoublePoints: true,
       allSeqsDoublePoints: false,
       allJokersFullMoney: true,
@@ -123,7 +121,6 @@ export function useGameState() {
       midPackPoints: gameOptions.midPackPoints!,
       fullCountPoints: gameOptions.fullCountPoints!,
       jokerType: gameOptions.jokerType!,
-      sequenceCount: gameOptions.sequenceCount!,
       allTripsDoublePoints: gameOptions.allTripsDoublePoints!,
       allSeqsDoublePoints: gameOptions.allSeqsDoublePoints!,
       allJokersFullMoney: gameOptions.allJokersFullMoney!,
@@ -153,7 +150,6 @@ export function useGameState() {
       midPackPoints: 50,
       fullCountPoints: 80,
       jokerType: "opposite",
-      sequenceCount: 2,
       allTripsDoublePoints: true,
       allSeqsDoublePoints: false,
       allJokersFullMoney: false,

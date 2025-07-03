@@ -556,23 +556,7 @@ export default function GameOptionsScreen() {
                         />
                       </div>
 
-                      {/* Min Sequences Count */}
-                      <div className="flex items-center justify-between">
-                        <Label className="text-white">Min Sequences Count</Label>
-                        <div className="flex items-center space-x-2">
-                          {[1, 2].map((count) => (
-                            <Button
-                              key={count}
-                              variant={gameOptions.sequenceCount === count ? "default" : "outline"}
-                              onClick={() => updateGameOptions({ sequenceCount: count })}
-                              className="px-3 py-1 text-sm"
-                              size="sm"
-                            >
-                              {count}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
+
 
                       {/* Re-Entry Allowed */}
                       <div className="flex items-center justify-between">
@@ -613,8 +597,16 @@ export default function GameOptionsScreen() {
                 <div className="pt-4 border-t border-gray-700">
                   <h3 className="text-lg font-semibold text-white mb-3">Implied Game Rules</h3>
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                    <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                    <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
                       <li>• Packs/Game = {packsPerGame}</li>
+                      <li>
+                        • <strong>Rule 1:</strong> Minimum number of sequences to avoid full count = 2
+                        <ul className="ml-4 mt-1 space-y-1">
+                          <li>› 1 original sequence & 1 non-original sequence w/ a joker is allowed</li>
+                          <li>› 2 non-original sequences are allowed when player has 2 jokers</li>
+                          <li>› Unless all triplets without joker is showed by a player</li>
+                        </ul>
+                      </li>
                       {showFullCountRule && (
                         <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
                           • Full-Count points = Sum of all cards in player's hands

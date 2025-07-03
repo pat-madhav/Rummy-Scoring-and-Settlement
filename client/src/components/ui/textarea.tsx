@@ -5,7 +5,16 @@ import { cn } from "@/lib/utils"
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
   React.ComponentProps<"textarea">
->(({ className, ...props }, ref) => {
+>(({ className, onClick, ...props }, ref) => {
+  const handleClick = (e: React.MouseEvent<HTMLTextAreaElement>) => {
+    // Select all text when textarea is clicked
+    e.currentTarget.select();
+    // Call the original onClick handler if provided
+    if (onClick) {
+      onClick(e);
+    }
+  };
+
   return (
     <textarea
       className={cn(
@@ -13,6 +22,7 @@ const Textarea = React.forwardRef<
         className
       )}
       ref={ref}
+      onClick={handleClick}
       {...props}
     />
   )

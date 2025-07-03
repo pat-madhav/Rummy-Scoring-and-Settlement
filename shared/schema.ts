@@ -14,7 +14,6 @@ export const games = pgTable("games", {
   midPackPoints: integer("mid_pack_points").notNull().default(50),
   fullCountPoints: integer("full_count_points").notNull().default(80),
   jokerType: text("joker_type").notNull().default("opposite"),
-  sequenceCount: integer("sequence_count").notNull().default(2),
   allTripsDoublePoints: boolean("all_trips_double_points").notNull().default(true),
   allSeqsDoublePoints: boolean("all_seqs_double_points").notNull().default(false),
   allJokersFullMoney: boolean("all_jokers_full_money").notNull().default(false),

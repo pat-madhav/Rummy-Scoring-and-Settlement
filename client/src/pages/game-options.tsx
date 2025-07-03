@@ -17,6 +17,10 @@ export default function GameOptionsScreen() {
   
   const [customPoints, setCustomPoints] = useState("");
   const [showCustomPoints, setShowCustomPoints] = useState(false);
+  const [customPackPoints, setCustomPackPoints] = useState("");
+  const [showCustomPackPoints, setShowCustomPackPoints] = useState(false);
+  const [customMidPackPoints, setCustomMidPackPoints] = useState("");
+  const [showCustomMidPackPoints, setShowCustomMidPackPoints] = useState(false);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -45,15 +49,41 @@ export default function GameOptionsScreen() {
     }
   };
 
-  const handlePackPointsChange = (field: string, value: string) => {
-    if (value === '') {
-      // Allow clearing the field
-      updateGameOptions({ [field]: '' });
-    } else {
-      const numValue = parseInt(value);
-      if (!isNaN(numValue) && numValue > 0) {
-        updateGameOptions({ [field]: numValue });
+  const handlePackPointsChange = (points: number | "custom") => {
+    if (points === "custom") {
+      setShowCustomPackPoints(true);
+      if (customPackPoints) {
+        updateGameOptions({ packPoints: parseInt(customPackPoints) });
       }
+    } else {
+      setShowCustomPackPoints(false);
+      updateGameOptions({ packPoints: points });
+    }
+  };
+
+  const handleCustomPackPointsChange = (value: string) => {
+    setCustomPackPoints(value);
+    if (value) {
+      updateGameOptions({ packPoints: parseInt(value) });
+    }
+  };
+
+  const handleMidPackPointsChange = (points: number | "custom") => {
+    if (points === "custom") {
+      setShowCustomMidPackPoints(true);
+      if (customMidPackPoints) {
+        updateGameOptions({ midPackPoints: parseInt(customMidPackPoints) });
+      }
+    } else {
+      setShowCustomMidPackPoints(false);
+      updateGameOptions({ midPackPoints: points });
+    }
+  };
+
+  const handleCustomMidPackPointsChange = (value: string) => {
+    setCustomMidPackPoints(value);
+    if (value) {
+      updateGameOptions({ midPackPoints: parseInt(value) });
     }
   };
 
@@ -203,48 +233,130 @@ export default function GameOptionsScreen() {
                 {/* Pack Points */}
                 <div className="flex items-center justify-between">
                   <Label className="text-white">Pack Points</Label>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant={gameOptions.packPoints === 25 ? "default" : "outline"}
-                      onClick={() => updateGameOptions({ packPoints: 25 })}
-                      className="px-3 py-1 text-sm"
-                      size="sm"
-                    >
-                      25
-                    </Button>
-                    <Input
-                      type="number"
-                      value={gameOptions.packPoints || ''}
-                      onChange={(e) => handlePackPointsChange("packPoints", e.target.value)}
-                      className="w-20 text-center"
-                      placeholder="25"
-                      onFocus={(e) => e.target.select()}
-                      min="1"
-                    />
+                  <div className="flex items-center space-x-2 relative">
+                    <div className={`flex items-center space-x-2 transition-all duration-500 ease-in-out ${
+                      showCustomPackPoints ? 'transform -translate-x-8' : 'transform translate-x-0'
+                    }`}>
+                      <Button
+                        variant={gameOptions.packPoints === 25 && !showCustomPackPoints ? "default" : "outline"}
+                        onClick={() => handlePackPointsChange(25)}
+                        className="px-3 py-1 text-sm transition-all duration-300"
+                        size="sm"
+                      >
+                        25
+                      </Button>
+                    </div>
+                    
+                    {/* Custom Button/Input with smooth transformation */}
+                    <div className="relative flex items-center">
+                      {!showCustomPackPoints ? (
+                        <Button
+                          variant={gameOptions.packPoints !== 25 ? "default" : "outline"}
+                          onClick={() => handlePackPointsChange("custom")}
+                          className="px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105"
+                          size="sm"
+                        >
+                          Custom
+                        </Button>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <Input
+                            type="number"
+                            placeholder="Enter points"
+                            value={customPackPoints}
+                            onChange={(e) => handleCustomPackPointsChange(e.target.value)}
+                            className="w-28 text-center text-sm h-8 transform transition-all duration-500 ease-in-out 
+                                     bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
+                                     border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
+                                     animate-in slide-in-from-right-3 fade-in-0"
+                            autoFocus
+                            onBlur={() => {
+                              if (!customPackPoints) {
+                                setShowCustomPackPoints(false);
+                              }
+                            }}
+                            min="1"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setShowCustomPackPoints(false);
+                              setCustomPackPoints("");
+                              updateGameOptions({ packPoints: 25 });
+                            }}
+                            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                          >
+                            ×
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 {/* Mid-Pack Points */}
                 <div className="flex items-center justify-between">
                   <Label className="text-white">Mid-Pack Points</Label>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant={gameOptions.midPackPoints === 50 ? "default" : "outline"}
-                      onClick={() => updateGameOptions({ midPackPoints: 50 })}
-                      className="px-3 py-1 text-sm"
-                      size="sm"
-                    >
-                      50
-                    </Button>
-                    <Input
-                      type="number"
-                      value={gameOptions.midPackPoints || ''}
-                      onChange={(e) => handlePackPointsChange("midPackPoints", e.target.value)}
-                      className="w-20 text-center"
-                      placeholder="50"
-                      onFocus={(e) => e.target.select()}
-                      min="1"
-                    />
+                  <div className="flex items-center space-x-2 relative">
+                    <div className={`flex items-center space-x-2 transition-all duration-500 ease-in-out ${
+                      showCustomMidPackPoints ? 'transform -translate-x-8' : 'transform translate-x-0'
+                    }`}>
+                      <Button
+                        variant={gameOptions.midPackPoints === 50 && !showCustomMidPackPoints ? "default" : "outline"}
+                        onClick={() => handleMidPackPointsChange(50)}
+                        className="px-3 py-1 text-sm transition-all duration-300"
+                        size="sm"
+                      >
+                        50
+                      </Button>
+                    </div>
+                    
+                    {/* Custom Button/Input with smooth transformation */}
+                    <div className="relative flex items-center">
+                      {!showCustomMidPackPoints ? (
+                        <Button
+                          variant={gameOptions.midPackPoints !== 50 ? "default" : "outline"}
+                          onClick={() => handleMidPackPointsChange("custom")}
+                          className="px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105"
+                          size="sm"
+                        >
+                          Custom
+                        </Button>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <Input
+                            type="number"
+                            placeholder="Enter points"
+                            value={customMidPackPoints}
+                            onChange={(e) => handleCustomMidPackPointsChange(e.target.value)}
+                            className="w-28 text-center text-sm h-8 transform transition-all duration-500 ease-in-out 
+                                     bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
+                                     border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
+                                     animate-in slide-in-from-right-3 fade-in-0"
+                            autoFocus
+                            onBlur={() => {
+                              if (!customMidPackPoints) {
+                                setShowCustomMidPackPoints(false);
+                              }
+                            }}
+                            min="1"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setShowCustomMidPackPoints(false);
+                              setCustomMidPackPoints("");
+                              updateGameOptions({ midPackPoints: 50 });
+                            }}
+                            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                          >
+                            ×
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 

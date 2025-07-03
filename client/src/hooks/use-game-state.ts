@@ -26,17 +26,7 @@ export function useGameState() {
   
   // Load game options from localStorage on initial load
   const loadGameOptions = (): Partial<GameOptions> => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('rummy-game-options');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch {
-          // If parsing fails, return defaults
-        }
-      }
-    }
-    return {
+    const defaults = {
       playerCount: 0, // No default selection
       forPoints: 101,
       buyInAmount: "",
@@ -52,6 +42,20 @@ export function useGameState() {
       reEntryAllowed: true,
       playerNames: [],
     };
+
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('rummy-game-options');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          // Merge with defaults to ensure forPoints is always 101 if not set
+          return { ...defaults, ...parsed, forPoints: parsed.forPoints || 101 };
+        } catch {
+          // If parsing fails, return defaults
+        }
+      }
+    }
+    return defaults;
   };
 
   const [gameOptions, setGameOptions] = useState<Partial<GameOptions>>(loadGameOptions);

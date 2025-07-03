@@ -116,7 +116,7 @@ export default function GameOptionsScreen() {
 
   // Handle Joker sub-options animation
   useEffect(() => {
-    const shouldShow = gameOptions.jokerType === "All";
+    const shouldShow = gameOptions.jokerType === "all";
     
     if (shouldShow && !showJokerSubOptions) {
       setShowJokerSubOptions(true);
@@ -132,7 +132,7 @@ export default function GameOptionsScreen() {
 
   // Handle Opposite joker sub-options animation
   useEffect(() => {
-    const shouldShow = gameOptions.jokerType === "Opposite";
+    const shouldShow = gameOptions.jokerType === "opposite";
     
     if (shouldShow && !showOppositeJokerOptions) {
       setShowOppositeJokerOptions(true);
@@ -155,12 +155,12 @@ export default function GameOptionsScreen() {
   };
 
   const handleJokerTypeChange = (type: string) => {
-    if (type === "All") {
+    if (type === "all") {
       updateGameOptions({ 
         jokerType: type,
         allJokersType: "Closed" // Default to Closed when All is selected
       });
-    } else if (type === "Opposite") {
+    } else if (type === "opposite") {
       updateGameOptions({ 
         jokerType: type,
         allJokersFullMoney: false // Default to off when Opposite is selected
@@ -470,16 +470,16 @@ export default function GameOptionsScreen() {
                     <Label className="text-white">Joker Type</Label>
                     <div className="flex items-center space-x-2">
                       <Button
-                        variant={gameOptions.jokerType === "Opposite" ? "default" : "outline"}
-                        onClick={() => handleJokerTypeChange("Opposite")}
+                        variant={gameOptions.jokerType === "opposite" ? "default" : "outline"}
+                        onClick={() => handleJokerTypeChange("opposite")}
                         className="px-3 py-1 text-sm"
                         size="sm"
                       >
                         Opposite
                       </Button>
                       <Button
-                        variant={gameOptions.jokerType === "All" ? "default" : "outline"}
-                        onClick={() => handleJokerTypeChange("All")}
+                        variant={gameOptions.jokerType === "all" ? "default" : "outline"}
+                        onClick={() => handleJokerTypeChange("all")}
                         className="px-3 py-1 text-sm"
                         size="sm"
                       >
@@ -600,7 +600,7 @@ export default function GameOptionsScreen() {
                     <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
                       <li>• Packs/Game = {packsPerGame}</li>
                       <li>
-                        • <strong>Rule 1:</strong> Minimum number of sequences to avoid full count = 2
+                        • Minimum number of sequences to avoid full count = 2
                         <ul className="ml-4 mt-1 space-y-1">
                           <li>› 1 original sequence & 1 non-original sequence w/ a joker is allowed</li>
                           <li>› 2 non-original sequences are allowed when player has 2 jokers</li>
@@ -609,7 +609,10 @@ export default function GameOptionsScreen() {
                       </li>
                       {showFullCountRule && (
                         <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
-                          • Full-Count points = Sum of all cards in player's hands
+                          • Full-Count points = Sum of all cards in non winning players' hands
+                          <ul className="ml-4 mt-1 space-y-1">
+                            <li>› not counting the 2 legal sequences</li>
+                          </ul>
                         </li>
                       )}
                     </ul>

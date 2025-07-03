@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/components/theme-provider";
 import { useGameState } from "@/hooks/use-game-state";
 import { calculatePacksPerGame } from "@/lib/game-utils";
@@ -198,9 +199,9 @@ export default function GameOptionsScreen() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {/* # of Players */}
+                {/* Number of players */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-white"># of Players</Label>
+                  <Label className="text-white">Number of players</Label>
                   <div className="flex items-center space-x-2">
                     {[2, 3, 4, 5, 6, 7].map((count) => (
                       <Button
@@ -440,16 +441,56 @@ export default function GameOptionsScreen() {
                   </div>
                 </div>
 
-                {/* Buy-In */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-white">Buy-In</Label>
-                  <Input
-                    type="number"
-                    placeholder="Enter amount"
-                    value={gameOptions.buyInAmount}
-                    onChange={(e) => updateGameOptions({ buyInAmount: e.target.value })}
-                    className="w-32 text-center"
-                  />
+                {/* Joker Type */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-white">Joker Type</Label>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant={gameOptions.jokerType === "Opposite" ? "default" : "outline"}
+                        onClick={() => handleJokerTypeChange("Opposite")}
+                        className="px-3 py-1 text-sm"
+                        size="sm"
+                      >
+                        Opposite
+                      </Button>
+                      <Button
+                        variant={gameOptions.jokerType === "All" ? "default" : "outline"}
+                        onClick={() => handleJokerTypeChange("All")}
+                        className="px-3 py-1 text-sm"
+                        size="sm"
+                      >
+                        All
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {/* All Jokers Sub-options */}
+                  {showJokerSubOptions && (
+                    <div className={`ml-6 transition-all duration-800 ease-out ${jokerSubOptionsAnimation}`}>
+                      <div className="flex items-center justify-between">
+                        <Label className="text-white text-sm opacity-80">All Jokers Type</Label>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant={gameOptions.allJokersType === "Closed" ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ allJokersType: "Closed" })}
+                            className="px-2 py-1 text-xs"
+                            size="sm"
+                          >
+                            Closed
+                          </Button>
+                          <Button
+                            variant={gameOptions.allJokersType === "Open" ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ allJokersType: "Open" })}
+                            className="px-2 py-1 text-xs"
+                            size="sm"
+                          >
+                            Open
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Advanced Settings - Collapsible */}
@@ -467,61 +508,21 @@ export default function GameOptionsScreen() {
                       </Button>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="collapsible-content space-y-4 transition-all duration-700 ease-out overflow-hidden">
-                      {/* Joker Type */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-white">Joker Type</Label>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant={gameOptions.jokerType === "Opposite" ? "default" : "outline"}
-                              onClick={() => handleJokerTypeChange("Opposite")}
-                              className="px-3 py-1 text-sm"
-                              size="sm"
-                            >
-                              Opposite
-                            </Button>
-                            <Button
-                              variant={gameOptions.jokerType === "All" ? "default" : "outline"}
-                              onClick={() => handleJokerTypeChange("All")}
-                              className="px-3 py-1 text-sm"
-                              size="sm"
-                            >
-                              All
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        {/* All Jokers Sub-options */}
-                        {showJokerSubOptions && (
-                          <div className={`ml-6 transition-all duration-800 ease-out ${jokerSubOptionsAnimation}`}>
-                            <div className="flex items-center justify-between">
-                              <Label className="text-white text-sm opacity-80">All Jokers Type</Label>
-                              <div className="flex items-center space-x-2">
-                                <Button
-                                  variant={gameOptions.allJokersType === "Closed" ? "default" : "outline"}
-                                  onClick={() => updateGameOptions({ allJokersType: "Closed" })}
-                                  className="px-2 py-1 text-xs"
-                                  size="sm"
-                                >
-                                  Closed
-                                </Button>
-                                <Button
-                                  variant={gameOptions.allJokersType === "Open" ? "default" : "outline"}
-                                  onClick={() => updateGameOptions({ allJokersType: "Open" })}
-                                  className="px-2 py-1 text-xs"
-                                  size="sm"
-                                >
-                                  Open
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                      {/* Buy-In Amount */}
+                      <div className="flex items-center justify-between">
+                        <Label className="text-white">Buy-In Amount</Label>
+                        <Input
+                          type="number"
+                          placeholder="Enter amount"
+                          value={gameOptions.buyInAmount}
+                          onChange={(e) => updateGameOptions({ buyInAmount: e.target.value })}
+                          className="w-32 text-center"
+                        />
                       </div>
 
-                      {/* Sequence Count */}
+                      {/* Min Sequences Count */}
                       <div className="flex items-center justify-between">
-                        <Label className="text-white">Sequence Count</Label>
+                        <Label className="text-white">Min Sequences Count</Label>
                         <div className="flex items-center space-x-2">
                           {[1, 2].map((count) => (
                             <Button
@@ -537,51 +538,44 @@ export default function GameOptionsScreen() {
                         </div>
                       </div>
 
-                      {/* Double Points Options */}
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-white">All Trips Double Points</Label>
-                          <Button
-                            variant={gameOptions.allTripsDoublePoints ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ allTripsDoublePoints: !gameOptions.allTripsDoublePoints })}
-                            className="px-3 py-1 text-sm"
-                            size="sm"
-                          >
-                            {gameOptions.allTripsDoublePoints ? "Yes" : "No"}
-                          </Button>
+                      {/* Double Points Section */}
+                      <div className="space-y-4">
+                        <div className="pt-2 border-t border-gray-600">
+                          <h4 className="text-sm font-medium text-white mb-3">All opponents get double points when a winning player shows</h4>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <Label className="text-white">All Trips w/o Joker</Label>
+                              <Switch
+                                checked={gameOptions.allTripsDoublePoints}
+                                onCheckedChange={(checked) => updateGameOptions({ allTripsDoublePoints: checked })}
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Label className="text-white">All Sequences w/o Joker</Label>
+                              <Switch
+                                checked={gameOptions.allSeqsDoublePoints}
+                                onCheckedChange={(checked) => updateGameOptions({ allSeqsDoublePoints: checked })}
+                              />
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-white">All Seqs Double Points</Label>
-                          <Button
-                            variant={gameOptions.allSeqsDoublePoints ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ allSeqsDoublePoints: !gameOptions.allSeqsDoublePoints })}
-                            className="px-3 py-1 text-sm"
-                            size="sm"
-                          >
-                            {gameOptions.allSeqsDoublePoints ? "Yes" : "No"}
-                          </Button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-white">All Jokers Full Money</Label>
-                          <Button
-                            variant={gameOptions.allJokersFullMoney ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ allJokersFullMoney: !gameOptions.allJokersFullMoney })}
-                            className="px-3 py-1 text-sm"
-                            size="sm"
-                          >
-                            {gameOptions.allJokersFullMoney ? "Yes" : "No"}
-                          </Button>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <Label className="text-white">Re-Entry Allowed</Label>
-                          <Button
-                            variant={gameOptions.reEntryAllowed ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ reEntryAllowed: !gameOptions.reEntryAllowed })}
-                            className="px-3 py-1 text-sm"
-                            size="sm"
-                          >
-                            {gameOptions.reEntryAllowed ? "Yes" : "No"}
-                          </Button>
+                        
+                        {/* Other Settings */}
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-white">All Jokers Full Money</Label>
+                            <Switch
+                              checked={gameOptions.allJokersFullMoney}
+                              onCheckedChange={(checked) => updateGameOptions({ allJokersFullMoney: checked })}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Label className="text-white">Re-Entry Allowed</Label>
+                            <Switch
+                              checked={gameOptions.reEntryAllowed}
+                              onCheckedChange={(checked) => updateGameOptions({ reEntryAllowed: checked })}
+                            />
+                          </div>
                         </div>
                       </div>
                     </CollapsibleContent>

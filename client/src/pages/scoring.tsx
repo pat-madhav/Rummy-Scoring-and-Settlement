@@ -110,9 +110,20 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
           return acc;
         }, {} as Record<string, string>);
         
-        // If all active players have entered scores for current round, advance to next round
+        // If all active players have entered scores for current round, validate and advance
         const activePlayers = players?.filter(p => p.isActive) || [];
         if (activePlayers.length > 0 && Object.keys(currentRoundScores).length === activePlayers.length) {
+          // Validate minimum 1 Rummy rule
+          const hasRummy = Object.values(currentRoundScores).some(scoreStr => parseInt(scoreStr) === 0);
+          if (!hasRummy) {
+            toast({
+              title: "Invalid Round",
+              description: "At least one player must have a Rummy (0 points) in each round",
+              variant: "destructive",
+            });
+            return prev;
+          }
+          
           setCurrentRound(prev => prev + 1);
         }
       }
@@ -392,13 +403,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                               {isEditing ? (
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      className="w-full text-center h-8 justify-center"
-                                    >
-                                      {displayScore || "Edit"}
-                                    </Button>
+                                    <Input
+                                      type="number"
+                                      placeholder="Enter Score"
+                                      value={savedScore || ""}
+                                      onChange={(e) => handleScoreChange(player.id, roundNumber, e.target.value)}
+                                      className="w-full text-center h-8 cursor-pointer"
+                                    />
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="center">
                                     <DropdownMenuItem
@@ -423,24 +434,6 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                         Full-Count ({game.fullCountPoints})
                                       </DropdownMenuItem>
                                     )}
-                                    <DropdownMenuItem asChild>
-                                      <div className="px-2 py-1">
-                                        <Input
-                                          type="number"
-                                          placeholder="Enter custom score"
-                                          className="w-full text-center h-8"
-                                          defaultValue={savedScore || ""}
-                                          onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                              const value = (e.target as HTMLInputElement).value;
-                                              if (value) {
-                                                handleScoreChange(player.id, roundNumber, value);
-                                              }
-                                            }
-                                          }}
-                                        />
-                                      </div>
-                                    </DropdownMenuItem>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               ) : (
@@ -462,12 +455,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       <td key={player.id} className="px-4 py-3">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="w-full text-center h-10 justify-center"
-                            >
-                              {scores[player.id]?.[currentRound] || "Select Score"}
-                            </Button>
+                            <Input
+                              type="number"
+                              placeholder="Enter Score"
+                              value={scores[player.id]?.[currentRound] || ""}
+                              onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
+                              className="w-full text-center h-10 cursor-pointer"
+                            />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="center">
                             <DropdownMenuItem
@@ -492,23 +486,6 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                 Full-Count ({game.fullCountPoints})
                               </DropdownMenuItem>
                             )}
-                            <DropdownMenuItem asChild>
-                              <div className="px-2 py-1">
-                                <Input
-                                  type="number"
-                                  placeholder="Enter custom score"
-                                  className="w-full text-center h-8"
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                      const value = (e.target as HTMLInputElement).value;
-                                      if (value) {
-                                        handleScoreChange(player.id, currentRound, value);
-                                      }
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </td>

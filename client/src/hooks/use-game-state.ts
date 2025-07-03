@@ -12,6 +12,7 @@ export interface GameOptions {
   midPackPoints: number;
   fullCountPoints: number;
   jokerType: string;
+  allJokersType?: string;
   sequenceCount: number;
   allTripsDoublePoints: boolean;
   allSeqsDoublePoints: boolean;
@@ -45,10 +46,11 @@ export function useGameState() {
       midPackPoints: 50,
       fullCountPoints: 80,
       jokerType: "opposite",
+      allJokersType: "open",
       sequenceCount: 2,
       allTripsDoublePoints: true,
       allSeqsDoublePoints: false,
-      allJokersFullMoney: false,
+      allJokersFullMoney: true,
       reEntryAllowed: true,
       playerNames: [],
     };

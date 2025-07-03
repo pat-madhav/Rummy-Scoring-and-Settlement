@@ -89,9 +89,33 @@ export default function AdvancedSettingsScreen() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="all" id="all" />
-                    <Label htmlFor="all">All Jokers (Open/Closed)</Label>
+                    <Label htmlFor="all">All Jokers</Label>
                   </div>
                 </RadioGroup>
+                
+                {/* All Jokers Open/Closed options */}
+                {gameOptions.jokerType === "all" && (
+                  <div className="mt-3 ml-6">
+                    <div className="flex space-x-3">
+                      <Button
+                        variant={gameOptions.allJokersType === "open" ? "default" : "outline"}
+                        onClick={() => updateGameOptions({ allJokersType: "open" })}
+                        className="px-4 py-2"
+                        size="sm"
+                      >
+                        Open
+                      </Button>
+                      <Button
+                        variant={gameOptions.allJokersType === "closed" ? "default" : "outline"}
+                        onClick={() => updateGameOptions({ allJokersType: "closed" })}
+                        className="px-4 py-2"
+                        size="sm"
+                      >
+                        Closed
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Number of Sequences */}
@@ -115,6 +139,14 @@ export default function AdvancedSettingsScreen() {
                     size="sm"
                   >
                     3
+                  </Button>
+                  <Button
+                    variant={gameOptions.sequenceCount === 4 ? "default" : "outline"}
+                    onClick={() => updateGameOptions({ sequenceCount: 4 })}
+                    className="px-4 py-2"
+                    size="sm"
+                  >
+                    4
                   </Button>
                 </div>
               </div>

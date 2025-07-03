@@ -28,12 +28,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerWithScores | null>(null);
 
   const gameStateQuery = useQuery({
-    queryKey: ["/api/games", gameId, "state"],
+    queryKey: [`/api/games/${gameId}/state`],
     enabled: !!gameId,
   });
 
   const playersWithScoresQuery = useQuery({
-    queryKey: ["/api/games", gameId, "players-with-scores"],
+    queryKey: [`/api/games/${gameId}/players-with-scores`],
     enabled: !!gameId,
   });
 
@@ -167,10 +167,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     );
   }
 
-  if (!gameStateQuery.data) {
+  if (gameStateQuery.isError || !gameStateQuery.data) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-lg text-red-600 dark:text-red-400">Game not found</div>
+        <div className="text-lg text-red-600 dark:text-red-400">
+          {gameStateQuery.isError ? "Error loading game" : "Game not found"}
+        </div>
       </div>
     );
   }

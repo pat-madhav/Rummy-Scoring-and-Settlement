@@ -127,11 +127,11 @@ export default function GameOptionsScreen() {
                 {/* Max Points */}
                 <div className="flex items-center justify-between">
                   <Label className="text-white">Max Points</Label>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 relative">
                     <Button
                       variant={gameOptions.forPoints === 100 ? "default" : "outline"}
                       onClick={() => handlePointsChange(100)}
-                      className="px-3 py-1 text-sm"
+                      className={`px-3 py-1 text-sm transition-all duration-300 ${showCustomPoints ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                       size="sm"
                     >
                       100
@@ -139,32 +139,37 @@ export default function GameOptionsScreen() {
                     <Button
                       variant={gameOptions.forPoints === 101 ? "default" : "outline"}
                       onClick={() => handlePointsChange(101)}
-                      className="px-3 py-1 text-sm"
+                      className={`px-3 py-1 text-sm transition-all duration-300 ${showCustomPoints ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                       size="sm"
                     >
                       101
                     </Button>
-                    <Button
-                      variant={showCustomPoints ? "default" : "outline"}
-                      onClick={() => handlePointsChange("custom")}
-                      className="px-3 py-1 text-sm"
-                      size="sm"
-                    >
-                      Custom
-                    </Button>
+                    {showCustomPoints ? (
+                      <Input
+                        type="number"
+                        placeholder="Enter points"
+                        value={customPoints}
+                        onChange={(e) => handleCustomPointsChange(e.target.value)}
+                        className="w-40 text-center text-sm h-8 absolute right-0 transition-all duration-300 ease-in-out"
+                        autoFocus
+                        onBlur={() => {
+                          if (!customPoints) {
+                            handlePointsChange(101);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <Button
+                        variant="outline"
+                        onClick={() => handlePointsChange("custom")}
+                        className="px-3 py-1 text-sm"
+                        size="sm"
+                      >
+                        Custom
+                      </Button>
+                    )}
                   </div>
                 </div>
-                {showCustomPoints && (
-                  <div className="flex items-center justify-end">
-                    <Input
-                      type="number"
-                      placeholder="Enter custom points"
-                      value={customPoints}
-                      onChange={(e) => handleCustomPointsChange(e.target.value)}
-                      className="w-32 text-center"
-                    />
-                  </div>
-                )}
 
                 {/* Pack */}
                 <div className="flex items-center justify-between">

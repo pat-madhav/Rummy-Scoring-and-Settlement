@@ -599,14 +599,7 @@ export default function GameOptionsScreen() {
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
                       <li>• Packs/Game = {packsPerGame}</li>
-                      <li>
-                        • Minimum number of sequences to avoid full count = 2
-                        <ul className="ml-4 mt-1 space-y-1">
-                          <li>› 1 original sequence & 1 non-original sequence w/ a joker is allowed</li>
-                          <li>› 2 non-original sequences are allowed when player has 2 jokers</li>
-                          <li>› Unless all triplets without joker is showed by a player</li>
-                        </ul>
-                      </li>
+
                       {showFullCountRule && (
                         <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
                           • Full-Count points = Sum of all cards in non winning players' hands

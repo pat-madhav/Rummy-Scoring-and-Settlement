@@ -145,6 +145,59 @@
     animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
+  /* Custom button transformation animations */
+  @keyframes expand-width {
+    from {
+      width: 4rem;
+    }
+    to {
+      width: 7rem;
+    }
+  }
+
+  @keyframes shrink-width {
+    from {
+      width: 7rem;
+    }
+    to {
+      width: 4rem;
+    }
+  }
+
+  @keyframes slide-buttons-left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-2rem);
+    }
+  }
+
+  @keyframes slide-buttons-right {
+    from {
+      transform: translateX(-2rem);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  .animate-expand-width {
+    animation: expand-width 0.5s ease-in-out forwards;
+  }
+
+  .animate-shrink-width {
+    animation: shrink-width 0.5s ease-in-out forwards;
+  }
+
+  .animate-slide-buttons-left {
+    animation: slide-buttons-left 0.5s ease-in-out forwards;
+  }
+
+  .animate-slide-buttons-right {
+    animation: slide-buttons-right 0.5s ease-in-out forwards;
+  }
+
   /* Enhanced button styling for better contrast */
   .btn-primary {
     @apply bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;

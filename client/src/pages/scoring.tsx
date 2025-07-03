@@ -212,6 +212,33 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     setLocation(`/settlement/${gameId}`);
   };
 
+  // Helper functions for player state
+  const getPlayerState = (playerId: number) => {
+    const totalScore = calculatePlayerTotal(playerId);
+    const packsRemaining = calculatePacksRemaining(playerId);
+    
+    // Check if player is "Out" - total score >= max score
+    if (totalScore >= game.forPoints) {
+      return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
+    }
+    
+    // Check if player has "Compulsory" (no packs left)
+    if (packsRemaining === 0) {
+      return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
+    }
+    
+    // Check if player has "Least" (minimum total score among all players)
+    const allTotals = players.map(p => calculatePlayerTotal(p.id));
+    const minTotal = Math.min(...allTotals);
+    if (totalScore === minTotal) {
+      return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
+    }
+    
+    return { state: "", color: "" };
+  };
+
+
+
   if (gameStateQuery.isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
@@ -352,26 +379,21 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
+                  {/* Player Names Row */}
                   <tr className="bg-gray-50 dark:bg-gray-700">
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Round</th>
                     {players.map((player) => {
-                      const packsRemaining = calculatePacksRemaining(player.id);
-                      const totalScore = calculatePlayerTotal(player.id);
-                      const isZeroPacks = packsRemaining === 0;
-                      const isCrossingMaxScore = totalScore >= (game.forPoints - 1);
+                      const playerState = getPlayerState(player.id);
                       
                       return (
-                        <th key={player.id} className={`px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white min-w-24 ${
-                          isZeroPacks ? 'bg-red-100 dark:bg-red-900/30' : 
-                          isCrossingMaxScore ? 'bg-red-200 dark:bg-red-800/50' : ''
-                        }`}>
+                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-gray-900 dark:text-white min-w-24 ${playerState.color}`}>
                           <div>{player.name}</div>
                           {game.reEntryAllowed && (
                             <Button
                               size="sm"
                               variant="secondary"
                               onClick={() => {
-                                const playerWithScores = playersWithScores.find(p => p.id === player.id);
+                                const playerWithScores = playersWithScoresQuery.data?.find(p => p.id === player.id);
                                 if (playerWithScores) {
                                   handleReEntryClick(playerWithScores);
                                 }
@@ -381,6 +403,19 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                               Re-Entry
                             </Button>
                           )}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                  {/* Player State Row */}
+                  <tr className="bg-gray-100 dark:bg-gray-800">
+                    <th className="px-4 py-2 text-left text-xs text-gray-600 dark:text-gray-400">State</th>
+                    {players.map((player) => {
+                      const playerState = getPlayerState(player.id);
+                      
+                      return (
+                        <th key={`state-${player.id}`} className={`px-4 py-2 text-center text-xs font-medium ${playerState.color} text-gray-700 dark:text-gray-300`}>
+                          {playerState.state}
                         </th>
                       );
                     })}
@@ -420,8 +455,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                           const savedScore = scores[player.id]?.[roundNumber];
                           const displayScore = savedScore ? parseInt(savedScore) : 0;
                           return (
-                            <td key={player.id} className="px-4 py-3">
-                              {isEditing ? (
+                            <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
+                              {isEditing && getPlayerState(player.id).state !== "Out" ? (
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
                                     <Input
@@ -473,18 +508,21 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   {/* Current round input - only one empty row */}
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{currentRound}</td>
-                    {players.map((player) => (
-                      <td key={player.id} className="px-4 py-3">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Input
-                              type="number"
-                              placeholder="Enter Score"
-                              value={scores[player.id]?.[currentRound] || ""}
-                              onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
-                              onFocus={(e) => e.target.select()}
-                              className="w-full text-center h-10 cursor-pointer"
-                            />
+                    {players.map((player) => {
+                      const isPlayerOut = getPlayerState(player.id).state === "Out";
+                      return (
+                        <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
+                          {!isPlayerOut ? (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Input
+                                  type="number"
+                                  placeholder="Enter Score"
+                                  value={scores[player.id]?.[currentRound] || ""}
+                                  onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
+                                  onFocus={(e) => e.target.select()}
+                                  className="w-full text-center h-10 cursor-pointer"
+                                />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="center">
                             <DropdownMenuItem
@@ -511,8 +549,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                             )}
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      </td>
-                    ))}
+                          ) : (
+                            <div className="text-center text-gray-400">-</div>
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
                 </tbody>
                 
@@ -521,7 +563,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   <tr className="font-semibold">
                     <td className="px-4 py-3 text-gray-900 dark:text-white">Total</td>
                     {players.map((player) => (
-                      <td key={player.id} className="px-4 py-3 text-center text-gray-900 dark:text-white">
+                      <td key={player.id} className={`px-4 py-3 text-center text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
                         {calculatePlayerTotal(player.id)}
                       </td>
                     ))}
@@ -529,15 +571,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   <tr className="text-sm">
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Points left</td>
                     {players.map((player) => (
-                      <td key={player.id} className="px-4 py-3 text-center text-gray-700 dark:text-gray-300">
+                      <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePointsLeft(player.id)}
                       </td>
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Packs rmng</td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Packs Remaining</td>
                     {players.map((player) => (
-                      <td key={player.id} className="px-4 py-3 text-center">
+                      <td key={player.id} className={`px-4 py-3 text-center ${getPlayerState(player.id).color}`}>
                         <div className="flex flex-col items-center">
                           <span className="text-gray-700 dark:text-gray-300">
                             {calculatePacksRemaining(player.id)}
@@ -549,11 +591,16 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   </tr>
                   <tr className="text-sm">
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Pack Safe Points</td>
-                    {players.map((player) => (
-                      <td key={player.id} className="px-4 py-3 text-center text-gray-700 dark:text-gray-300">
-                        {calculatePackSafePoints(player.id)}
-                      </td>
-                    ))}
+                    {players.map((player) => {
+                      const packSafePoints = calculatePackSafePoints(player.id);
+                      const isPlayerOut = getPlayerState(player.id).state === "Out";
+                      
+                      return (
+                        <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
+                          {!isPlayerOut && packSafePoints === 0 ? "Pack Safe" : packSafePoints}
+                        </td>
+                      );
+                    })}
                   </tr>
                 </tfoot>
               </table>

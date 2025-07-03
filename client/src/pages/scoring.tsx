@@ -111,8 +111,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         }, {} as Record<string, string>);
         
         // If all active players have entered scores for current round, validate and advance
-        const activePlayers = players?.filter(p => p.isActive) || [];
-        if (activePlayers.length > 0 && Object.keys(currentRoundScores).length === activePlayers.length) {
+        const allPlayers = players || [];
+        const playersNotOut = allPlayers.filter(p => {
+          const playerTotal = Object.values(newScores[p.id] || {}).reduce((total, score) => {
+            const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
+            return total + numScore;
+          }, 0);
+          return playerTotal < game.forPoints && p.isActive;
+        });
+        
+        const currentRoundPlayersWithScores = playersNotOut.filter(p => newScores[p.id]?.[roundNumber]);
+        
+        if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
           // Validate minimum 1 Rummy rule
           const hasRummy = Object.values(currentRoundScores).some(scoreStr => parseInt(scoreStr) === 0);
           if (!hasRummy) {
@@ -124,7 +134,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
             return prev;
           }
           
-          setCurrentRound(prev => prev + 1);
+          // Check if game should continue (more than 1 player remaining)
+          if (playersNotOut.length > 1) {
+            setCurrentRound(prev => prev + 1);
+          }
         }
       }
       
@@ -227,11 +240,19 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if player has "Least" (minimum total score among all players)
+    // Check if player has "Least" (minimum total score among all players) - only if game has progressed
     const allTotals = players.map(p => calculatePlayerTotal(p.id));
+    const gameHasProgressed = allTotals.some(total => total > 0);
     const minTotal = Math.min(...allTotals);
-    if (totalScore === minTotal) {
+    
+    if (gameHasProgressed && totalScore === minTotal && totalScore > 0) {
       return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
+    }
+    
+    // Check if player is the winner (only one active player left)
+    const activePlayers = players.filter(p => calculatePlayerTotal(p.id) < game.forPoints);
+    if (activePlayers.length === 1 && activePlayers[0].id === playerId) {
+      return { state: "Winner", color: "bg-green-400 dark:bg-green-600" };
     }
     
     return { state: "", color: "" };
@@ -398,7 +419,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   handleReEntryClick(playerWithScores);
                                 }
                               }}
-                              className="mt-1 text-xs"
+                              className="mt-1 text-xs hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors"
                             >
                               Re-Entry
                             </Button>
@@ -461,11 +482,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   <DropdownMenuTrigger asChild>
                                     <Input
                                       type="number"
-                                      placeholder="Enter Score"
+                                      placeholder="Score"
                                       value={savedScore || ""}
                                       onChange={(e) => handleScoreChange(player.id, roundNumber, e.target.value)}
                                       onFocus={(e) => e.target.select()}
-                                      className="w-full text-center h-8 cursor-pointer"
+                                      className="w-full text-center h-8 cursor-pointer text-sm"
                                     />
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="center">
@@ -474,16 +495,35 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     >
                                       Rummy (0)
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => handleScoreOption(player.id, roundNumber, "pack")}
-                                    >
-                                      Pack ({game.packPoints})
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => handleScoreOption(player.id, roundNumber, "mid-pack")}
-                                    >
-                                      Mid-Pack ({game.midPackPoints})
-                                    </DropdownMenuItem>
+                                    {calculatePacksRemaining(player.id) > 0 ? (
+                                      <>
+                                        <DropdownMenuItem
+                                          onClick={() => handleScoreOption(player.id, roundNumber, "pack")}
+                                        >
+                                          Pack ({game.packPoints})
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          onClick={() => handleScoreOption(player.id, roundNumber, "mid-pack")}
+                                        >
+                                          Mid-Pack ({game.midPackPoints})
+                                        </DropdownMenuItem>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <DropdownMenuItem
+                                          disabled
+                                          className="opacity-50 cursor-not-allowed"
+                                        >
+                                          Pack ({game.packPoints}) - Disabled
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          disabled
+                                          className="opacity-50 cursor-not-allowed"
+                                        >
+                                          Mid-Pack ({game.midPackPoints}) - Disabled
+                                        </DropdownMenuItem>
+                                      </>
+                                    )}
                                     {game.fullCountPoints === 80 && (
                                       <DropdownMenuItem
                                         onClick={() => handleScoreOption(player.id, roundNumber, "full-count")}
@@ -517,38 +557,71 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                               <DropdownMenuTrigger asChild>
                                 <Input
                                   type="number"
-                                  placeholder="Enter Score"
+                                  placeholder="Score"
                                   value={scores[player.id]?.[currentRound] || ""}
                                   onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
                                   onFocus={(e) => e.target.select()}
-                                  className="w-full text-center h-10 cursor-pointer"
+                                  className="w-full text-center h-10 cursor-pointer text-sm"
                                 />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="center">
-                            <DropdownMenuItem
-                              onClick={() => handleScoreOption(player.id, currentRound, "rummy")}
-                            >
-                              Rummy (0)
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleScoreOption(player.id, currentRound, "pack")}
-                            >
-                              Pack ({game.packPoints})
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleScoreOption(player.id, currentRound, "mid-pack")}
-                            >
-                              Mid-Pack ({game.midPackPoints})
-                            </DropdownMenuItem>
-                            {game.fullCountPoints === 80 && (
-                              <DropdownMenuItem
-                                onClick={() => handleScoreOption(player.id, currentRound, "full-count")}
-                              >
-                                Full-Count ({game.fullCountPoints})
-                              </DropdownMenuItem>
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="center">
+                                <DropdownMenuItem
+                                  onClick={() => handleScoreOption(player.id, currentRound, "rummy")}
+                                >
+                                  Rummy (0)
+                                </DropdownMenuItem>
+                                {calculatePacksRemaining(player.id) > 0 ? (
+                                  <>
+                                    <DropdownMenuItem
+                                      onClick={() => handleScoreOption(player.id, currentRound, "pack")}
+                                    >
+                                      Pack ({game.packPoints})
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() => handleScoreOption(player.id, currentRound, "mid-pack")}
+                                    >
+                                      Mid-Pack ({game.midPackPoints})
+                                    </DropdownMenuItem>
+                                  </>
+                                ) : (
+                                  <>
+                                    <DropdownMenuItem
+                                      disabled
+                                      onClick={() => {
+                                        toast({
+                                          title: "Compulsory",
+                                          description: "Player has no packs left - must play Rummy or Full-Count",
+                                          variant: "destructive",
+                                        });
+                                      }}
+                                      className="opacity-50 cursor-not-allowed"
+                                    >
+                                      Pack ({game.packPoints}) - Disabled
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      disabled
+                                      onClick={() => {
+                                        toast({
+                                          title: "Compulsory",
+                                          description: "Player has no packs left - must play Rummy or Full-Count",
+                                          variant: "destructive",
+                                        });
+                                      }}
+                                      className="opacity-50 cursor-not-allowed"
+                                    >
+                                      Mid-Pack ({game.midPackPoints}) - Disabled
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                                {game.fullCountPoints === 80 && (
+                                  <DropdownMenuItem
+                                    onClick={() => handleScoreOption(player.id, currentRound, "full-count")}
+                                  >
+                                    Full-Count ({game.fullCountPoints})
+                                  </DropdownMenuItem>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           ) : (
                             <div className="text-center text-gray-400">-</div>
                           )}
@@ -561,9 +634,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 {/* Summary Rows */}
                 <tfoot className="bg-gray-50 dark:bg-gray-700">
                   <tr className="font-semibold">
-                    <td className="px-4 py-3 text-gray-900 dark:text-white">Total</td>
+                    <td className="px-4 py-3 text-lg font-bold text-gray-900 dark:text-white">Total</td>
                     {players.map((player) => (
-                      <td key={player.id} className={`px-4 py-3 text-center text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
+                      <td key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
                         {calculatePlayerTotal(player.id)}
                       </td>
                     ))}

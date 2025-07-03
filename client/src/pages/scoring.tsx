@@ -4,6 +4,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/theme-provider";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -69,6 +75,20 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   };
 
   const handleScoreChange = (playerId: number, roundNumber: number, score: string) => {
+    // Validate score against full count setting
+    const numScore = parseInt(score);
+    if (!isNaN(numScore) && score !== "") {
+      const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
+      if (numScore > maxScore) {
+        toast({
+          title: "Invalid Score",
+          description: "You are entering a score that is greater than full count",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setScores(prev => {
       const newScores = {
         ...prev,
@@ -89,7 +109,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         }, {} as Record<string, string>);
         
         // If all active players have entered scores for current round, advance to next round
-        const activePlayers = playersWithScoresQuery.data?.filter(p => p.isActive) || [];
+        const activePlayers = players?.filter(p => p.isActive) || [];
         if (activePlayers.length > 0 && Object.keys(currentRoundScores).length === activePlayers.length) {
           setCurrentRound(prev => prev + 1);
         }
@@ -224,6 +244,29 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     return pointsLeft % game.packPoints;
   };
 
+  const handleScoreOption = (playerId: number, roundNumber: number, option: string) => {
+    let score: string;
+    
+    switch (option) {
+      case "rummy":
+        score = "0";
+        break;
+      case "pack":
+        score = game.packPoints.toString();
+        break;
+      case "mid-pack":
+        score = game.midPackPoints.toString();
+        break;
+      case "full-count":
+        score = game.fullCountPoints.toString();
+        break;
+      default:
+        return;
+    }
+    
+    handleScoreChange(playerId, roundNumber, score);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
@@ -336,13 +379,40 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{currentRound}</td>
                     {players.map((player) => (
                       <td key={player.id} className="px-4 py-3">
-                        <Input
-                          type="number"
-                          placeholder="Enter score"
-                          value={scores[player.id]?.[currentRound] || ""}
-                          onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
-                          className="w-full text-center"
-                        />
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full text-center h-10 justify-center"
+                            >
+                              {scores[player.id]?.[currentRound] || "Select Score"}
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="center">
+                            <DropdownMenuItem
+                              onClick={() => handleScoreOption(player.id, currentRound, "rummy")}
+                            >
+                              Rummy (0)
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleScoreOption(player.id, currentRound, "pack")}
+                            >
+                              Pack ({game.packPoints})
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleScoreOption(player.id, currentRound, "mid-pack")}
+                            >
+                              Mid-Pack ({game.midPackPoints})
+                            </DropdownMenuItem>
+                            {game.fullCountPoints === 80 && (
+                              <DropdownMenuItem
+                                onClick={() => handleScoreOption(player.id, currentRound, "full-count")}
+                              >
+                                Full-Count ({game.fullCountPoints})
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </td>
                     ))}
                   </tr>

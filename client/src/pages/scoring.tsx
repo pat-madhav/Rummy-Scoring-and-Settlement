@@ -418,7 +418,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         </div>
 
         {/* Re-entry notification */}
-        {game.reEntryAllowed && (
+        {gameStateQuery.data?.game.reEntryAllowed && (
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
             <p className="text-sm text-blue-700 dark:text-blue-300">
               <span className="font-semibold">Re-entry allowed only if:</span> (1) At least 3 players are playing, (2) There's at least one pack remaining in the top score of remaining players
@@ -441,7 +441,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       return (
                         <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-gray-900 dark:text-white min-w-24 ${playerState.color}`}>
                           <div>{player.name}</div>
-                          {game.reEntryAllowed && (
+                          {gameStateQuery.data?.game.reEntryAllowed && (
                             <Button
                               size="sm"
                               variant="secondary"

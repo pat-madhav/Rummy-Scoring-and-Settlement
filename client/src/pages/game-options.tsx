@@ -28,6 +28,8 @@ export default function GameOptionsScreen() {
   const [fullCountRuleAnimation, setFullCountRuleAnimation] = useState("");
   const [showJokerSubOptions, setShowJokerSubOptions] = useState(false);
   const [jokerSubOptionsAnimation, setJokerSubOptionsAnimation] = useState("");
+  const [showOppositeJokerOptions, setShowOppositeJokerOptions] = useState(false);
+  const [oppositeJokerOptionsAnimation, setOppositeJokerOptionsAnimation] = useState("");
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -128,6 +130,22 @@ export default function GameOptionsScreen() {
     }
   }, [gameOptions.jokerType, showJokerSubOptions]);
 
+  // Handle Opposite joker sub-options animation
+  useEffect(() => {
+    const shouldShow = gameOptions.jokerType === "Opposite";
+    
+    if (shouldShow && !showOppositeJokerOptions) {
+      setShowOppositeJokerOptions(true);
+      setOppositeJokerOptionsAnimation("implied-rule-enter");
+    } else if (!shouldShow && showOppositeJokerOptions) {
+      setOppositeJokerOptionsAnimation("implied-rule-exit");
+      setTimeout(() => {
+        setShowOppositeJokerOptions(false);
+        setOppositeJokerOptionsAnimation("");
+      }, 600); // Match animation duration
+    }
+  }, [gameOptions.jokerType, showOppositeJokerOptions]);
+
   const handleFullCountChange = (value: number | "fullCount") => {
     if (value === "fullCount") {
       updateGameOptions({ fullCountPoints: gameOptions.forPoints || 101 });
@@ -141,6 +159,11 @@ export default function GameOptionsScreen() {
       updateGameOptions({ 
         jokerType: type,
         allJokersType: "Closed" // Default to Closed when All is selected
+      });
+    } else if (type === "Opposite") {
+      updateGameOptions({ 
+        jokerType: type,
+        allJokersFullMoney: false // Default to off when Opposite is selected
       });
     } else {
       updateGameOptions({ jokerType: type });
@@ -491,6 +514,19 @@ export default function GameOptionsScreen() {
                       </div>
                     </div>
                   )}
+                  
+                  {/* Opposite Jokers Sub-options */}
+                  {showOppositeJokerOptions && (
+                    <div className={`ml-6 transition-all duration-800 ease-out ${oppositeJokerOptionsAnimation}`}>
+                      <div className="flex items-center justify-between">
+                        <Label className="text-white text-sm opacity-80">All Jokers Full Money</Label>
+                        <Switch
+                          checked={gameOptions.allJokersFullMoney}
+                          onCheckedChange={(checked) => updateGameOptions({ allJokersFullMoney: checked })}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Advanced Settings - Collapsible */}
@@ -538,11 +574,20 @@ export default function GameOptionsScreen() {
                         </div>
                       </div>
 
+                      {/* Re-Entry Allowed */}
+                      <div className="flex items-center justify-between">
+                        <Label className="text-white">Re-Entry Allowed</Label>
+                        <Switch
+                          checked={gameOptions.reEntryAllowed}
+                          onCheckedChange={(checked) => updateGameOptions({ reEntryAllowed: checked })}
+                        />
+                      </div>
+
                       {/* Double Points Section */}
                       <div className="space-y-4">
                         <div className="pt-2 border-t border-gray-600">
                           <h4 className="text-sm font-medium text-white mb-3">All opponents get double points when a winning player shows</h4>
-                          <div className="space-y-3">
+                          <div className="space-y-3 ml-4">
                             <div className="flex items-center justify-between">
                               <Label className="text-white">All Trips w/o Joker</Label>
                               <Switch
@@ -557,24 +602,6 @@ export default function GameOptionsScreen() {
                                 onCheckedChange={(checked) => updateGameOptions({ allSeqsDoublePoints: checked })}
                               />
                             </div>
-                          </div>
-                        </div>
-                        
-                        {/* Other Settings */}
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <Label className="text-white">All Jokers Full Money</Label>
-                            <Switch
-                              checked={gameOptions.allJokersFullMoney}
-                              onCheckedChange={(checked) => updateGameOptions({ allJokersFullMoney: checked })}
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <Label className="text-white">Re-Entry Allowed</Label>
-                            <Switch
-                              checked={gameOptions.reEntryAllowed}
-                              onCheckedChange={(checked) => updateGameOptions({ reEntryAllowed: checked })}
-                            />
                           </div>
                         </div>
                       </div>

@@ -598,7 +598,14 @@ export default function GameOptionsScreen() {
                   <h3 className="text-lg font-semibold text-white mb-3">Implied Game Rules</h3>
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
-                      <li>• Packs/Game = {packsPerGame}</li>
+                      <li>• Packs/Game = 8</li>
+                      <li>
+                        • Each player is dealt 13 cards. To show and get minimum score (0), Assemble all 13 cards based on...
+                        <ul className="ml-6 mt-1 space-y-1">
+                          <li>› Create 2 or more sequences of 3 or 4 cards (same suite)</li>
+                          <li>› other cards can be assembled into triplets of 3 or 4 cards (all cards are same number of different suite)</li>
+                        </ul>
+                      </li>
                       <li>
                         • Minimum number of sequences to avoid full count = 2
                         <ul className="ml-4 mt-1 space-y-1">

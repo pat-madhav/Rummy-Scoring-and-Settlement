@@ -30,6 +30,18 @@ export default function PlayerNamesScreen() {
     updateGameOptions({ playerNames: newNames });
   };
 
+  const clearAllNames = () => {
+    const emptyNames = Array(gameOptions.playerCount || 3).fill("");
+    setPlayerNames(emptyNames);
+    updateGameOptions({ playerNames: emptyNames });
+  };
+
+  const assignDefaultNames = () => {
+    const defaultNames = Array.from({ length: gameOptions.playerCount || 3 }, (_, i) => `Player ${i + 1}`);
+    setPlayerNames(defaultNames);
+    updateGameOptions({ playerNames: defaultNames });
+  };
+
   const handleStartGame = async () => {
     const validNames = playerNames.filter(name => name.trim());
     if (validNames.length < (gameOptions.playerCount || 3)) {
@@ -115,13 +127,31 @@ export default function PlayerNamesScreen() {
                     placeholder="Enter name"
                     value={playerNames[index] || ""}
                     onChange={(e) => handleNameChange(index, e.target.value)}
+                    onFocus={(e) => e.target.select()}
                     className="flex-1"
                   />
                 </div>
               ))}
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6 flex space-x-3">
+              <Button
+                onClick={clearAllNames}
+                variant="outline"
+                className="flex-1"
+              >
+                Clear All Names
+              </Button>
+              <Button
+                onClick={assignDefaultNames}
+                variant="outline"
+                className="flex-1"
+              >
+                Default Names
+              </Button>
+            </div>
+
+            <div className="mt-4">
               <Button
                 onClick={handleStartGame}
                 disabled={createGameMutation.isPending}

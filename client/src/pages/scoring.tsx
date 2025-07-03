@@ -84,7 +84,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       if (numScore > maxScore) {
         toast({
           title: "Invalid Score",
-          description: "You are entering a score that is greater than full count",
+          description: `Enter a score less than full count (${maxScore})`,
           variant: "destructive",
         });
         return;
@@ -244,7 +244,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   
   const calculatePointsLeft = (playerId: number) => {
     const total = calculatePlayerTotal(playerId);
-    return Math.max(0, game.forPoints - total);
+    return Math.max(0, game.forPoints - total - 1);
   };
   
   const calculatePacksRemaining = (playerId: number) => {
@@ -252,12 +252,23 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     return Math.floor(pointsLeft / game.packPoints);
   };
   
-  const calculateResidualPoints = (playerId: number) => {
+  const calculatePackSafePoints = (playerId: number) => {
     const pointsLeft = calculatePointsLeft(playerId);
     return pointsLeft % game.packPoints;
   };
 
   const handleScoreOption = (playerId: number, roundNumber: number, option: string) => {
+    // Check if player has 0 packs left and is trying to pack
+    const packsRemaining = calculatePacksRemaining(playerId);
+    if (packsRemaining === 0 && (option === "pack" || option === "mid-pack")) {
+      toast({
+        title: "Compulsory",
+        description: "Player with 0 packs left cannot pack or mid-pack",
+        variant: "destructive",
+      });
+      return;
+    }
+
     let score: string;
     
     switch (option) {
@@ -343,26 +354,36 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 <thead>
                   <tr className="bg-gray-50 dark:bg-gray-700">
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Round</th>
-                    {players.map((player) => (
-                      <th key={player.id} className="px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white min-w-24">
-                        <div>{player.name}</div>
-                        {game.reEntryAllowed && (
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            onClick={() => {
-                              const playerWithScores = playersWithScores.find(p => p.id === player.id);
-                              if (playerWithScores) {
-                                handleReEntryClick(playerWithScores);
-                              }
-                            }}
-                            className="mt-1 text-xs"
-                          >
-                            Re-Entry
-                          </Button>
-                        )}
-                      </th>
-                    ))}
+                    {players.map((player) => {
+                      const packsRemaining = calculatePacksRemaining(player.id);
+                      const totalScore = calculatePlayerTotal(player.id);
+                      const isZeroPacks = packsRemaining === 0;
+                      const isCrossingMaxScore = totalScore >= (game.forPoints - 1);
+                      
+                      return (
+                        <th key={player.id} className={`px-4 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white min-w-24 ${
+                          isZeroPacks ? 'bg-red-100 dark:bg-red-900/30' : 
+                          isCrossingMaxScore ? 'bg-red-200 dark:bg-red-800/50' : ''
+                        }`}>
+                          <div>{player.name}</div>
+                          {game.reEntryAllowed && (
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => {
+                                const playerWithScores = playersWithScores.find(p => p.id === player.id);
+                                if (playerWithScores) {
+                                  handleReEntryClick(playerWithScores);
+                                }
+                              }}
+                              className="mt-1 text-xs"
+                            >
+                              Re-Entry
+                            </Button>
+                          )}
+                        </th>
+                      );
+                    })}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
@@ -408,6 +429,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                       placeholder="Enter Score"
                                       value={savedScore || ""}
                                       onChange={(e) => handleScoreChange(player.id, roundNumber, e.target.value)}
+                                      onFocus={(e) => e.target.select()}
                                       className="w-full text-center h-8 cursor-pointer"
                                     />
                                   </DropdownMenuTrigger>
@@ -460,6 +482,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                               placeholder="Enter Score"
                               value={scores[player.id]?.[currentRound] || ""}
                               onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
+                              onFocus={(e) => e.target.select()}
                               className="w-full text-center h-10 cursor-pointer"
                             />
                           </DropdownMenuTrigger>
@@ -525,10 +548,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Residual points rmng</td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Pack Safe Points</td>
                     {players.map((player) => (
                       <td key={player.id} className="px-4 py-3 text-center text-gray-700 dark:text-gray-300">
-                        {calculateResidualPoints(player.id)}
+                        {calculatePackSafePoints(player.id)}
                       </td>
                     ))}
                   </tr>

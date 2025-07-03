@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useTheme } from "@/components/theme-provider";
 import { useGameState } from "@/hooks/use-game-state";
 import { calculatePacksPerGame } from "@/lib/game-utils";
-import { Moon, Sun, ArrowLeft, Settings } from "lucide-react";
+import { Moon, Sun, ArrowLeft, Settings, ChevronDown, ChevronRight } from "lucide-react";
 
 export default function GameOptionsScreen() {
   const [, setLocation] = useLocation();
@@ -21,6 +22,7 @@ export default function GameOptionsScreen() {
   const [showCustomPackPoints, setShowCustomPackPoints] = useState(false);
   const [customMidPackPoints, setCustomMidPackPoints] = useState("");
   const [showCustomMidPackPoints, setShowCustomMidPackPoints] = useState(false);
+  const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -395,13 +397,133 @@ export default function GameOptionsScreen() {
                   />
                 </div>
 
+                {/* Advanced Settings - Collapsible */}
+                <div className="pt-4 border-t border-gray-700">
+                  <Collapsible open={advancedSettingsOpen} onOpenChange={setAdvancedSettingsOpen}>
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-between p-0 h-auto text-left hover:bg-transparent"
+                      >
+                        <h3 className="text-lg font-semibold text-white">Advanced Settings</h3>
+                        {advancedSettingsOpen ? (
+                          <ChevronDown className="h-4 w-4 text-white" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 text-white" />
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-4 space-y-4">
+                      {/* Joker Type */}
+                      <div className="flex items-center justify-between">
+                        <Label className="text-white">Joker Type</Label>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant={gameOptions.jokerType === "Normal" ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ jokerType: "Normal" })}
+                            className="px-3 py-1 text-sm"
+                            size="sm"
+                          >
+                            Normal
+                          </Button>
+                          <Button
+                            variant={gameOptions.jokerType === "Paplu" ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ jokerType: "Paplu" })}
+                            className="px-3 py-1 text-sm"
+                            size="sm"
+                          >
+                            Paplu
+                          </Button>
+                          <Button
+                            variant={gameOptions.jokerType === "Muflis" ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ jokerType: "Muflis" })}
+                            className="px-3 py-1 text-sm"
+                            size="sm"
+                          >
+                            Muflis
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Sequence Count */}
+                      <div className="flex items-center justify-between">
+                        <Label className="text-white">Sequence Count</Label>
+                        <div className="flex items-center space-x-2">
+                          {[1, 2].map((count) => (
+                            <Button
+                              key={count}
+                              variant={gameOptions.sequenceCount === count ? "default" : "outline"}
+                              onClick={() => updateGameOptions({ sequenceCount: count })}
+                              className="px-3 py-1 text-sm"
+                              size="sm"
+                            >
+                              {count}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Double Points Options */}
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-white">All Trips Double Points</Label>
+                          <Button
+                            variant={gameOptions.allTripsDoublePoints ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ allTripsDoublePoints: !gameOptions.allTripsDoublePoints })}
+                            className="px-3 py-1 text-sm"
+                            size="sm"
+                          >
+                            {gameOptions.allTripsDoublePoints ? "Yes" : "No"}
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Label className="text-white">All Seqs Double Points</Label>
+                          <Button
+                            variant={gameOptions.allSeqsDoublePoints ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ allSeqsDoublePoints: !gameOptions.allSeqsDoublePoints })}
+                            className="px-3 py-1 text-sm"
+                            size="sm"
+                          >
+                            {gameOptions.allSeqsDoublePoints ? "Yes" : "No"}
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Label className="text-white">All Jokers Full Money</Label>
+                          <Button
+                            variant={gameOptions.allJokersFullMoney ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ allJokersFullMoney: !gameOptions.allJokersFullMoney })}
+                            className="px-3 py-1 text-sm"
+                            size="sm"
+                          >
+                            {gameOptions.allJokersFullMoney ? "Yes" : "No"}
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Label className="text-white">Re-Entry Allowed</Label>
+                          <Button
+                            variant={gameOptions.reEntryAllowed ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ reEntryAllowed: !gameOptions.reEntryAllowed })}
+                            className="px-3 py-1 text-sm"
+                            size="sm"
+                          >
+                            {gameOptions.reEntryAllowed ? "Yes" : "No"}
+                          </Button>
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+
                 {/* Implied Game Rules */}
                 <div className="pt-4 border-t border-gray-700">
                   <h3 className="text-lg font-semibold text-white mb-3">Implied Game Rules</h3>
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                    <p className="text-sm text-blue-700 dark:text-blue-300">
-                      {packsPerGame} packs / game
-                    </p>
+                    <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                      <li>• Packs/Game = {packsPerGame}</li>
+                      {gameOptions.fullCountPoints !== 80 && (
+                        <li>• Full-Count points = Sum of all cards in player's hands</li>
+                      )}
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -409,18 +531,10 @@ export default function GameOptionsScreen() {
           </Card>
 
           {/* Action Buttons */}
-          <div className="flex space-x-4">
-            <Button
-              variant="outline"
-              onClick={() => setLocation("/advanced-settings")}
-              className="flex-1"
-            >
-              <Settings className="w-4 h-4 mr-2" />
-              Advanced Settings
-            </Button>
+          <div className="flex justify-center">
             <Button
               onClick={() => setLocation("/player-names")}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
             >
               Next
             </Button>

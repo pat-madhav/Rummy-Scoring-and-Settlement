@@ -406,14 +406,12 @@ export default function GameOptionsScreen() {
                         className="w-full justify-between p-0 h-auto text-left hover:bg-transparent"
                       >
                         <h3 className="text-lg font-semibold text-white">Advanced Settings</h3>
-                        {advancedSettingsOpen ? (
-                          <ChevronDown className="h-4 w-4 text-white" />
-                        ) : (
-                          <ChevronRight className="h-4 w-4 text-white" />
-                        )}
+                        <ChevronRight className={`h-4 w-4 text-white transition-transform duration-500 ease-in-out ${
+                          advancedSettingsOpen ? 'rotate-90' : 'rotate-0'
+                        }`} />
                       </Button>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="mt-4 space-y-4">
+                    <CollapsibleContent className="collapsible-content space-y-4 transition-all duration-700 ease-out overflow-hidden">
                       {/* Joker Type */}
                       <div className="flex items-center justify-between">
                         <Label className="text-white">Joker Type</Label>

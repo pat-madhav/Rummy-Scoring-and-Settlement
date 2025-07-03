@@ -198,6 +198,63 @@
     animation: slide-buttons-right 0.5s ease-in-out forwards;
   }
 
+  /* Advanced Settings slide animations */
+  @keyframes slide-down-gradient {
+    from {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      max-height: 500px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-up-gradient {
+    from {
+      max-height: 500px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-slide-down-gradient {
+    animation: slide-down-gradient 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    overflow: hidden;
+  }
+
+  .animate-slide-up-gradient {
+    animation: slide-up-gradient 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    overflow: hidden;
+  }
+
+  /* Collapsible content styling */
+  .collapsible-content {
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(180deg, 
+      rgba(59, 130, 246, 0.05) 0%, 
+      rgba(59, 130, 246, 0.02) 50%, 
+      transparent 100%);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .collapsible-content[data-state="open"] {
+    animation: slide-down-gradient 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .collapsible-content[data-state="closed"] {
+    animation: slide-up-gradient 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
   /* Enhanced button styling for better contrast */
   .btn-primary {
     @apply bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;

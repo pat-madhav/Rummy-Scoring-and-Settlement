@@ -268,16 +268,17 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if any rounds are completed (at least round 1 finished)
-    let roundCompleted = false;
+    // Check if round 1 is completed (all active players have scores for round 1)
+    let round1Completed = false;
     
-    if (currentRound > 1) {
+    if (currentRound >= 1) {
       // Check if all active players have scores for round 1
       const playersWithRound1Scores = activePlayers.filter(p => scores[p.id]?.[1]);
-      roundCompleted = playersWithRound1Scores.length === activePlayers.length;
+      round1Completed = playersWithRound1Scores.length === activePlayers.length;
     }
     
-    if (roundCompleted && activePlayers.length > 1) {
+    // Apply "Least" highlighting if round 1 is completed and there are multiple active players
+    if (round1Completed && activePlayers.length > 1) {
       const activeTotals = activePlayers.map(p => calculatePlayerTotal(p.id));
       const minTotal = Math.min(...activeTotals);
       

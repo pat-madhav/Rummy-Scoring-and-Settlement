@@ -42,33 +42,38 @@ export default function WelcomeScreen() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
-          <CardContent className="p-8">
-            <div className="text-center mb-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">
-                <span className="text-white text-3xl font-bold">♠♥</span>
+      <main className="flex-1 flex flex-col justify-between p-4 min-h-[calc(100vh-80px)]">
+        <div className="flex-1 flex items-center justify-center">
+          <Card className="w-full max-w-md animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
+            <CardContent className="p-8">
+              <div className="text-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">
+                  <span className="text-white text-3xl font-bold">♠♥</span>
+                </div>
+                <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Rummy</h2>
+                <h3 className="text-2xl font-medium text-gray-600 dark:text-gray-300 mb-4">Scorer</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-lg mb-8">Simple, FREE Rummy Scoring & Settlement</p>
+                
+                <div className="text-center mb-8">
+                  <p className="text-sm text-gray-400 dark:text-gray-500 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent font-medium">
+                    Created By: Pattabhi Madhavaram
+                  </p>
+                </div>
               </div>
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Rummy</h2>
-              <h3 className="text-2xl font-medium text-gray-600 dark:text-gray-300 mb-4">Scorer</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-lg mb-6">Simple, FREE Rummy Scoring & Settlement</p>
-              
-              <div className="text-center mb-6">
-                <p className="text-sm text-gray-400 dark:text-gray-500 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent font-medium">
-                  Created By: Pattabhi Madhavaram
-                </p>
-              </div>
-            </div>
-            
-            <Button
-              onClick={() => setLocation("/game-options")}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px]"
-            >
-              <Play className="w-5 h-5 mr-3" />
-              Begin
-            </Button>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Sticky Bottom Button */}
+        <div className="w-full max-w-md mx-auto pb-4">
+          <Button
+            onClick={() => setLocation("/game-options")}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px]"
+          >
+            <Play className="w-5 h-5 mr-3" />
+            Begin
+          </Button>
+        </div>
       </main>
     </div>
   );

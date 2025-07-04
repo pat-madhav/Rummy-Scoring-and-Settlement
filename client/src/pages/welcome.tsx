@@ -51,16 +51,24 @@ export default function WelcomeScreen() {
               </div>
               <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Rummy</h2>
               <h3 className="text-2xl font-medium text-gray-600 dark:text-gray-300 mb-4">Scorer</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-lg">Scoring & Settlement made simple</p>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">Simple, FREE Rummy Scoring & Settlement</p>
             </div>
             
-            <Button
-              onClick={() => setLocation("/game-options")}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px]"
-            >
-              <Play className="w-5 h-5 mr-3" />
-              Begin
-            </Button>
+            <div className="space-y-6">
+              <Button
+                onClick={() => setLocation("/game-options")}
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px]"
+              >
+                <Play className="w-5 h-5 mr-3" />
+                Begin
+              </Button>
+              
+              <div className="text-center">
+                <p className="text-sm text-gray-400 dark:text-gray-500 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent font-medium">
+                  Created By: Pattabhi Madhavaram
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </main>

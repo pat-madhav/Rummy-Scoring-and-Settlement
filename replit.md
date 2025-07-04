@@ -120,3 +120,5 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Added animated slidedown rules for Joker Type with conditional display based on selection
 - July 04, 2025: Implemented mobile-optimized sticky buttons for all pages with proper sizing and positioning
 - July 04, 2025: Added mobile-specific CSS optimizations for button groups, inputs, and content spacing
+- July 04, 2025: Updated Default Names functionality to only fill empty player name fields
+- July 04, 2025: Enhanced home page with "Simple, FREE Rummy Scoring & Settlement" caption and added creator attribution with gradient styling

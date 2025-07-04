@@ -37,9 +37,15 @@ export default function PlayerNamesScreen() {
   };
 
   const assignDefaultNames = () => {
-    const defaultNames = Array.from({ length: gameOptions.playerCount || 3 }, (_, i) => `Player ${i + 1}`);
-    setPlayerNames(defaultNames);
-    updateGameOptions({ playerNames: defaultNames });
+    const newNames = [...playerNames];
+    for (let i = 0; i < (gameOptions.playerCount || 3); i++) {
+      // Only fill empty fields
+      if (!newNames[i] || newNames[i].trim() === "") {
+        newNames[i] = `Player ${i + 1}`;
+      }
+    }
+    setPlayerNames(newNames);
+    updateGameOptions({ playerNames: newNames });
   };
 
   const handleStartGame = async () => {

@@ -85,6 +85,24 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     setOpenDropdowns(prev => ({ ...prev, [key]: false }));
   };
 
+  const closeAllDropdowns = () => {
+    setOpenDropdowns({});
+  };
+
+  // Click outside effect to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      // Don't close if clicking on dropdown content or input
+      if (!target.closest('.dropdown-container') && !target.closest('input[type="number"]')) {
+        closeAllDropdowns();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleScoreChange = (playerId: number, roundNumber: number, score: string) => {
     // Close dropdown when user starts typing
     closeDropdown(playerId, roundNumber);
@@ -683,92 +701,94 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       return (
                         <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
                           {showInput ? (
-                            <DropdownMenu 
-                              open={openDropdowns[getDropdownKey(player.id, currentRound)] || false}
-                              onOpenChange={(open) => {
-                                const key = getDropdownKey(player.id, currentRound);
-                                setOpenDropdowns(prev => ({ ...prev, [key]: open }));
-                              }}
-                            >
-                              <DropdownMenuTrigger asChild>
-                                <Input
-                                  type="number"
-                                  placeholder="Score"
-                                  value={scores[player.id]?.[currentRound] || ""}
-                                  onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
-                                  onFocus={(e) => {
-                                    e.target.select();
-                                    // Open dropdown when focusing on input
-                                    const key = getDropdownKey(player.id, currentRound);
-                                    setOpenDropdowns(prev => ({ ...prev, [key]: true }));
-                                  }}
-                                  onKeyDown={(e) => {
-                                    // Close dropdown when user starts typing (any key except tab, enter, escape)
-                                    if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-                                      closeDropdown(player.id, currentRound);
-                                    }
-                                  }}
-                                  className={`w-full text-center h-10 cursor-pointer text-sm min-w-20 ${!scores[player.id]?.[currentRound] ? "border-blue-500 dark:border-blue-400 border-2" : ""}`}
-                                />
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="center">
-                                <DropdownMenuItem
-                                  onClick={() => handleScoreOption(player.id, currentRound, "rummy")}
-                                >
-                                  Rummy (0)
-                                </DropdownMenuItem>
-                                {calculatePacksRemaining(player.id) > 0 ? (
-                                  <>
-                                    <DropdownMenuItem
-                                      onClick={() => handleScoreOption(player.id, currentRound, "pack")}
-                                    >
-                                      Pack ({game.packPoints})
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => handleScoreOption(player.id, currentRound, "mid-pack")}
-                                    >
-                                      Mid-Pack ({game.midPackPoints})
-                                    </DropdownMenuItem>
-                                  </>
-                                ) : (
-                                  <>
-                                    <DropdownMenuItem
-                                      disabled
-                                      onClick={() => {
-                                        toast({
-                                          title: "Compulsory",
-                                          description: "Player has no packs left - must play Rummy or Full-Count",
-                                          variant: "destructive",
-                                        });
-                                      }}
-                                      className="opacity-50 cursor-not-allowed"
-                                    >
-                                      Pack ({game.packPoints}) - Disabled
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      disabled
-                                      onClick={() => {
-                                        toast({
-                                          title: "Compulsory",
-                                          description: "Player has no packs left - must play Rummy or Full-Count",
-                                          variant: "destructive",
-                                        });
-                                      }}
-                                      className="opacity-50 cursor-not-allowed"
-                                    >
-                                      Mid-Pack ({game.midPackPoints}) - Disabled
-                                    </DropdownMenuItem>
-                                  </>
-                                )}
-                                {game.fullCountPoints === 80 && (
-                                  <DropdownMenuItem
-                                    onClick={() => handleScoreOption(player.id, currentRound, "full-count")}
+                            <div className="relative dropdown-container">
+                              <Input
+                                type="number"
+                                placeholder="Score"
+                                value={scores[player.id]?.[currentRound] || ""}
+                                onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
+                                onFocus={(e) => {
+                                  e.target.select();
+                                  // Open dropdown when focusing on input
+                                  const key = getDropdownKey(player.id, currentRound);
+                                  setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                }}
+                                onKeyDown={(e) => {
+                                  // Close dropdown when user starts typing (any key except tab, enter, escape)
+                                  if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                                    closeDropdown(player.id, currentRound);
+                                  }
+                                }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  // Open dropdown when clicking on input
+                                  const key = getDropdownKey(player.id, currentRound);
+                                  setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                }}
+                                className={`w-full text-center h-10 cursor-text text-sm min-w-20 ${!scores[player.id]?.[currentRound] ? "border-blue-500 dark:border-blue-400 border-2" : ""}`}
+                              />
+                              {openDropdowns[getDropdownKey(player.id, currentRound)] && (
+                                <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
+                                  <div
+                                    onClick={() => handleScoreOption(player.id, currentRound, "rummy")}
+                                    className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
                                   >
-                                    Full-Count ({game.fullCountPoints})
-                                  </DropdownMenuItem>
-                                )}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                                    Rummy (0)
+                                  </div>
+                                  {calculatePacksRemaining(player.id) > 0 ? (
+                                    <>
+                                      <div
+                                        onClick={() => handleScoreOption(player.id, currentRound, "pack")}
+                                        className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
+                                      >
+                                        Pack ({game.packPoints})
+                                      </div>
+                                      <div
+                                        onClick={() => handleScoreOption(player.id, currentRound, "mid-pack")}
+                                        className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
+                                      >
+                                        Mid-Pack ({game.midPackPoints})
+                                      </div>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <div
+                                        onClick={() => {
+                                          toast({
+                                            title: "Compulsory",
+                                            description: "Player has no packs left - must play Rummy or Full-Count",
+                                            variant: "destructive",
+                                          });
+                                        }}
+                                        className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
+                                      >
+                                        Pack ({game.packPoints}) - Disabled
+                                      </div>
+                                      <div
+                                        onClick={() => {
+                                          toast({
+                                            title: "Compulsory",
+                                            description: "Player has no packs left - must play Rummy or Full-Count",
+                                            variant: "destructive",
+                                          });
+                                        }}
+                                        className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
+                                      >
+                                        Mid-Pack ({game.midPackPoints}) - Disabled
+                                      </div>
+                                    </>
+                                  )}
+                                  {game.fullCountPoints === 80 && (
+                                    <div
+                                      onClick={() => handleScoreOption(player.id, currentRound, "full-count")}
+                                      className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    >
+                                      Full-Count ({game.fullCountPoints})
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           ) : (
                             <div className="text-center text-gray-400">-</div>
                           )}

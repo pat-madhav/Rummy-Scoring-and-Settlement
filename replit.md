@@ -144,3 +144,6 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Fixed player count option buttons sizing to match other option buttons in game rules page
 - July 04, 2025: Improved Pack Safe points display to show blank instead of "0" until player enters at least one score
 - July 04, 2025: Removed "Rummy Scorer" caption from top bar headers across all pages, now showing only logo
+- July 04, 2025: Moved app name "Rummy Scorer" from welcome page main content to status bar for consistency with other pages
+- July 04, 2025: Converted all status bar headings from blue-purple gradient to solid purple color for unified theme (text-purple-600 dark:text-purple-400)
+- July 04, 2025: Updated unselected buttons to use status bar background color (bg-white dark:bg-gray-800) for visual consistency across all option buttons

@@ -25,6 +25,13 @@ export default function WelcomeScreen() {
               </div>
             </div>
             
+            {/* Centered page title - always visible */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">
+                Rummy Scorer
+              </h1>
+            </div>
+            
             <div className="flex items-center space-x-3">
               <TutorialButton variant="minimal" />
               <Button
@@ -53,7 +60,7 @@ export default function WelcomeScreen() {
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">
                   <span className="text-white text-3xl font-bold">♠♥</span>
                 </div>
-                <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 main-title">Rummy Scorer</h2>
+
                 <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-[280px] mx-auto">Simple, FREE Rummy Scoring & Settlement</p>
                 
                 <div className="text-center mb-8">

@@ -187,7 +187,7 @@ export default function GameOptionsScreen() {
             
             {/* Centered page title - always visible */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">
                 Set Game Rules
               </h1>
             </div>
@@ -239,7 +239,11 @@ export default function GameOptionsScreen() {
                         key={count}
                         variant={gameOptions.playerCount === count ? "default" : "outline"}
                         onClick={() => handlePlayerCountChange(count)}
-                        className="px-3 py-1 text-sm"
+                        className={`px-3 py-1 text-sm ${
+                          gameOptions.playerCount === count 
+                            ? "" 
+                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
                         size="sm"
                       >
                         {count}
@@ -258,7 +262,11 @@ export default function GameOptionsScreen() {
                       <Button
                         variant={gameOptions.forPoints === 100 ? "default" : "outline"}
                         onClick={() => handlePointsChange(100)}
-                        className="px-3 py-1 text-sm transition-all duration-300"
+                        className={`px-3 py-1 text-sm transition-all duration-300 ${
+                          gameOptions.forPoints === 100 
+                            ? "" 
+                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
                         size="sm"
                       >
                         100
@@ -266,7 +274,11 @@ export default function GameOptionsScreen() {
                       <Button
                         variant={gameOptions.forPoints === 101 ? "default" : "outline"}
                         onClick={() => handlePointsChange(101)}
-                        className="px-3 py-1 text-sm transition-all duration-300"
+                        className={`px-3 py-1 text-sm transition-all duration-300 ${
+                          gameOptions.forPoints === 101 
+                            ? "" 
+                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
                         size="sm"
                       >
                         101
@@ -279,7 +291,7 @@ export default function GameOptionsScreen() {
                         <Button
                           variant="outline"
                           onClick={() => handlePointsChange("custom")}
-                          className="px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105"
+                          className="px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
                           size="sm"
                         >
                           Custom
@@ -329,7 +341,11 @@ export default function GameOptionsScreen() {
                       <Button
                         variant={gameOptions.packPoints === 25 && !showCustomPackPoints ? "default" : "outline"}
                         onClick={() => handlePackPointsChange(25)}
-                        className="px-3 py-1 text-sm transition-all duration-300"
+                        className={`px-3 py-1 text-sm transition-all duration-300 ${
+                          gameOptions.packPoints === 25 && !showCustomPackPoints
+                            ? "" 
+                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
                         size="sm"
                       >
                         25
@@ -342,7 +358,11 @@ export default function GameOptionsScreen() {
                         <Button
                           variant={gameOptions.packPoints !== 25 ? "default" : "outline"}
                           onClick={() => handlePackPointsChange("custom")}
-                          className="px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105"
+                          className={`px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105 ${
+                            gameOptions.packPoints !== 25 
+                              ? "" 
+                              : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          }`}
                           size="sm"
                         >
                           Custom
@@ -480,7 +500,11 @@ export default function GameOptionsScreen() {
                       <Button
                         variant={gameOptions.jokerType === "opposite" ? "default" : "outline"}
                         onClick={() => handleJokerTypeChange("opposite")}
-                        className="px-3 py-1 text-sm"
+                        className={`px-3 py-1 text-sm ${
+                          gameOptions.jokerType === "opposite" 
+                            ? "" 
+                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
                         size="sm"
                       >
                         Opposite
@@ -488,7 +512,11 @@ export default function GameOptionsScreen() {
                       <Button
                         variant={gameOptions.jokerType === "all" ? "default" : "outline"}
                         onClick={() => handleJokerTypeChange("all")}
-                        className="px-3 py-1 text-sm"
+                        className={`px-3 py-1 text-sm ${
+                          gameOptions.jokerType === "all" 
+                            ? "" 
+                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
                         size="sm"
                       >
                         All
@@ -505,7 +533,11 @@ export default function GameOptionsScreen() {
                           <Button
                             variant={gameOptions.allJokersType === "Closed" ? "default" : "outline"}
                             onClick={() => updateGameOptions({ allJokersType: "Closed" })}
-                            className="px-2 py-1 text-xs"
+                            className={`px-2 py-1 text-xs ${
+                              gameOptions.allJokersType === "Closed" 
+                                ? "" 
+                                : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            }`}
                             size="sm"
                           >
                             Closed
@@ -513,7 +545,11 @@ export default function GameOptionsScreen() {
                           <Button
                             variant={gameOptions.allJokersType === "Open" ? "default" : "outline"}
                             onClick={() => updateGameOptions({ allJokersType: "Open" })}
-                            className="px-2 py-1 text-xs"
+                            className={`px-2 py-1 text-xs ${
+                              gameOptions.allJokersType === "Open" 
+                                ? "" 
+                                : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            }`}
                             size="sm"
                           >
                             Open

@@ -86,7 +86,7 @@ export default function PostGameScreen({ gameId }: PostGameScreenProps) {
             
             {/* Centered page title - always visible */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">
                 Game Summary
               </h1>
             </div>

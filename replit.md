@@ -130,3 +130,5 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Implemented fade effect for sticky bottom buttons instead of border lines for better visual flow
 - July 04, 2025: Applied subtle fade effect consistently across all pages (game options, player names, settlement, post-game) for unified aesthetic
 - July 04, 2025: Reduced fade intensity and height to create more invisible bottom section as requested
+- July 04, 2025: Fixed critical player count bug where scoring page showed players from previous games instead of current selection
+- July 04, 2025: Updated startNewGame function to only create players up to the selected playerCount using .slice()

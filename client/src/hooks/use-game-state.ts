@@ -133,10 +133,13 @@ export function useGameState() {
 
     const game = await createGameMutation.mutateAsync(gameData);
     
-    const players = gameOptions.playerNames.map((name, index) => ({
-      name,
-      position: index + 1,
-    }));
+    // Only create players up to the selected player count
+    const players = gameOptions.playerNames
+      .slice(0, gameOptions.playerCount)
+      .map((name, index) => ({
+        name,
+        position: index + 1,
+      }));
 
     await createPlayerMutation.mutateAsync({ gameId: game.id, players });
     

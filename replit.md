@@ -128,3 +128,5 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Added dark background to game options settings sections matching player names page
 - July 04, 2025: Fixed spacing issue between player names card and sticky button section with proper gap
 - July 04, 2025: Implemented fade effect for sticky bottom buttons instead of border lines for better visual flow
+- July 04, 2025: Applied subtle fade effect consistently across all pages (game options, player names, settlement, post-game) for unified aesthetic
+- July 04, 2025: Reduced fade intensity and height to create more invisible bottom section as requested

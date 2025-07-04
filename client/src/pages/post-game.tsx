@@ -171,22 +171,29 @@ export default function PostGameScreen({ gameId }: PostGameScreenProps) {
           </Card>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex space-x-4 mt-8">
-          <Button
-            onClick={handleGoHome}
-            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Home
-          </Button>
-          <Button
-            onClick={handlePlayAgain}
-            className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Play Again
-          </Button>
+        {/* Add spacing before buttons */}
+        <div className="h-16"></div>
+
+        {/* Action Buttons with subtle fade effect */}
+        <div className="sticky bottom-0 p-4 -mx-4">
+          {/* Subtle fade gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-gray-50/60 via-gray-50/30 to-transparent dark:from-gray-900 dark:via-gray-900/60 dark:via-gray-900/30 dark:to-transparent pointer-events-none h-24"></div>
+          <div className="flex space-x-4 relative">
+            <Button
+              onClick={handleGoHome}
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Home
+            </Button>
+            <Button
+              onClick={handlePlayAgain}
+              className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Play Again
+            </Button>
+          </div>
         </div>
       </main>
     </div>

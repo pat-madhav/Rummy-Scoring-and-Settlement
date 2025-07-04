@@ -32,10 +32,11 @@ export default function SettlementScreen({ gameId }: SettlementScreenProps) {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  // Scroll detection effect
+  // Scroll detection effect with precise timing
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY > 50;
+      // Calculate precise scroll position to match page title disappearance
+      const scrolled = window.scrollY > 32;
       setIsScrolled(scrolled);
     };
 
@@ -95,19 +96,24 @@ export default function SettlementScreen({ gameId }: SettlementScreenProps) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
-      <header className={`bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-lg' : ''}`}>
+      <header className={`bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-500 ${isScrolled ? 'shadow-lg' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 relative">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm font-bold">♠</span>
               </div>
-              {/* Show page title in header when scrolled */}
-              {isScrolled && (
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white transition-opacity duration-300">
-                  Game Settlement
-                </h1>
-              )}
+            </div>
+            
+            {/* Centered page title with gradient merge effect */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <h1 className={`text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent transition-all duration-700 ease-in-out transform ${
+                isScrolled 
+                  ? 'opacity-100 translate-y-0 scale-100' 
+                  : 'opacity-0 translate-y-4 scale-95'
+              }`}>
+                Game Settlement
+              </h1>
             </div>
             
             <Button

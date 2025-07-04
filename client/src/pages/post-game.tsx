@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +15,7 @@ interface PostGameScreenProps {
 export default function PostGameScreen({ gameId }: PostGameScreenProps) {
   const [, setLocation] = useLocation();
   const { theme, setTheme } = useTheme();
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const gameStateQuery = useQuery({
     queryKey: ["/api/games", gameId, "state"],
@@ -28,6 +30,17 @@ export default function PostGameScreen({ gameId }: PostGameScreenProps) {
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
+
+  // Scroll detection effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 50;
+      setIsScrolled(scrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleGoHome = () => {
     setLocation("/");
@@ -71,13 +84,19 @@ export default function PostGameScreen({ gameId }: PostGameScreenProps) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+      <header className={`bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-lg' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm font-bold">♠</span>
               </div>
+              {/* Show page title in header when scrolled */}
+              {isScrolled && (
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white transition-opacity duration-300">
+                  Game Summary
+                </h1>
+              )}
             </div>
             
             <Button

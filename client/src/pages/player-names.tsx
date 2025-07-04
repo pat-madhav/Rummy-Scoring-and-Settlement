@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,10 +18,22 @@ export default function PlayerNamesScreen() {
   const [playerNames, setPlayerNames] = useState(
     gameOptions.playerNames || Array(gameOptions.playerCount || 3).fill("")
   );
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
+
+  // Scroll detection effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 50;
+      setIsScrolled(scrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleNameChange = (index: number, name: string) => {
     const newNames = [...playerNames];
@@ -84,13 +96,19 @@ export default function PlayerNamesScreen() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+      <header className={`bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-lg' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm font-bold">♠</span>
               </div>
+              {/* Show page title in header when scrolled */}
+              {isScrolled && (
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white transition-opacity duration-300">
+                  Enter Player Names
+                </h1>
+              )}
             </div>
             
             <div className="flex items-center space-x-4">

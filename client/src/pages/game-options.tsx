@@ -632,13 +632,10 @@ export default function GameOptionsScreen() {
             </CardContent>
           </Card>
 
-          {/* Add spacing between card and sticky button */}
-          <div className="h-16"></div>
-
           {/* Action Buttons - Mobile optimized with subtle fade effect */}
           <div className="sticky bottom-0 p-4 -mx-4">
-            {/* Subtle fade gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-gray-50/60 via-gray-50/30 to-transparent dark:from-gray-900 dark:via-gray-900/60 dark:via-gray-900/30 dark:to-transparent pointer-events-none h-24"></div>
+            {/* Subtle fade gradient overlay - starts above button section */}
+            <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
             <div className="flex justify-center relative">
               <Button
                 onClick={() => setLocation("/player-names")}

@@ -2,6 +2,7 @@ import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
+import { TutorialButton } from "@/components/tutorial/tutorial-button";
 import { Moon, Sun, Play } from "lucide-react";
 
 export default function WelcomeScreen() {
@@ -25,18 +26,21 @@ export default function WelcomeScreen() {
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">Rummy Scorer</h1>
             </div>
             
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5 text-yellow-500" />
-              ) : (
-                <Moon className="h-5 w-5 text-gray-600" />
-              )}
-            </Button>
+            <div className="flex items-center space-x-3">
+              <TutorialButton variant="minimal" />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-5 w-5 text-yellow-500" />
+                ) : (
+                  <Moon className="h-5 w-5 text-gray-600" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -50,7 +54,7 @@ export default function WelcomeScreen() {
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">
                   <span className="text-white text-3xl font-bold">♠♥</span>
                 </div>
-                <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Rummy</h2>
+                <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 main-title">Rummy</h2>
                 <h3 className="text-2xl font-medium text-gray-600 dark:text-gray-300 mb-4">Scorer</h3>
                 <p className="text-gray-500 dark:text-gray-400 text-lg mb-8">Simple, FREE Rummy Scoring & Settlement</p>
                 
@@ -68,7 +72,7 @@ export default function WelcomeScreen() {
         <div className="w-full max-w-md mx-auto pb-4">
           <Button
             onClick={() => setLocation("/game-options")}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px]"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px] start-game-btn"
           >
             <Play className="w-5 h-5 mr-3" />
             Begin

@@ -216,14 +216,14 @@ export default function GameOptionsScreen() {
         
         <div className="space-y-8">
           {/* Game Settings - Merged section with all settings */}
-          <Card className="bg-gray-900/50 border-gray-800">
+          <Card className="bg-gray-900/50 border-gray-800 main-settings-card">
             <CardHeader>
               <CardTitle className="text-xl font-bold text-white bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Main Settings</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {/* Number of players */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between" data-tutorial="players-section">
                   <Label className="text-white">Players</Label>
                   <div className="flex items-center space-x-2 mobile-button-group">
                     {[2, 3, 4, 5, 6, 7].map((count) => (

@@ -111,7 +111,7 @@ export default function PlayerNamesScreen() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-2xl mx-auto p-4 py-8">
+      <main className="max-w-2xl mx-auto p-4 py-8 main-content">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Enter Player Names</h2>
         
         <Card>
@@ -130,7 +130,7 @@ export default function PlayerNamesScreen() {
                       value={playerNames[index] || ""}
                       onChange={(e) => handleNameChange(index, e.target.value)}
                       onFocus={(e) => e.target.select()}
-                      className={`flex-1 ${isEmpty ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400" : ""}`}
+                      className={`flex-1 mobile-input ${isEmpty ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400" : ""}`}
                     />
                   </div>
                 );
@@ -154,11 +154,12 @@ export default function PlayerNamesScreen() {
               </Button>
             </div>
 
-            <div className="mt-4">
+            {/* Mobile-optimized Begin Game button */}
+            <div className="sticky bottom-0 bg-white dark:bg-gray-800 p-4 -mx-6 -mb-6 border-t border-gray-200 dark:border-gray-700">
               <Button
                 onClick={handleStartGame}
                 disabled={createGameMutation.isPending}
-                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-3 px-6 rounded-xl transition-all"
+                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg"
               >
                 {createGameMutation.isPending ? (
                   "Creating Game..."

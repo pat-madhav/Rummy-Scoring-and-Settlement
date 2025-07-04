@@ -51,12 +51,12 @@ export default function WelcomeScreen() {
               </div>
               <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Rummy</h2>
               <h3 className="text-2xl font-medium text-gray-600 dark:text-gray-300 mb-4">Scorer</h3>
-              <p className="text-gray-500 dark:text-gray-400 text-lg">Professional scoring made simple</p>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">Scoring & Settlement made simple</p>
             </div>
             
             <Button
               onClick={() => setLocation("/game-options")}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px]"
             >
               <Play className="w-5 h-5 mr-3" />
               Begin

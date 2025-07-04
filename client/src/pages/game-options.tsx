@@ -211,27 +211,27 @@ export default function GameOptionsScreen() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-2xl mx-auto p-4 py-8">
+      <main className="max-w-2xl mx-auto p-4 py-8 main-content">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Set Game Rules</h2>
         
         <div className="space-y-8">
           {/* Game Settings - Merged section with all settings */}
           <Card className="bg-gray-900/50 border-gray-800">
             <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white">Main Settings</CardTitle>
+              <CardTitle className="text-xl font-bold text-white bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Main Settings</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {/* Number of players */}
                 <div className="flex items-center justify-between">
                   <Label className="text-white">Number of players</Label>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 mobile-button-group">
                     {[2, 3, 4, 5, 6, 7].map((count) => (
                       <Button
                         key={count}
                         variant={gameOptions.playerCount === count ? "default" : "outline"}
                         onClick={() => handlePlayerCountChange(count)}
-                        className="px-3 py-1 text-sm"
+                        className="px-3 py-1 text-sm min-h-[48px] min-w-[48px]"
                         size="sm"
                       >
                         {count}
@@ -283,7 +283,7 @@ export default function GameOptionsScreen() {
                             placeholder="Enter points"
                             value={customPoints}
                             onChange={(e) => handleCustomPointsChange(e.target.value)}
-                            className="w-28 text-center text-sm h-8 transform transition-all duration-500 ease-in-out 
+                            className="w-28 text-center text-sm h-8 mobile-input transform transition-all duration-500 ease-in-out 
                                      bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
                                      border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
                                      animate-in slide-in-from-right-3 fade-in-0"
@@ -537,7 +537,7 @@ export default function GameOptionsScreen() {
                         variant="ghost"
                         className="w-full justify-between p-0 h-auto text-left hover:bg-transparent"
                       >
-                        <h3 className="text-lg font-semibold text-white">Advanced Settings</h3>
+                        <h3 className="text-xl font-bold text-white bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Advanced Settings</h3>
                         <ChevronRight className={`h-4 w-4 text-white transition-transform duration-500 ease-in-out ${
                           advancedSettingsOpen ? 'rotate-90' : 'rotate-0'
                         }`} />
@@ -595,7 +595,7 @@ export default function GameOptionsScreen() {
 
                 {/* Implied Game Rules */}
                 <div className="pt-4 border-t border-gray-700">
-                  <h3 className="text-lg font-semibold text-white mb-3">Implied Game Rules</h3>
+                  <h3 className="text-xl font-bold text-white bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
                       <li>• Packs/Game = {packsPerGame}</li>
@@ -608,6 +608,23 @@ export default function GameOptionsScreen() {
                           </ul>
                         </li>
                       )}
+
+                      {/* Joker Type Rules - Animated slidedown */}
+                      {gameOptions.jokerType === "opposite" && (
+                        <li className="transition-all duration-800 ease-out animate-in slide-in-from-bottom-3 fade-in-0">
+                          • Add 1 Joker card to 2 decks of playing cards
+                          <ul className="ml-4 mt-1 space-y-1">
+                            <li>› The Joker card is a replacement for the actual joker card</li>
+                            <li>› The Joker card does not serve as an actual Joker</li>
+                          </ul>
+                        </li>
+                      )}
+
+                      {gameOptions.jokerType === "all" && (
+                        <li className="transition-all duration-800 ease-out animate-in slide-in-from-bottom-3 fade-in-0">
+                          • Add 2 Joker cards to 2 decks of playing cards
+                        </li>
+                      )}
                     </ul>
                   </div>
                 </div>
@@ -615,14 +632,16 @@ export default function GameOptionsScreen() {
             </CardContent>
           </Card>
 
-          {/* Action Buttons */}
-          <div className="flex justify-center">
-            <Button
-              onClick={() => setLocation("/player-names")}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-            >
-              Next
-            </Button>
+          {/* Action Buttons - Mobile optimized */}
+          <div className="sticky bottom-0 bg-gray-50 dark:bg-gray-900 p-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex justify-center">
+              <Button
+                onClick={() => setLocation("/player-names")}
+                className="w-full max-w-md bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg"
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
       </main>

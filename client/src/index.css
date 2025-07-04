@@ -248,6 +248,37 @@
     animation: slide-down-gradient 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .main-content {
+      padding-bottom: 80px; /* Extra space for sticky buttons */
+    }
+    
+    /* Ensure buttons are properly sized for mobile */
+    .mobile-button {
+      min-height: 56px;
+      font-size: 1.125rem;
+      padding: 1rem 2rem;
+    }
+    
+    /* Mobile-specific card padding */
+    .mobile-card {
+      padding: 1rem;
+    }
+    
+    /* Mobile-specific input sizing */
+    .mobile-input {
+      font-size: 16px; /* Prevents zoom on iOS */
+      min-height: 48px;
+    }
+    
+    /* Mobile-specific button groups */
+    .mobile-button-group button {
+      min-width: 48px;
+      min-height: 48px;
+    }
+  }
+
   .collapsible-content[data-state="closed"] {
     animation: slide-up-gradient 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }

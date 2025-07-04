@@ -23,7 +23,6 @@ export default function WelcomeScreen() {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm font-bold">♠</span>
               </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Rummy Scorer</h1>
             </div>
             
             <div className="flex items-center space-x-3">
@@ -54,8 +53,7 @@ export default function WelcomeScreen() {
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">
                   <span className="text-white text-3xl font-bold">♠♥</span>
                 </div>
-                <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 main-title">Rummy</h2>
-                <h3 className="text-2xl font-medium text-gray-600 dark:text-gray-300 mb-4">Scorer</h3>
+                <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 main-title">Rummy Scorer</h2>
                 <p className="text-gray-500 dark:text-gray-400 text-lg mb-8">Simple, FREE Rummy Scoring & Settlement</p>
                 
                 <div className="text-center mb-8">

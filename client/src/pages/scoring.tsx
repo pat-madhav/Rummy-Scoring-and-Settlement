@@ -488,7 +488,6 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm font-bold">♠</span>
               </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Rummy Scorer</h1>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -834,7 +833,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       
                       return (
                         <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
-                          {!isPlayerOut && hasScores && packSafePoints === 0 ? "Pack Safe" : packSafePoints}
+                          {!hasScores ? "" : (!isPlayerOut && packSafePoints === 0 ? "Pack Safe" : packSafePoints)}
                         </td>
                       );
                     })}

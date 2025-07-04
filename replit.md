@@ -140,3 +140,7 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Implemented comprehensive gamified tutorial system with interactive tooltips, progress tracking, points system, and guided user onboarding across all pages
 - July 04, 2025: Fixed scoring screen textbox functionality - enabled proper cursor interaction, implemented click-outside dropdown closure, and removed DropdownMenuTrigger wrapping that prevented normal input behavior
 - July 04, 2025: Standardized button aesthetics across all pages with consistent styling - added minimum height (56px), enhanced gradients, improved shadows and transitions, and proper fade effects for mobile and desktop platforms
+- July 04, 2025: Updated welcome page heading to "Rummy Scorer" (removed subtitle "Scorer")
+- July 04, 2025: Fixed player count option buttons sizing to match other option buttons in game rules page
+- July 04, 2025: Improved Pack Safe points display to show blank instead of "0" until player enters at least one score
+- July 04, 2025: Removed "Rummy Scorer" caption from top bar headers across all pages, now showing only logo

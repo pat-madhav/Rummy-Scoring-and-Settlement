@@ -134,3 +134,5 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Updated startNewGame function to only create players up to the selected playerCount using .slice()
 - July 04, 2025: Fixed Pack Safe section to only show "Pack Safe" message when player has entered at least one score
 - July 04, 2025: Added sticky bottom positioning to scoring page buttons with fade effect for consistent mobile experience
+- July 04, 2025: Enhanced scoring textboxes with dual functionality - dropdown options appear on focus, typing closes dropdown and allows direct input
+- July 04, 2025: Implemented intelligent dropdown state management that maintains all validation rules for both option selection and manual typing

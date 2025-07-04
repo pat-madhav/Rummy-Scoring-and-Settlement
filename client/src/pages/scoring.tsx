@@ -34,6 +34,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerWithScores | null>(null);
   const [editingRound, setEditingRound] = useState<number | null>(null);
   const [hoveredRound, setHoveredRound] = useState<number | null>(null);
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isOpen
 
   const gameStateQuery = useQuery({
     queryKey: [`/api/games/${gameId}/state`],
@@ -76,7 +77,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
+  // Helper functions for dropdown management
+  const getDropdownKey = (playerId: number, roundNumber: number) => `${playerId}-${roundNumber}`;
+  
+  const closeDropdown = (playerId: number, roundNumber: number) => {
+    const key = getDropdownKey(playerId, roundNumber);
+    setOpenDropdowns(prev => ({ ...prev, [key]: false }));
+  };
+
   const handleScoreChange = (playerId: number, roundNumber: number, score: string) => {
+    // Close dropdown when user starts typing
+    closeDropdown(playerId, roundNumber);
+    
     // Validate score against full count setting
     const numScore = parseInt(score);
     if (!isNaN(numScore) && score !== "") {
@@ -368,7 +380,84 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         return;
     }
     
-    handleScoreChange(playerId, roundNumber, score);
+    // Close dropdown when option is selected
+    closeDropdown(playerId, roundNumber);
+    
+    // Set the score directly without triggering the onChange handler that would close dropdown again
+    setScores(prev => {
+      const newScores = {
+        ...prev,
+        [playerId]: {
+          ...prev[playerId],
+          [roundNumber]: score,
+        },
+      };
+      
+      // Validate score against full count setting and run game logic
+      const numScore = parseInt(score);
+      if (!isNaN(numScore) && score !== "") {
+        const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
+        if (numScore > maxScore) {
+          toast({
+            title: "Invalid Score",
+            description: `Enter a score less than full count (${maxScore})`,
+            variant: "destructive",
+          });
+          return prev;
+        }
+      }
+      
+      // Apply the same game logic as handleScoreChange
+      if (roundNumber === currentRound) {
+        const currentRoundScores = Object.keys(newScores).reduce((acc, playerIdStr) => {
+          const playerScore = newScores[playerIdStr]?.[roundNumber];
+          if (playerScore && playerScore !== "") {
+            acc[playerIdStr] = playerScore;
+          }
+          return acc;
+        }, {} as Record<string, string>);
+        
+        const allPlayers = players || [];
+        const playersNotOut = allPlayers.filter(p => {
+          const playerTotal = Object.values(newScores[p.id] || {}).reduce((total, score) => {
+            const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
+            return total + numScore;
+          }, 0);
+          return playerTotal < game.forPoints && p.isActive;
+        });
+        
+        const currentRoundPlayersWithScores = playersNotOut.filter(p => newScores[p.id]?.[roundNumber]);
+        
+        if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
+          const rummyScores = Object.values(currentRoundScores).filter(scoreStr => parseInt(scoreStr) === 0);
+          if (rummyScores.length === 0) {
+            toast({
+              title: "Invalid Round",
+              description: "At least one player must have a Rummy (0 points) in each round",
+              variant: "destructive",
+            });
+            return prev;
+          }
+          
+          if (rummyScores.length > 1) {
+            toast({
+              title: "Invalid Round",
+              description: "Only one player can have a Rummy (0 points) in each round",
+              variant: "destructive",
+            });
+            return prev;
+          }
+          
+          if (playersNotOut.length > 1) {
+            setTimeout(() => {
+              setCurrentRound(prev => prev + 1);
+            }, 500);
+          }
+        }
+      }
+      
+      return newScores;
+    });
   };
 
   return (
@@ -594,14 +683,31 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       return (
                         <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
                           {showInput ? (
-                            <DropdownMenu>
+                            <DropdownMenu 
+                              open={openDropdowns[getDropdownKey(player.id, currentRound)] || false}
+                              onOpenChange={(open) => {
+                                const key = getDropdownKey(player.id, currentRound);
+                                setOpenDropdowns(prev => ({ ...prev, [key]: open }));
+                              }}
+                            >
                               <DropdownMenuTrigger asChild>
                                 <Input
                                   type="number"
                                   placeholder="Score"
                                   value={scores[player.id]?.[currentRound] || ""}
                                   onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
-                                  onFocus={(e) => e.target.select()}
+                                  onFocus={(e) => {
+                                    e.target.select();
+                                    // Open dropdown when focusing on input
+                                    const key = getDropdownKey(player.id, currentRound);
+                                    setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                  }}
+                                  onKeyDown={(e) => {
+                                    // Close dropdown when user starts typing (any key except tab, enter, escape)
+                                    if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                                      closeDropdown(player.id, currentRound);
+                                    }
+                                  }}
                                   className={`w-full text-center h-10 cursor-pointer text-sm min-w-20 ${!scores[player.id]?.[currentRound] ? "border-blue-500 dark:border-blue-400 border-2" : ""}`}
                                 />
                               </DropdownMenuTrigger>

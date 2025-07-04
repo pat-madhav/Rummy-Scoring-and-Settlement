@@ -224,7 +224,7 @@ export default function GameOptionsScreen() {
               <div className="space-y-4">
                 {/* Number of players */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-white">Number of players</Label>
+                  <Label className="text-white">Players</Label>
                   <div className="flex items-center space-x-2 mobile-button-group">
                     {[2, 3, 4, 5, 6, 7].map((count) => (
                       <Button

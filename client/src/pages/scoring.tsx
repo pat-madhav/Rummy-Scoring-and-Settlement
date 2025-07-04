@@ -703,10 +703,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     {players.map((player) => {
                       const packSafePoints = calculatePackSafePoints(player.id);
                       const isPlayerOut = getPlayerState(player.id).state === "Out";
+                      const playerTotal = calculatePlayerTotal(player.id);
+                      const hasScores = playerTotal > 0; // Player has entered at least one score
                       
                       return (
                         <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
-                          {!isPlayerOut && packSafePoints === 0 ? "Pack Safe" : packSafePoints}
+                          {!isPlayerOut && hasScores && packSafePoints === 0 ? "Pack Safe" : packSafePoints}
                         </td>
                       );
                     })}
@@ -717,22 +719,26 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
           </CardContent>
         </Card>
 
-        {/* Action Buttons */}
-        <div className="flex space-x-4 mt-6">
-          <Button
-            onClick={handleSettleGame}
-            className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800"
-          >
-            <Calculator className="w-4 h-4 mr-2" />
-            Settle Game
-          </Button>
-          <Button
-            onClick={handleRestartGame}
-            className="flex-1 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Restart Game
-          </Button>
+        {/* Action Buttons - Mobile optimized with sticky bottom positioning */}
+        <div className="sticky bottom-0 p-4 -mx-4 mt-6">
+          {/* Subtle fade gradient overlay - starts above button section */}
+          <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
+          <div className="flex space-x-4 relative">
+            <Button
+              onClick={handleSettleGame}
+              className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800"
+            >
+              <Calculator className="w-4 h-4 mr-2" />
+              Settle Game
+            </Button>
+            <Button
+              onClick={handleRestartGame}
+              className="flex-1 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Restart Game
+            </Button>
+          </div>
         </div>
       </main>
 

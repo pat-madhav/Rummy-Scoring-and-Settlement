@@ -132,3 +132,5 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Reduced fade intensity and height to create more invisible bottom section as requested
 - July 04, 2025: Fixed critical player count bug where scoring page showed players from previous games instead of current selection
 - July 04, 2025: Updated startNewGame function to only create players up to the selected playerCount using .slice()
+- July 04, 2025: Fixed Pack Safe section to only show "Pack Safe" message when player has entered at least one score
+- July 04, 2025: Added sticky bottom positioning to scoring page buttons with fade effect for consistent mobile experience

@@ -614,8 +614,8 @@ export default function GameOptionsScreen() {
                         <li className="transition-all duration-800 ease-out animate-in slide-in-from-bottom-3 fade-in-0">
                           • Add 1 Joker card to 2 decks of playing cards
                           <ul className="ml-4 mt-1 space-y-1">
-                            <li>› The Joker card is a replacement for the actual joker card</li>
-                            <li>› The Joker card does not serve as an actual Joker</li>
+                            <li>› The Joker card 🃏 is a replacement for the actual joker picked by the player before the dealer</li>
+                            <li>› The Joker card 🃏 does not serve as a Joker</li>
                           </ul>
                         </li>
                       )}

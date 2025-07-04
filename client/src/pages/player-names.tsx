@@ -98,7 +98,7 @@ export default function PlayerNamesScreen() {
             
             {/* Centered page title - always visible */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Enter Player Names
               </h1>
             </div>

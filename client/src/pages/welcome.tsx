@@ -27,7 +27,7 @@ export default function WelcomeScreen() {
             
             {/* Centered page title - always visible */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h1 className="text-xl font-bold text-purple-600 dark:text-purple-400">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Rummy Scorer
               </h1>
             </div>
@@ -61,7 +61,14 @@ export default function WelcomeScreen() {
                   <span className="text-white text-3xl font-bold">♠♥</span>
                 </div>
 
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-[280px] mx-auto">Simple, FREE Rummy Scoring & Settlement</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 whitespace-nowrap">Simple, FREE Rummy Scoring & Settlement</p>
+                
+                {/* Three empty lines */}
+                <div className="mb-6">
+                  <br />
+                  <br />
+                  <br />
+                </div>
                 
                 <div className="text-center mb-8">
                   <p className="text-sm text-gray-400 dark:text-gray-500 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent font-medium">

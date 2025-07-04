@@ -147,3 +147,6 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Moved app name "Rummy Scorer" from welcome page main content to status bar for consistency with other pages
 - July 04, 2025: Converted all status bar headings from blue-purple gradient to solid purple color for unified theme (text-purple-600 dark:text-purple-400)
 - July 04, 2025: Updated unselected buttons to use status bar background color (bg-white dark:bg-gray-800) for visual consistency across all option buttons
+- July 04, 2025: Fixed home page layout - "Simple, FREE Rummy Scoring & Settlement" now appears on one line with whitespace-nowrap
+- July 04, 2025: Added 3 empty lines between caption and creator attribution on home page as requested
+- July 04, 2025: Converted all status bar headings to match Main Settings gradient style (bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent) for unified visual theme across entire app

@@ -175,7 +175,7 @@ export default function PlayerNamesScreen() {
             <Button
               onClick={handleStartGame}
               disabled={createGameMutation.isPending}
-              className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg"
+              className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px] start-game-btn"
             >
               {createGameMutation.isPending ? (
                 "Creating Game..."

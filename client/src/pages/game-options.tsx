@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/components/theme-provider";
 import { useGameState } from "@/hooks/use-game-state";
 import { calculatePacksPerGame } from "@/lib/game-utils";
-import { Moon, Sun, ArrowLeft, Settings, ChevronDown, ChevronRight } from "lucide-react";
+import { Moon, Sun, ArrowLeft, Settings, ChevronDown, ChevronRight, Play } from "lucide-react";
 
 export default function GameOptionsScreen() {
   const [, setLocation] = useLocation();
@@ -639,8 +639,9 @@ export default function GameOptionsScreen() {
             <div className="flex justify-center relative">
               <Button
                 onClick={() => setLocation("/player-names")}
-                className="w-full max-w-md bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg"
+                className="w-full max-w-md bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px]"
               >
+                <Play className="w-5 h-5 mr-2" />
                 Next
               </Button>
             </div>

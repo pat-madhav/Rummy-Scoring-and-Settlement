@@ -852,14 +852,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
           <div className="flex space-x-4 relative">
             <Button
               onClick={handleSettleGame}
-              className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800"
+              className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px] settlement-btn"
             >
               <Calculator className="w-4 h-4 mr-2" />
               Settle Game
             </Button>
             <Button
               onClick={handleRestartGame}
-              className="flex-1 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800"
+              className="flex-1 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px]"
             >
               <RotateCcw className="w-4 h-4 mr-2" />
               Restart Game

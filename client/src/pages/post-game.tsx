@@ -178,14 +178,14 @@ export default function PostGameScreen({ gameId }: PostGameScreenProps) {
           <div className="flex space-x-4 relative">
             <Button
               onClick={handleGoHome}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px]"
             >
               <Home className="w-4 h-4 mr-2" />
               Home
             </Button>
             <Button
               onClick={handlePlayAgain}
-              className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800"
+              className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px]"
             >
               <RotateCcw className="w-4 h-4 mr-2" />
               Play Again

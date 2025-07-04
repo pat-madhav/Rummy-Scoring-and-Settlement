@@ -54,7 +54,7 @@ export default function WelcomeScreen() {
                   <span className="text-white text-3xl font-bold">♠♥</span>
                 </div>
                 <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 main-title">Rummy Scorer</h2>
-                <p className="text-gray-500 dark:text-gray-400 text-lg mb-8">Simple, FREE Rummy Scoring & Settlement</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-[280px] mx-auto">Simple, FREE Rummy Scoring & Settlement</p>
                 
                 <div className="text-center mb-8">
                   <p className="text-sm text-gray-400 dark:text-gray-500 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent font-medium">

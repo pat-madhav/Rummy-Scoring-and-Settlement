@@ -121,7 +121,7 @@ export default function PlayerNamesScreen() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-2xl mx-auto p-4 py-8 main-content">
+      <main className="max-w-2xl mx-auto p-4 py-8 pb-24 main-content">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Enter Player Names</h2>
         
         <Card>
@@ -166,28 +166,29 @@ export default function PlayerNamesScreen() {
           </CardContent>
         </Card>
 
-        {/* Mobile-optimized Begin Game button with subtle fade effect */}
-        <div className="sticky bottom-0 p-4 -mx-4">
-          {/* Subtle fade gradient overlay - starts above button section */}
-          <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
-          <div className="max-w-2xl mx-auto relative">
-            <Button
-              onClick={handleStartGame}
-              disabled={createGameMutation.isPending}
-              className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px] start-game-btn"
-            >
-              {createGameMutation.isPending ? (
-                "Creating Game..."
-              ) : (
-                <>
-                  <Play className="w-5 h-5 mr-2" />
-                  Begin Game
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
       </main>
+
+      {/* Fixed Bottom Button - Independent of main content */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 z-50">
+        {/* Subtle fade gradient overlay - starts above button section */}
+        <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
+        <div className="max-w-2xl mx-auto relative">
+          <Button
+            onClick={handleStartGame}
+            disabled={createGameMutation.isPending}
+            className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px] start-game-btn"
+          >
+            {createGameMutation.isPending ? (
+              "Creating Game..."
+            ) : (
+              <>
+                <Play className="w-5 h-5 mr-2" />
+                Begin Game
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

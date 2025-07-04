@@ -30,7 +30,7 @@ export default function GameOptionsScreen() {
   const [jokerSubOptionsAnimation, setJokerSubOptionsAnimation] = useState("");
   const [showOppositeJokerOptions, setShowOppositeJokerOptions] = useState(false);
   const [oppositeJokerOptionsAnimation, setOppositeJokerOptionsAnimation] = useState("");
-  const [isScrolled, setIsScrolled] = useState(false);
+
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -99,18 +99,7 @@ export default function GameOptionsScreen() {
 
   const packsPerGame = calculatePacksPerGame(gameOptions.forPoints || 101, gameOptions.packPoints || 25);
 
-  // Scroll detection effect with precise timing
-  useEffect(() => {
-    const handleScroll = () => {
-      // Calculate precise scroll position to match page title disappearance
-      // Original title is at ~96px from top (header 64px + margin 32px)
-      const scrolled = window.scrollY > 32;
-      setIsScrolled(scrolled);
-    };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Handle Full-Count rule animation
   useEffect(() => {
@@ -187,7 +176,7 @@ export default function GameOptionsScreen() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
-      <header className={`bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-500 ${isScrolled ? 'shadow-lg' : ''}`}>
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 relative">
             <div className="flex items-center space-x-3">
@@ -196,13 +185,9 @@ export default function GameOptionsScreen() {
               </div>
             </div>
             
-            {/* Centered page title with gradient merge effect */}
+            {/* Centered page title - always visible */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h1 className={`text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent transition-all duration-700 ease-in-out transform ${
-                isScrolled 
-                  ? 'opacity-100 translate-y-0 scale-100' 
-                  : 'opacity-0 translate-y-4 scale-95'
-              }`}>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Set Game Rules
               </h1>
             </div>
@@ -236,7 +221,6 @@ export default function GameOptionsScreen() {
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto p-4 py-8 pb-24 main-content">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Set Game Rules</h2>
         
         <div className="space-y-8">
           {/* Game Settings - Merged section with all settings */}

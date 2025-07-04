@@ -16,7 +16,7 @@ interface SettlementScreenProps {
 export default function SettlementScreen({ gameId }: SettlementScreenProps) {
   const [, setLocation] = useLocation();
   const { theme, setTheme } = useTheme();
-  const [isScrolled, setIsScrolled] = useState(false);
+
 
   const gameStateQuery = useQuery({
     queryKey: ["/api/games", gameId, "state"],
@@ -32,17 +32,7 @@ export default function SettlementScreen({ gameId }: SettlementScreenProps) {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  // Scroll detection effect with precise timing
-  useEffect(() => {
-    const handleScroll = () => {
-      // Calculate precise scroll position to match page title disappearance
-      const scrolled = window.scrollY > 32;
-      setIsScrolled(scrolled);
-    };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const handleNewGame = () => {
     setLocation("/");
@@ -96,7 +86,7 @@ export default function SettlementScreen({ gameId }: SettlementScreenProps) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
-      <header className={`bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-500 ${isScrolled ? 'shadow-lg' : ''}`}>
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 relative">
             <div className="flex items-center space-x-3">
@@ -105,13 +95,9 @@ export default function SettlementScreen({ gameId }: SettlementScreenProps) {
               </div>
             </div>
             
-            {/* Centered page title with gradient merge effect */}
+            {/* Centered page title - always visible */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h1 className={`text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent transition-all duration-700 ease-in-out transform ${
-                isScrolled 
-                  ? 'opacity-100 translate-y-0 scale-100' 
-                  : 'opacity-0 translate-y-4 scale-95'
-              }`}>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Game Settlement
               </h1>
             </div>
@@ -134,7 +120,7 @@ export default function SettlementScreen({ gameId }: SettlementScreenProps) {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto p-4 py-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Game Settlement</h2>
+
         
         <div className="grid md:grid-cols-2 gap-8">
           {/* Final Scores */}

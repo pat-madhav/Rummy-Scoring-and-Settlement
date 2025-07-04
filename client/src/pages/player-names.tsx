@@ -49,8 +49,13 @@ export default function PlayerNamesScreen() {
   };
 
   const handleStartGame = async () => {
-    const validNames = playerNames.filter(name => name.trim());
-    if (validNames.length < (gameOptions.playerCount || 3)) {
+    const expectedPlayerCount = gameOptions.playerCount || 3;
+    // Only take names up to the selected player count
+    const validNames = playerNames
+      .slice(0, expectedPlayerCount)
+      .filter(name => name && name.trim());
+    
+    if (validNames.length < expectedPlayerCount) {
       toast({
         title: "Missing Player Names",
         description: "Please enter names for all players",
@@ -143,7 +148,7 @@ export default function PlayerNamesScreen() {
               })}
             </div>
 
-            <div className="mt-6 flex space-x-3">
+            <div className="mt-6 flex space-x-3 mb-6">
               <Button
                 onClick={clearAllNames}
                 variant="outline"
@@ -159,26 +164,28 @@ export default function PlayerNamesScreen() {
                 Default Names
               </Button>
             </div>
-
-            {/* Mobile-optimized Begin Game button */}
-            <div className="sticky bottom-0 bg-white dark:bg-gray-800 p-4 -mx-6 -mb-6 border-t border-gray-200 dark:border-gray-700">
-              <Button
-                onClick={handleStartGame}
-                disabled={createGameMutation.isPending}
-                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg"
-              >
-                {createGameMutation.isPending ? (
-                  "Creating Game..."
-                ) : (
-                  <>
-                    <Play className="w-5 h-5 mr-2" />
-                    Begin Game
-                  </>
-                )}
-              </Button>
-            </div>
           </CardContent>
         </Card>
+
+        {/* Mobile-optimized Begin Game button - Outside card for proper spacing */}
+        <div className="sticky bottom-0 bg-gray-50 dark:bg-gray-900 p-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="max-w-2xl mx-auto">
+            <Button
+              onClick={handleStartGame}
+              disabled={createGameMutation.isPending}
+              className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg"
+            >
+              {createGameMutation.isPending ? (
+                "Creating Game..."
+              ) : (
+                <>
+                  <Play className="w-5 h-5 mr-2" />
+                  Begin Game
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
       </main>
     </div>
   );

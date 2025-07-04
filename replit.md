@@ -122,3 +122,6 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Added mobile-specific CSS optimizations for button groups, inputs, and content spacing
 - July 04, 2025: Updated Default Names functionality to only fill empty player name fields
 - July 04, 2025: Enhanced home page with "Simple, FREE Rummy Scoring & Settlement" caption and added creator attribution with gradient styling
+- July 04, 2025: Fixed player names page alignment issues by moving Clear/Default buttons outside sticky section
+- July 04, 2025: Fixed player count mismatch bug by ensuring only selected number of players are created in game
+- July 04, 2025: Updated Joker Type rule with joker emoji and clearer timing description

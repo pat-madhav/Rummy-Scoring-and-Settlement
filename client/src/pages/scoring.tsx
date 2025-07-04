@@ -35,6 +35,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [editingRound, setEditingRound] = useState<number | null>(null);
   const [hoveredRound, setHoveredRound] = useState<number | null>(null);
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isOpen
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const gameStateQuery = useQuery({
     queryKey: [`/api/games/${gameId}/state`],
@@ -101,6 +102,17 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Scroll detection for seamless header transitions
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 100;
+      setIsScrolled(scrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Shared function to check if round should advance and validate
@@ -447,13 +459,19 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+      <header className={`bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-lg' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm font-bold">♠</span>
               </div>
+              {/* Show page title in header when scrolled */}
+              {isScrolled && (
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white transition-opacity duration-300">
+                  Scoring
+                </h1>
+              )}
             </div>
             
             <div className="flex items-center space-x-4">
@@ -503,7 +521,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead>
+                <thead className="sticky top-16 z-40">
                   {/* Player Names Row */}
                   <tr className="bg-gray-50 dark:bg-gray-700">
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Round</th>
@@ -581,64 +599,97 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                           const displayScore = savedScore ? parseInt(savedScore) : 0;
                           return (
                             <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
-                              {isEditing && getPlayerState(player.id).state !== "Out" ? (
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Input
-                                      type="number"
-                                      placeholder="Score"
-                                      value={savedScore || ""}
-                                      onChange={(e) => handleScoreChange(player.id, roundNumber, e.target.value)}
-                                      onFocus={(e) => e.target.select()}
-                                      className="w-full text-center h-8 cursor-pointer text-sm"
-                                    />
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="center">
-                                    <DropdownMenuItem
-                                      onClick={() => handleScoreOption(player.id, roundNumber, "rummy")}
-                                    >
-                                      Rummy (0)
-                                    </DropdownMenuItem>
-                                    {calculatePacksRemaining(player.id) > 0 ? (
-                                      <>
-                                        <DropdownMenuItem
-                                          onClick={() => handleScoreOption(player.id, roundNumber, "pack")}
-                                        >
-                                          Pack ({game.packPoints})
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          onClick={() => handleScoreOption(player.id, roundNumber, "mid-pack")}
-                                        >
-                                          Mid-Pack ({game.midPackPoints})
-                                        </DropdownMenuItem>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <DropdownMenuItem
-                                          disabled
-                                          className="opacity-50 cursor-not-allowed"
-                                        >
-                                          Pack ({game.packPoints}) - Disabled
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          disabled
-                                          className="opacity-50 cursor-not-allowed"
-                                        >
-                                          Mid-Pack ({game.midPackPoints}) - Disabled
-                                        </DropdownMenuItem>
-                                      </>
-                                    )}
-                                    {game.fullCountPoints === 80 && (
-                                      <DropdownMenuItem
-                                        onClick={() => handleScoreOption(player.id, roundNumber, "full-count")}
+                              {getPlayerState(player.id).state !== "Out" ? (
+                                <div className="relative dropdown-container">
+                                  <Input
+                                    type="number"
+                                    placeholder="Score"
+                                    value={savedScore || ""}
+                                    onChange={(e) => handleScoreChange(player.id, roundNumber, e.target.value)}
+                                    onFocus={(e) => {
+                                      e.target.select();
+                                      // Open dropdown when focusing on input
+                                      const key = getDropdownKey(player.id, roundNumber);
+                                      setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                    }}
+                                    onKeyDown={(e) => {
+                                      // Close dropdown when user starts typing (any key except tab, enter, escape)
+                                      if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                                        closeDropdown(player.id, roundNumber);
+                                      }
+                                    }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      // Open dropdown when clicking on input
+                                      const key = getDropdownKey(player.id, roundNumber);
+                                      setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                    }}
+                                    className="w-full text-center h-8 cursor-text text-sm"
+                                  />
+                                  {openDropdowns[getDropdownKey(player.id, roundNumber)] && (
+                                    <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
+                                      <div
+                                        onClick={() => handleScoreOption(player.id, roundNumber, "rummy")}
+                                        className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
                                       >
-                                        Full-Count ({game.fullCountPoints})
-                                      </DropdownMenuItem>
-                                    )}
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
+                                        Rummy (0)
+                                      </div>
+                                      {calculatePacksRemaining(player.id) > 0 ? (
+                                        <>
+                                          <div
+                                            onClick={() => handleScoreOption(player.id, roundNumber, "pack")}
+                                            className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
+                                          >
+                                            Pack ({game.packPoints})
+                                          </div>
+                                          <div
+                                            onClick={() => handleScoreOption(player.id, roundNumber, "mid-pack")}
+                                            className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
+                                          >
+                                            Mid-Pack ({game.midPackPoints})
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <div
+                                            onClick={() => {
+                                              toast({
+                                                title: "Compulsory",
+                                                description: "Player with 0 packs left cannot pack or mid-pack",
+                                                variant: "destructive",
+                                              });
+                                            }}
+                                            className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
+                                          >
+                                            Pack ({game.packPoints})
+                                          </div>
+                                          <div
+                                            onClick={() => {
+                                              toast({
+                                                title: "Compulsory",
+                                                description: "Player with 0 packs left cannot pack or mid-pack",
+                                                variant: "destructive",
+                                              });
+                                            }}
+                                            className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
+                                          >
+                                            Mid-Pack ({game.midPackPoints})
+                                          </div>
+                                        </>
+                                      )}
+                                      {game.fullCountPoints === 80 && (
+                                        <div
+                                          onClick={() => handleScoreOption(player.id, roundNumber, "full-count")}
+                                          className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        >
+                                          Full-Count ({game.fullCountPoints})
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
                               ) : (
-                                <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border">
+                                <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm">
                                   {displayScore}
                                 </div>
                               )}
@@ -727,7 +778,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                         }}
                                         className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                       >
-                                        Pack ({game.packPoints}) - Disabled
+                                        Pack ({game.packPoints})
                                       </div>
                                       <div
                                         onClick={() => {
@@ -739,7 +790,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                         }}
                                         className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                       >
-                                        Mid-Pack ({game.midPackPoints}) - Disabled
+                                        Mid-Pack ({game.midPackPoints})
                                       </div>
                                     </>
                                   )}
@@ -764,7 +815,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 </tbody>
                 
                 {/* Summary Rows */}
-                <tfoot className="bg-gray-50 dark:bg-gray-700">
+                <tfoot className="bg-gray-50 dark:bg-gray-700 sticky bottom-24 z-30">
                   <tr className="font-semibold border-t-4 border-b-4 border-gray-800 dark:border-gray-200">
                     <td className="px-4 py-3 text-lg font-bold text-gray-900 dark:text-white">Total</td>
                     {players.map((player) => (
@@ -782,7 +833,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Packs Remaining</td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Packs</td>
                     {players.map((player) => (
                       <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePacksRemaining(player.id)}
@@ -790,7 +841,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Pack Safe Points</td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Pack Safe</td>
                     {players.map((player) => {
                       const packSafePoints = calculatePackSafePoints(player.id);
                       const isPlayerOut = getPlayerState(player.id).state === "Out";
@@ -799,7 +850,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       
                       return (
                         <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
-                          {!hasScores ? "" : (!isPlayerOut && packSafePoints === 0 ? "Pack Safe" : packSafePoints)}
+                          {!hasScores ? "" : (!isPlayerOut && packSafePoints === 0 ? "Yes" : packSafePoints)}
                         </td>
                       );
                     })}
@@ -815,7 +866,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       <div className="fixed bottom-0 left-0 right-0 p-4 z-50">
         {/* Subtle fade gradient overlay - starts above button section */}
         <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
-        <div className="flex space-x-4 relative max-w-2xl mx-auto">
+        <div className="flex space-x-4 relative max-w-2xl mx-auto mb-16">
           <Button
             onClick={handleSettleGame}
             className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px] settlement-btn"

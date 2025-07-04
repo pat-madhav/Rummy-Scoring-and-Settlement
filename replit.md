@@ -125,3 +125,6 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Fixed player names page alignment issues by moving Clear/Default buttons outside sticky section
 - July 04, 2025: Fixed player count mismatch bug by ensuring only selected number of players are created in game
 - July 04, 2025: Updated Joker Type rule with joker emoji and clearer timing description
+- July 04, 2025: Added dark background to game options settings sections matching player names page
+- July 04, 2025: Fixed spacing issue between player names card and sticky button section with proper gap
+- July 04, 2025: Implemented fade effect for sticky bottom buttons instead of border lines for better visual flow

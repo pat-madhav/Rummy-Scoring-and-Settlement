@@ -167,9 +167,14 @@ export default function PlayerNamesScreen() {
           </CardContent>
         </Card>
 
-        {/* Mobile-optimized Begin Game button - Outside card for proper spacing */}
-        <div className="sticky bottom-0 bg-gray-50 dark:bg-gray-900 p-4 -mx-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="max-w-2xl mx-auto">
+        {/* Add spacing between card and sticky button */}
+        <div className="h-20"></div>
+
+        {/* Mobile-optimized Begin Game button with fade effect */}
+        <div className="sticky bottom-0 p-4 -mx-4">
+          {/* Fade gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-gray-50/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 dark:to-transparent pointer-events-none"></div>
+          <div className="max-w-2xl mx-auto relative">
             <Button
               onClick={handleStartGame}
               disabled={createGameMutation.isPending}

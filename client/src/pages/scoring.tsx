@@ -103,6 +103,63 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Shared function to check if round should advance and validate
+  const checkRoundAdvancement = (newScores: Record<number, Record<number, string>>, roundNumber: number) => {
+    if (roundNumber !== currentRound) return;
+    
+    const currentRoundScores = Object.keys(newScores).reduce((acc, playerIdStr) => {
+      const playerScore = newScores[playerIdStr]?.[roundNumber];
+      if (playerScore && playerScore !== "") {
+        acc[playerIdStr] = playerScore;
+      }
+      return acc;
+    }, {} as Record<string, string>);
+    
+    // If all active players have entered scores for current round, validate and advance
+    const allPlayers = players || [];
+    const playersNotOut = allPlayers.filter(p => {
+      const playerTotal = Object.values(newScores[p.id] || {}).reduce((total, score) => {
+        const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
+        return total + numScore;
+      }, 0);
+      return playerTotal < game.forPoints && p.isActive;
+    });
+    
+    const currentRoundPlayersWithScores = playersNotOut.filter(p => newScores[p.id]?.[roundNumber]);
+    
+    if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
+      // Validate minimum 1 Rummy rule
+      const rummyScores = Object.values(currentRoundScores).filter(scoreStr => parseInt(scoreStr) === 0);
+      if (rummyScores.length === 0) {
+        toast({
+          title: "Invalid Round",
+          description: "At least one player must have a Rummy (0 points) in each round",
+          variant: "destructive",
+        });
+        return false;
+      }
+      
+      // Validate maximum 1 Rummy rule
+      if (rummyScores.length > 1) {
+        toast({
+          title: "Invalid Round",
+          description: "Only one player can have a Rummy (0 points) in each round",
+          variant: "destructive",
+        });
+        return false;
+      }
+      
+      // Check if game should continue (more than 1 player remaining)
+      if (playersNotOut.length > 1) {
+        // Debounce round advancement to prevent duplicate creation
+        setTimeout(() => {
+          setCurrentRound(prev => prev + 1);
+        }, 500);
+      }
+    }
+    return true;
+  };
+
   const handleScoreChange = (playerId: number, roundNumber: number, score: string) => {
     // Close dropdown when user starts typing
     closeDropdown(playerId, roundNumber);
@@ -130,58 +187,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       };
       
-      // Check if current round is complete (all players have entered scores)
-      if (roundNumber === currentRound) {
-        const currentRoundScores = Object.keys(newScores).reduce((acc, playerIdStr) => {
-          const playerScore = newScores[playerIdStr]?.[roundNumber];
-          if (playerScore && playerScore !== "") {
-            acc[playerIdStr] = playerScore;
-          }
-          return acc;
-        }, {} as Record<string, string>);
-        
-        // If all active players have entered scores for current round, validate and advance
-        const allPlayers = players || [];
-        const playersNotOut = allPlayers.filter(p => {
-          const playerTotal = Object.values(newScores[p.id] || {}).reduce((total, score) => {
-            const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
-            return total + numScore;
-          }, 0);
-          return playerTotal < game.forPoints && p.isActive;
-        });
-        
-        const currentRoundPlayersWithScores = playersNotOut.filter(p => newScores[p.id]?.[roundNumber]);
-        
-        if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
-          // Validate minimum 1 Rummy rule
-          const rummyScores = Object.values(currentRoundScores).filter(scoreStr => parseInt(scoreStr) === 0);
-          if (rummyScores.length === 0) {
-            toast({
-              title: "Invalid Round",
-              description: "At least one player must have a Rummy (0 points) in each round",
-              variant: "destructive",
-            });
-            return prev;
-          }
-          
-          // Validate maximum 1 Rummy rule
-          if (rummyScores.length > 1) {
-            toast({
-              title: "Invalid Round",
-              description: "Only one player can have a Rummy (0 points) in each round",
-              variant: "destructive",
-            });
-            return prev;
-          }
-          
-          // Check if game should continue (more than 1 player remaining)
-          if (playersNotOut.length > 1) {
-            // Debounce round advancement to prevent premature creation
-            setTimeout(() => {
-              setCurrentRound(prev => prev + 1);
-            }, 500);
-          }
-        }
+      // Check if round should advance
+      const shouldContinue = checkRoundAdvancement(newScores, roundNumber);
+      if (!shouldContinue) {
+        return prev;
       }
       
       return newScores;
@@ -401,7 +410,21 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Close dropdown when option is selected
     closeDropdown(playerId, roundNumber);
     
-    // Set the score directly without triggering the onChange handler that would close dropdown again
+    // Validate score against full count setting
+    const numScore = parseInt(score);
+    if (!isNaN(numScore) && score !== "") {
+      const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
+      if (numScore > maxScore) {
+        toast({
+          title: "Invalid Score",
+          description: `Enter a score less than full count (${maxScore})`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
+    // Set the score directly and use shared round advancement logic
     setScores(prev => {
       const newScores = {
         ...prev,
@@ -411,67 +434,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       };
       
-      // Validate score against full count setting and run game logic
-      const numScore = parseInt(score);
-      if (!isNaN(numScore) && score !== "") {
-        const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
-        if (numScore > maxScore) {
-          toast({
-            title: "Invalid Score",
-            description: `Enter a score less than full count (${maxScore})`,
-            variant: "destructive",
-          });
-          return prev;
-        }
-      }
-      
-      // Apply the same game logic as handleScoreChange
-      if (roundNumber === currentRound) {
-        const currentRoundScores = Object.keys(newScores).reduce((acc, playerIdStr) => {
-          const playerScore = newScores[playerIdStr]?.[roundNumber];
-          if (playerScore && playerScore !== "") {
-            acc[playerIdStr] = playerScore;
-          }
-          return acc;
-        }, {} as Record<string, string>);
-        
-        const allPlayers = players || [];
-        const playersNotOut = allPlayers.filter(p => {
-          const playerTotal = Object.values(newScores[p.id] || {}).reduce((total, score) => {
-            const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
-            return total + numScore;
-          }, 0);
-          return playerTotal < game.forPoints && p.isActive;
-        });
-        
-        const currentRoundPlayersWithScores = playersNotOut.filter(p => newScores[p.id]?.[roundNumber]);
-        
-        if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
-          const rummyScores = Object.values(currentRoundScores).filter(scoreStr => parseInt(scoreStr) === 0);
-          if (rummyScores.length === 0) {
-            toast({
-              title: "Invalid Round",
-              description: "At least one player must have a Rummy (0 points) in each round",
-              variant: "destructive",
-            });
-            return prev;
-          }
-          
-          if (rummyScores.length > 1) {
-            toast({
-              title: "Invalid Round",
-              description: "Only one player can have a Rummy (0 points) in each round",
-              variant: "destructive",
-            });
-            return prev;
-          }
-          
-          if (playersNotOut.length > 1) {
-            setTimeout(() => {
-              setCurrentRound(prev => prev + 1);
-            }, 500);
-          }
-        }
+      // Use shared function to check round advancement (prevents duplicate rounds)
+      const shouldContinue = checkRoundAdvancement(newScores, roundNumber);
+      if (!shouldContinue) {
+        return prev;
       }
       
       return newScores;

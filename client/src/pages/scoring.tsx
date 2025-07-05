@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
@@ -79,30 +79,42 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   };
 
   // Helper functions for dropdown management
-  const getDropdownKey = (playerId: number, roundNumber: number) => `${playerId}-${roundNumber}`;
+  const getDropdownKey = useCallback((playerId: number, roundNumber: number) => `${playerId}-${roundNumber}`, []);
   
-  const closeDropdown = (playerId: number, roundNumber: number) => {
+  const closeDropdown = useCallback((playerId: number, roundNumber: number) => {
     const key = getDropdownKey(playerId, roundNumber);
-    setOpenDropdowns(prev => ({ ...prev, [key]: false }));
-  };
+    setTimeout(() => {
+      setOpenDropdowns(prev => ({ ...prev, [key]: false }));
+    }, 0);
+  }, [getDropdownKey]);
 
-  const closeAllDropdowns = () => {
-    setOpenDropdowns({});
-  };
+  const closeAllDropdowns = useCallback(() => {
+    setTimeout(() => {
+      setOpenDropdowns({});
+    }, 0);
+  }, []);
+
+  const openSingleDropdown = useCallback((playerId: number, roundNumber: number) => {
+    const key = getDropdownKey(playerId, roundNumber);
+    // Use setTimeout to avoid React rendering conflicts
+    setTimeout(() => {
+      setOpenDropdowns({ [key]: true });
+    }, 0);
+  }, [getDropdownKey]);
 
   // Click outside effect to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       // Don't close if clicking on dropdown content or input
-      if (!target.closest('.dropdown-container') && !target.closest('input[type="number"]')) {
+      if (!target.closest('.dropdown-container')) {
         closeAllDropdowns();
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [closeAllDropdowns]);
 
 
 
@@ -600,8 +612,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     onFocus={(e) => {
                                       e.target.select();
                                       // Close all dropdowns first, then open this one
-                                      const key = getDropdownKey(player.id, roundNumber);
-                                      setOpenDropdowns({ [key]: true });
+                                      openSingleDropdown(player.id, roundNumber);
                                     }}
                                     onKeyDown={(e) => {
                                       // Close dropdown when user starts typing (any key except tab, enter, escape)
@@ -612,8 +623,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       // Close all dropdowns first, then open this one
-                                      const key = getDropdownKey(player.id, roundNumber);
-                                      setOpenDropdowns({ [key]: true });
+                                      openSingleDropdown(player.id, roundNumber);
                                     }}
                                     className="w-full text-center h-8 cursor-text text-sm"
                                   />

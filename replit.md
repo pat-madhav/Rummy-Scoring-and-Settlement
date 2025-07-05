@@ -154,3 +154,4 @@ Preferred communication style: Simple, everyday language.
 - July 05, 2025: Fixed bottom button overlap with tutorial help button by adding pb-20 padding to all pages (welcome, game-options, player-names, scoring, settlement, post-game) to prevent visual conflicts
 - July 05, 2025: Completely removed gamified tutorial system including TutorialProvider, TutorialButton, Tutorial components, and all tutorial-related imports from App.tsx and individual pages to eliminate floating question mark button
 - July 05, 2025: Standardized all main navigation buttons across app flow to use consistent positioning (fixed bottom-6) and sizing (70% horizontal width) with uniform button dimensions and styling for optimal mobile navigation experience
+- July 05, 2025: Fixed scoring page dropdown behavior to close all other dropdown menus when opening a new score input box, preventing multiple dropdowns from staying open simultaneously

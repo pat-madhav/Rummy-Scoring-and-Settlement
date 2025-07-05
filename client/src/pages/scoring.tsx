@@ -599,9 +599,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     onChange={(e) => handleScoreChange(player.id, roundNumber, e.target.value)}
                                     onFocus={(e) => {
                                       e.target.select();
-                                      // Open dropdown when focusing on input
+                                      // Close all dropdowns first, then open this one
                                       const key = getDropdownKey(player.id, roundNumber);
-                                      setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                      setOpenDropdowns({ [key]: true });
                                     }}
                                     onKeyDown={(e) => {
                                       // Close dropdown when user starts typing (any key except tab, enter, escape)
@@ -611,9 +611,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     }}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      // Open dropdown when clicking on input
+                                      // Close all dropdowns first, then open this one
                                       const key = getDropdownKey(player.id, roundNumber);
-                                      setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                      setOpenDropdowns({ [key]: true });
                                     }}
                                     className="w-full text-center h-8 cursor-text text-sm"
                                   />

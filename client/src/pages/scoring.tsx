@@ -611,34 +611,36 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
                         <td className="px-4 py-3 font-medium text-gray-900 dark:text-white relative">
-                          {roundNumber}
-                          {/* Edit and Remove buttons - appear on hover/tap */}
-                          {(hoveredRound === roundNumber || isEditing) && (
-                            <div className="absolute left-full top-1/2 transform -translate-y-1/2 flex flex-col gap-1 ml-2">
-                              <Button
-                                size="sm"
-                                className="bg-orange-400 hover:bg-orange-500 text-white text-xs px-2 py-1 h-5 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setEditingRound(isEditing ? null : roundNumber);
-                                }}
-                              >
-                                {isEditing ? "Save" : "Edit"}
-                              </Button>
-                              {!isEditing && (
+                          <div className="flex items-center justify-between w-full">
+                            <span>{roundNumber}</span>
+                            {/* Edit and Remove buttons - appear on hover/tap */}
+                            {(hoveredRound === roundNumber || isEditing) && (
+                              <div className="flex flex-col gap-1">
                                 <Button
                                   size="sm"
-                                  className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 h-5 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                                  className="bg-orange-400 hover:bg-orange-500 text-white text-xs px-2 py-1 h-5 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleRemoveRound(roundNumber);
+                                    setEditingRound(isEditing ? null : roundNumber);
                                   }}
                                 >
-                                  Remove
+                                  {isEditing ? "Save" : "Edit"}
                                 </Button>
-                              )}
-                            </div>
-                          )}
+                                {!isEditing && (
+                                  <Button
+                                    size="sm"
+                                    className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 h-5 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleRemoveRound(roundNumber);
+                                    }}
+                                  >
+                                    Remove
+                                  </Button>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </td>
                         {players.map((player) => {
                           const savedScore = scores[player.id]?.[roundNumber];

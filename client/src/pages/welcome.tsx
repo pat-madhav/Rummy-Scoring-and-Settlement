@@ -84,7 +84,7 @@ export default function WelcomeScreen() {
         <div className="sticky bottom-0 p-4 -mx-4">
           {/* Subtle fade gradient overlay - starts above button section */}
           <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
-          <div className="w-full max-w-md mx-auto relative pr-20">
+          <div className="w-full max-w-sm mx-auto relative mr-20">
             <Button
               onClick={() => setLocation("/game-options")}
               className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px] start-game-btn"

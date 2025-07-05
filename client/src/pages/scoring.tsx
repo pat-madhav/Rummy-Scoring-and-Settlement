@@ -611,14 +611,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
                         <td className="px-4 py-3 font-medium text-gray-900 dark:text-white relative">
-                          <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center justify-between w-full h-full">
                             <span className="mr-2">{roundNumber}</span>
                             {/* Edit and Remove buttons - appear on hover/tap */}
                             {(hoveredRound === roundNumber || isEditing) && (
-                              <div className="flex flex-col gap-1">
+                              <div className="flex flex-col gap-0.5 h-full justify-center">
                                 <Button
                                   size="sm"
-                                  className="bg-orange-400 hover:bg-orange-500 text-white text-xs px-2 py-1 h-5 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                                  className="bg-orange-400 hover:bg-orange-500 text-white text-xs px-1.5 py-0.5 h-4 rounded-full shadow-md transition-all duration-200 border border-white dark:border-gray-800"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setEditingRound(isEditing ? null : roundNumber);
@@ -629,7 +629,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                 {!isEditing && (
                                   <Button
                                     size="sm"
-                                    className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 h-5 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                                    className="bg-red-500 hover:bg-red-600 text-white text-xs px-1.5 py-0.5 h-4 rounded-full shadow-md transition-all duration-200 border border-white dark:border-gray-800"
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       handleRemoveRound(roundNumber);

@@ -527,12 +527,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 <thead>
                   {/* Player Names Row */}
                   <tr className="bg-gray-50 dark:bg-gray-700">
-                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Round</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Round</th>
                     {players.map((player) => {
                       const playerState = getPlayerState(player.id);
                       
                       return (
-                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-gray-900 dark:text-white min-w-24 ${playerState.color}`}>
+                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent min-w-24 ${playerState.color}`}>
                           <div>{player.name}</div>
                           {gameStateQuery.data?.game.reEntryAllowed && (
                             <Button
@@ -818,7 +818,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 {/* Summary Rows */}
                 <tfoot className="bg-gray-50 dark:bg-gray-700">
                   <tr className="font-semibold border-t-4 border-b-4 border-gray-800 dark:border-gray-200">
-                    <td className="px-4 py-3 text-lg font-bold text-gray-900 dark:text-white">Total</td>
+                    <td className="px-4 py-3 text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Total</td>
                     {players.map((player) => (
                       <td key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
                         {calculatePlayerTotal(player.id)}
@@ -826,7 +826,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Points left</td>
+                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Points left</td>
                     {players.map((player) => (
                       <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePointsLeft(player.id)}
@@ -834,7 +834,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Packs</td>
+                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Packs</td>
                     {players.map((player) => (
                       <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePacksRemaining(player.id)}
@@ -842,7 +842,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">Pack Safe</td>
+                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Pack Safe</td>
                     {players.map((player) => {
                       const packSafePoints = calculatePackSafePoints(player.id);
                       const isPlayerOut = getPlayerState(player.id).state === "Out";

@@ -156,3 +156,4 @@ Preferred communication style: Simple, everyday language.
 - July 05, 2025: Standardized all main navigation buttons across app flow to use consistent positioning (fixed bottom-6) and sizing (70% horizontal width) with uniform button dimensions and styling for optimal mobile navigation experience
 - July 05, 2025: Fixed scoring page dropdown behavior to close all other dropdown menus when opening a new score input box, preventing multiple dropdowns from staying open simultaneously
 - July 05, 2025: Implemented comprehensive dropdown management fix using useCallback hooks and setTimeout to prevent React rendering conflicts that were causing dropdowns to remain open randomly
+- July 05, 2025: Applied blue gradient color styling to all scoring page table headers (Round, player names, Total, Points left, Packs, Pack Safe) for consistent visual theme

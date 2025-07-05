@@ -2,7 +2,6 @@ import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
-import { TutorialButton } from "@/components/tutorial/tutorial-button";
 import { Moon, Sun, Play } from "lucide-react";
 
 export default function WelcomeScreen() {
@@ -33,7 +32,6 @@ export default function WelcomeScreen() {
             </div>
             
             <div className="flex items-center space-x-3">
-              <TutorialButton variant="minimal" />
               <Button
                 variant="ghost"
                 size="icon"

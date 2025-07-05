@@ -4,9 +4,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
-import { TutorialProvider } from "@/components/tutorial/tutorial-provider";
-import { Tutorial } from "@/components/tutorial/tutorial";
-import { TutorialButton } from "@/components/tutorial/tutorial-button";
 import WelcomeScreen from "@/pages/welcome";
 import GameOptionsScreen from "@/pages/game-options";
 import AdvancedSettingsScreen from "@/pages/advanced-settings";
@@ -35,14 +32,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="rummy-scorer-theme">
-        <TutorialProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Router />
-            <Tutorial />
-            <TutorialButton variant="floating" />
-          </TooltipProvider>
-        </TutorialProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

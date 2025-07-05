@@ -614,10 +614,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                           {roundNumber}
                           {/* Edit and Remove buttons - appear on hover/tap */}
                           {(hoveredRound === roundNumber || isEditing) && (
-                            <div className="absolute -right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
+                            <div className="absolute left-full top-1/2 transform -translate-y-1/2 flex flex-col gap-1 ml-2">
                               <Button
                                 size="sm"
-                                className="bg-orange-400 hover:bg-orange-500 text-white text-xs px-2 py-1 h-6 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                                className="bg-orange-400 hover:bg-orange-500 text-white text-xs px-2 py-1 h-5 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setEditingRound(isEditing ? null : roundNumber);
@@ -628,7 +628,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                               {!isEditing && (
                                 <Button
                                   size="sm"
-                                  className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 h-6 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                                  className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 h-5 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     handleRemoveRound(roundNumber);

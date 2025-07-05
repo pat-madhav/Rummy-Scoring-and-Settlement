@@ -296,6 +296,35 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     setLocation(`/settlement/${gameId}`);
   };
 
+  const handleRemoveRound = (roundNumber: number) => {
+    if (confirm(`Are you sure you want to remove Round ${roundNumber}? This will delete all scores for this round and cannot be undone.`)) {
+      // Remove scores for this round from all players
+      setScores(prevScores => {
+        const newScores = { ...prevScores };
+        Object.keys(newScores).forEach(playerIdStr => {
+          const playerId = parseInt(playerIdStr);
+          if (newScores[playerId] && newScores[playerId][roundNumber]) {
+            delete newScores[playerId][roundNumber];
+          }
+        });
+        return newScores;
+      });
+
+      // If removing the last completed round, move back to that round
+      if (roundNumber === currentRound - 1) {
+        setCurrentRound(currentRound - 1);
+      }
+      
+      setEditingRound(null);
+      setHoveredRound(null);
+      
+      toast({
+        title: "Round Removed",
+        description: `Round ${roundNumber} has been deleted`,
+      });
+    }
+  };
+
   // Helper functions for player state
   const getPlayerState = (playerId: number) => {
     const totalScore = calculatePlayerTotal(playerId);
@@ -583,18 +612,32 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       >
                         <td className="px-4 py-3 font-medium text-gray-900 dark:text-white relative">
                           {roundNumber}
-                          {/* Edit button - appears on hover/tap */}
+                          {/* Edit and Remove buttons - appear on hover/tap */}
                           {(hoveredRound === roundNumber || isEditing) && (
-                            <Button
-                              size="sm"
-                              className="absolute -right-2 top-1/2 transform -translate-y-1/2 bg-orange-400 hover:bg-orange-500 text-white text-xs px-2 py-1 h-6 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingRound(isEditing ? null : roundNumber);
-                              }}
-                            >
-                              {isEditing ? "Save" : "Edit"}
-                            </Button>
+                            <div className="absolute -right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
+                              <Button
+                                size="sm"
+                                className="bg-orange-400 hover:bg-orange-500 text-white text-xs px-2 py-1 h-6 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditingRound(isEditing ? null : roundNumber);
+                                }}
+                              >
+                                {isEditing ? "Save" : "Edit"}
+                              </Button>
+                              {!isEditing && (
+                                <Button
+                                  size="sm"
+                                  className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 h-6 rounded-full shadow-md transition-all duration-200 border-2 border-white dark:border-gray-800"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemoveRound(roundNumber);
+                                  }}
+                                >
+                                  Remove
+                                </Button>
+                              )}
+                            </div>
                           )}
                         </td>
                         {players.map((player) => {

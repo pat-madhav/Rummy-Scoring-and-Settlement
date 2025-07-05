@@ -157,3 +157,4 @@ Preferred communication style: Simple, everyday language.
 - July 05, 2025: Fixed scoring page dropdown behavior to close all other dropdown menus when opening a new score input box, preventing multiple dropdowns from staying open simultaneously
 - July 05, 2025: Implemented comprehensive dropdown management fix using useCallback hooks and setTimeout to prevent React rendering conflicts that were causing dropdowns to remain open randomly
 - July 05, 2025: Applied blue gradient color styling to all scoring page table headers (Round, player names, Total, Points left, Packs, Pack Safe) for consistent visual theme
+- July 05, 2025: Added "Remove" button functionality for completed rounds with red styling, appears alongside "Edit" button on hover, includes confirmation dialog and automatic current round adjustment

@@ -581,7 +581,7 @@ export default function GameOptionsScreen() {
                         variant="ghost"
                         className="w-full justify-between p-0 h-auto text-left hover:bg-transparent"
                       >
-                        <h3 className="text-xl font-bold text-white bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Advanced Settings</h3>
+                        <h3 className="text-xl font-bold text-white bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Advanced Settings</h3>
                         <ChevronRight className={`h-4 w-4 text-white transition-transform duration-500 ease-in-out ${
                           advancedSettingsOpen ? 'rotate-90' : 'rotate-0'
                         }`} />
@@ -639,7 +639,7 @@ export default function GameOptionsScreen() {
 
                 {/* Implied Game Rules */}
                 <div className="pt-4 border-t border-gray-700">
-                  <h3 className="text-xl font-bold text-white bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
+                  <h3 className="text-xl font-bold text-white bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
                       <li>• Packs/Game = {packsPerGame}</li>

@@ -150,3 +150,4 @@ Preferred communication style: Simple, everyday language.
 - July 04, 2025: Fixed home page layout - "Simple, FREE Rummy Scoring & Settlement" now appears on one line with whitespace-nowrap
 - July 04, 2025: Added 3 empty lines between caption and creator attribution on home page as requested
 - July 04, 2025: Converted all status bar headings to match Main Settings gradient style (bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent) for unified visual theme across entire app
+- July 05, 2025: Updated "Advanced Settings" and "Implied Game Rules" headings in Set Game Rules page to match Main Settings blue gradient style for complete visual consistency

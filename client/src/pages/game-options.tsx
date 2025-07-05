@@ -680,10 +680,10 @@ export default function GameOptionsScreen() {
       </main>
 
       {/* Fixed Bottom Button - Independent of main content */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 z-50 pb-20">
+      <div className="fixed bottom-0 left-0 right-0 p-4 z-50">
         {/* Subtle fade gradient overlay - starts above button section */}
         <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
-        <div className="flex justify-center relative">
+        <div className="flex justify-center relative pr-20">
           <Button
             onClick={() => setLocation("/player-names")}
             className="w-full max-w-md bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-lg min-h-[56px]"

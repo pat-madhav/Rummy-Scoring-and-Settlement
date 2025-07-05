@@ -612,7 +612,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       >
                         <td className="px-4 py-3 font-medium text-gray-900 dark:text-white relative">
                           <div className="flex items-center justify-between w-full">
-                            <span>{roundNumber}</span>
+                            <span className="mr-2">{roundNumber}</span>
                             {/* Edit and Remove buttons - appear on hover/tap */}
                             {(hoveredRound === roundNumber || isEditing) && (
                               <div className="flex flex-col gap-1">

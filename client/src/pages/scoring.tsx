@@ -854,10 +854,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       </main>
 
       {/* Fixed Bottom Buttons - Independent of main content */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-4 z-50 pb-20">
         {/* Subtle fade gradient overlay - starts above button section */}
         <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
-        <div className="flex space-x-4 relative max-w-2xl mx-auto pr-20">
+        <div className="flex space-x-4 relative max-w-2xl mx-auto">
           <Button
             onClick={handleSettleGame}
             className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px] settlement-btn"

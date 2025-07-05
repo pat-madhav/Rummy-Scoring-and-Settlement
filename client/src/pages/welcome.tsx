@@ -81,7 +81,7 @@ export default function WelcomeScreen() {
         </div>
         
         {/* Sticky Bottom Button */}
-        <div className="sticky bottom-0 p-4 -mx-4">
+        <div className="sticky bottom-0 p-4 -mx-4 pb-20">
           {/* Subtle fade gradient overlay - starts above button section */}
           <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
           <div className="w-full max-w-md mx-auto relative">

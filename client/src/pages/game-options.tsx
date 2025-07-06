@@ -582,7 +582,7 @@ export default function GameOptionsScreen() {
               </div>
 
               {/* Advanced Settings */}
-              <div className="py-4 border-t border-gray-200 dark:border-gray-700">
+              <div className={`pt-4 ${advancedSettingsOpen ? 'pb-4' : 'pb-0'} border-t border-gray-200 dark:border-gray-700 transition-all duration-300`}>
                 <Collapsible open={advancedSettingsOpen} onOpenChange={setAdvancedSettingsOpen}>
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
                     <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Advanced Settings</h3>

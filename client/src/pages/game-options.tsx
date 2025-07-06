@@ -582,14 +582,14 @@ export default function GameOptionsScreen() {
               </div>
 
               {/* Advanced Settings */}
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="py-4 border-t border-gray-200 dark:border-gray-700">
                 <Collapsible open={advancedSettingsOpen} onOpenChange={setAdvancedSettingsOpen}>
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
                     <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Advanced Settings</h3>
-                    <ChevronRight className={`h-5 w-5 text-gray-500 transition-transform group-data-[state=open]:rotate-90`} />
+                    <ChevronRight className={`h-5 w-5 text-gray-500 transition-all duration-300 group-data-[state=open]:rotate-90`} />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-4">
-                    <div className="bg-gray-800 dark:bg-gray-900 rounded-lg p-4 space-y-4">
+                  <CollapsibleContent className="transition-all duration-500 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-up-2 data-[state=open]:slide-down-2">
+                    <div className="bg-gray-800 dark:bg-gray-900 rounded-lg p-4 space-y-4 mt-4">
                       {/* Buy-in Amount */}
                       <div className="flex items-center justify-between">
                         <Label className="text-gray-300 dark:text-gray-300">Buy-in Amount</Label>
@@ -638,7 +638,7 @@ export default function GameOptionsScreen() {
               </div>
 
               {/* Implied Game Rules */}
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="py-4 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg overflow-visible">
                   <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2 overflow-visible">

@@ -180,3 +180,5 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Added shaded background pane to Advanced Settings section matching screenshot design
 - July 06, 2025: Fixed "All Jokers Full Money" to default to toggled on (true) instead of off when "Opposite" joker type is selected
 - July 06, 2025: Fixed Full-Count rule text visibility issue in Implied Game Rules - changed from nested list to block spans with proper whitespace handling to ensure complete text display
+- July 06, 2025: Improved UI spacing - changed Advanced Settings and Implied Game Rules sections to use consistent py-4 (padding top and bottom) for equal spacing
+- July 06, 2025: Enhanced Advanced Settings animation - added smooth glide-down effect with duration-500 and slide animations for seamless expansion/collapse

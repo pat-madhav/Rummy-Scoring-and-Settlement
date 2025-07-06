@@ -730,7 +730,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                           return (
                             <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
                               {isEditing ? (
-                                !isPlayerOutBeforeThisRound ? (
+                                // For the current round, allow all players to enter scores
+                                // For previous rounds, only allow players who weren't out before that round
+                                (roundNumber === currentRound || !isPlayerOutBeforeThisRound) ? (
                                   <div className="relative dropdown-container">
                                     <Input
                                       type="number"

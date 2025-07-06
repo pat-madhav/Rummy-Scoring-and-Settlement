@@ -159,6 +159,25 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     const currentRoundPlayersWithScores = playersNotOut.filter(p => newScores[p.id]?.[roundNumber]);
     
     if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
+      // First check if any player has an invalid score (red highlighted inputs)
+      for (const player of playersNotOut) {
+        const score = newScores[player.id]?.[roundNumber];
+        if (score && score !== "") {
+          const numScore = parseInt(score);
+          // Check for invalid scores (1 or any score that would be marked as invalid)
+          if (!isNaN(numScore) && numScore < 2 && numScore !== 0) {
+            // Don't advance round if any player has an invalid score
+            return false;
+          }
+          // Check maximum score
+          const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
+          if (numScore > maxScore) {
+            // Don't advance round if any player has an invalid score
+            return false;
+          }
+        }
+      }
+      
       // Validate minimum 1 Rummy rule
       const rummyScores = Object.values(currentRoundScores).filter(scoreStr => parseInt(scoreStr) === 0);
       if (rummyScores.length === 0) {

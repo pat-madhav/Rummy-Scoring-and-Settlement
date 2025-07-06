@@ -712,10 +712,25 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         {players.map((player) => {
                           const savedScore = scores[player.id]?.[roundNumber];
                           const displayScore = savedScore ? parseInt(savedScore) : 0;
+                          
+                          // Check if player was out at the time of this round
+                          const wasPlayerOutAtRound = (playerId: number, checkRound: number) => {
+                            let cumulativeScore = 0;
+                            for (let r = 1; r < checkRound; r++) {
+                              const roundScore = scores[playerId]?.[r];
+                              if (roundScore) {
+                                cumulativeScore += parseInt(roundScore);
+                              }
+                            }
+                            return cumulativeScore >= game.forPoints;
+                          };
+                          
+                          const isPlayerOutAtThisRound = wasPlayerOutAtRound(player.id, roundNumber);
+                          
                           return (
                             <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
                               {isEditing ? (
-                                getPlayerState(player.id).state !== "Out" ? (
+                                !isPlayerOutAtThisRound ? (
                                   <div className="relative dropdown-container">
                                     <Input
                                       type="number"
@@ -814,14 +829,17 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   )}
                                 </div>
                                 ) : (
+                                  <div className="text-center text-gray-400">-</div>
+                                )
+                              ) : (
+                                // Display logic for non-editing mode
+                                isPlayerOutAtThisRound ? (
+                                  <div className="text-center text-gray-400">-</div>
+                                ) : (
                                   <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm">
                                     {displayScore}
                                   </div>
                                 )
-                              ) : (
-                                <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm">
-                                  {displayScore}
-                                </div>
                               )}
                             </td>
                           );

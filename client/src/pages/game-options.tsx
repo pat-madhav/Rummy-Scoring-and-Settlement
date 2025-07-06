@@ -589,7 +589,9 @@ export default function GameOptionsScreen() {
                     <ChevronRight className={`h-5 w-5 text-gray-500 transition-all duration-300 ${advancedSettingsOpen ? 'rotate-90' : ''}`} />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
-                    <div className="bg-gray-800 dark:bg-gray-900 rounded-lg p-4 space-y-4 mt-4">
+                    <div className={`bg-gray-800 dark:bg-gray-900 rounded-lg space-y-4 transition-all duration-300 ${
+                      advancedSettingsOpen ? 'mt-4 p-4' : 'mt-0 p-0'
+                    }`}>
                       {/* Buy-in Amount */}
                       <div className="flex items-center justify-between">
                         <Label className="text-gray-300 dark:text-gray-300">Buy-in Amount</Label>

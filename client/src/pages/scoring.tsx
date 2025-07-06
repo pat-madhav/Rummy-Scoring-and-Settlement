@@ -733,7 +733,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                         </div>
                                       ) : (
                                         <div className="px-3 py-2 text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed border-b border-gray-100 dark:border-gray-600">
-                                          Rummy (0) - Already taken
+                                          Rummy (0)
                                         </div>
                                       )}
                                       {calculatePacksRemaining(player.id) > 0 ? (
@@ -862,7 +862,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     </div>
                                   ) : (
                                     <div className="px-3 py-2 text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed border-b border-gray-100 dark:border-gray-600">
-                                      Rummy (0) - Already taken
+                                      Rummy (0)
                                     </div>
                                   )}
                                   {calculatePacksRemaining(player.id) > 0 ? (

@@ -103,6 +103,21 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     }, 0);
   }, [getDropdownKey]);
 
+  const getDropdownPosition = (playerId: number, roundNumber: number) => {
+    // For the rightmost players, position dropdown to the left
+    if (playersWithScores && playersWithScores.length > 0) {
+      const playerIndex = playersWithScores.findIndex(p => p.id === playerId);
+      const isRightmostPlayer = playerIndex >= playersWithScores.length - 2;
+      
+      if (isRightmostPlayer) {
+        return "absolute top-0 right-full z-50 mr-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
+      }
+    }
+    
+    // Default position: to the right
+    return "absolute top-0 left-full z-50 ml-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
+  };
+
   // Click outside effect to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -731,7 +746,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                       }`}
                                     />
                                     {openDropdowns[getDropdownKey(player.id, roundNumber)] && (
-                                    <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
+                                    <div className={getDropdownPosition(player.id, roundNumber)}>
                                       {!hasRummyInRound(roundNumber) || scores[player.id]?.[roundNumber] === "0" ? (
                                         <div
                                           onClick={() => handleScoreOption(player.id, roundNumber, "rummy")}
@@ -866,7 +881,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                 }`}
                               />
                               {openDropdowns[getDropdownKey(player.id, currentRound)] && (
-                                <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
+                                <div className={getDropdownPosition(player.id, currentRound)}>
                                   {!hasRummyInRound(currentRound) || scores[player.id]?.[currentRound] === "0" ? (
                                     <div
                                       onClick={() => handleScoreOption(player.id, currentRound, "rummy")}

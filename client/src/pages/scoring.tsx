@@ -160,22 +160,38 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
       // First check if any player has an invalid score (red highlighted inputs)
+      const playersWithInvalidScores: string[] = [];
+      
       for (const player of playersNotOut) {
         const score = newScores[player.id]?.[roundNumber];
         if (score && score !== "") {
           const numScore = parseInt(score);
           // Check for invalid scores (1 or any score that would be marked as invalid)
           if (!isNaN(numScore) && numScore < 2 && numScore !== 0) {
-            // Don't advance round if any player has an invalid score
-            return false;
+            playersWithInvalidScores.push(player.name);
           }
           // Check maximum score
           const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
           if (numScore > maxScore) {
-            // Don't advance round if any player has an invalid score
-            return false;
+            playersWithInvalidScores.push(player.name);
           }
         }
+      }
+      
+      // If there are invalid scores, show persistent toast
+      if (playersWithInvalidScores.length > 0) {
+        const playersList = playersWithInvalidScores.join(", ");
+        const message = playersWithInvalidScores.length === 1 
+          ? `Fix score of player ${playersList}` 
+          : `Fix scores of players ${playersList}`;
+          
+        toast({
+          title: "Invalid Scores",
+          description: message,
+          variant: "destructive",
+          duration: Infinity, // Keep toast visible until fixed
+        });
+        return false;
       }
       
       // Validate minimum 1 Rummy rule
@@ -244,7 +260,16 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       // Clear invalid state if score is empty
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
       // Re-check round advancement when clearing a score
-      checkRoundAdvancement(scores, roundNumber);
+      setTimeout(() => {
+        const updatedScores = {
+          ...scores,
+          [playerId]: {
+            ...scores[playerId],
+            [roundNumber]: score,
+          },
+        };
+        checkRoundAdvancement(updatedScores, roundNumber);
+      }, 0);
       return true;
     }
     
@@ -252,7 +277,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     if (isNaN(numScore)) {
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
       // Re-check round advancement
-      checkRoundAdvancement(scores, roundNumber);
+      setTimeout(() => {
+        checkRoundAdvancement(scores, roundNumber);
+      }, 0);
       return true;
     }
     
@@ -283,8 +310,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Clear invalid state if validation passes
     setInvalidInputs(prev => ({ ...prev, [key]: false }));
-    // Re-check round advancement after validation passes
-    checkRoundAdvancement(scores, roundNumber);
+    // Re-check round advancement after validation passes - this will clear the persistent toast if all scores are valid
+    setTimeout(() => {
+      checkRoundAdvancement(scores, roundNumber);
+    }, 0);
     return true;
   };
 

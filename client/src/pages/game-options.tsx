@@ -23,7 +23,7 @@ export default function GameOptionsScreen() {
   const [showCustomPackPoints, setShowCustomPackPoints] = useState(false);
   const [customMidPackPoints, setCustomMidPackPoints] = useState("");
   const [showCustomMidPackPoints, setShowCustomMidPackPoints] = useState(false);
-  const [mainSettingsOpen, setMainSettingsOpen] = useState(true);
+  const [mainSettingsOpen, setMainSettingsOpen] = useState(false);
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
   const [showFullCountRule, setShowFullCountRule] = useState(false);
   const [fullCountRuleAnimation, setFullCountRuleAnimation] = useState("");

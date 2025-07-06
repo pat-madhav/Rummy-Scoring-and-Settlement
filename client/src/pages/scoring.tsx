@@ -854,14 +854,21 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{currentRound}</td>
                     {players.map((player) => {
                       const currentTotalScore = calculatePlayerTotal(player.id);
-                      const isPlayerOut = getPlayerState(player.id).state === "Out";
                       
-                      // Check if player will become out with this round's score
-                      const currentScore = scores[player.id]?.[currentRound];
-                      const willBecomeOut = currentScore && (currentTotalScore >= game.forPoints);
+                      // Check if player was out BEFORE this round (not including this round)
+                      const wasPlayerOutBeforeCurrentRound = (() => {
+                        let cumulativeScore = 0;
+                        for (let r = 1; r < currentRound; r++) {
+                          const roundScore = scores[player.id]?.[r];
+                          if (roundScore) {
+                            cumulativeScore += parseInt(roundScore);
+                          }
+                        }
+                        return cumulativeScore >= game.forPoints;
+                      })();
                       
-                      // Show input only if player is not out yet
-                      const showInput = !isPlayerOut;
+                      // Show input only if player was not out before current round
+                      const showInput = !wasPlayerOutBeforeCurrentRound;
                       
                       return (
                         <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>

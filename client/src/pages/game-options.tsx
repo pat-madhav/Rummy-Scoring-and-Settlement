@@ -101,7 +101,7 @@ export default function GameOptionsScreen() {
 
   // Handle Full-Count rule animation
   useEffect(() => {
-    const shouldShow = gameOptions.fullCountPoints === (gameOptions.forPoints || 101);
+    const shouldShow = gameOptions.fullCountPoints !== 80; // Show when NOT 80 (i.e., when Full-Count is selected)
     
     if (shouldShow && !showFullCountRule) {
       setShowFullCountRule(true);
@@ -113,7 +113,7 @@ export default function GameOptionsScreen() {
         setFullCountRuleAnimation("");
       }, 600); // Match animation duration
     }
-  }, [gameOptions.fullCountPoints, gameOptions.forPoints, showFullCountRule]);
+  }, [gameOptions.fullCountPoints, showFullCountRule]);
 
   // Handle Joker sub-options animation
   useEffect(() => {

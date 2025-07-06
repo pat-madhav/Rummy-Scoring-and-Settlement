@@ -159,4 +159,3 @@ Preferred communication style: Simple, everyday language.
 - July 05, 2025: Applied blue gradient color styling to all scoring page table headers (Round, player names, Total, Points left, Packs, Pack Safe) for consistent visual theme
 - July 05, 2025: Added "Remove" button functionality for completed rounds with red styling, appears alongside "Edit" button on hover, includes confirmation dialog and automatic current round adjustment
 - July 05, 2025: Updated hover button positioning to vertically stack Edit and Remove buttons to the immediate right of Round number within table row for better visual organization
-- July 05, 2025: Made Main Settings section collapsible with same aesthetic as Advanced Settings section, automatically slides out when navigating to Set Game Rules page

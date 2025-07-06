@@ -23,6 +23,7 @@ export default function GameOptionsScreen() {
   const [showCustomPackPoints, setShowCustomPackPoints] = useState(false);
   const [customMidPackPoints, setCustomMidPackPoints] = useState("");
   const [showCustomMidPackPoints, setShowCustomMidPackPoints] = useState(false);
+  const [mainSettingsOpen, setMainSettingsOpen] = useState(true);
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
   const [showFullCountRule, setShowFullCountRule] = useState(false);
   const [fullCountRuleAnimation, setFullCountRuleAnimation] = useState("");
@@ -223,9 +224,16 @@ export default function GameOptionsScreen() {
           <CardContent className="p-6">
             <div className="space-y-8">
               {/* Main Settings */}
-              <div>
-                <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-6">Main Settings</h2>
-                <div className="bg-gray-800 dark:bg-gray-900 rounded-lg p-4 space-y-4">
+              <div className={`${mainSettingsOpen ? 'pt-2 pb-0' : 'pt-6 pb-0'}`}>
+                <Collapsible open={mainSettingsOpen} onOpenChange={setMainSettingsOpen}>
+                  <CollapsibleTrigger className={`flex items-center justify-between w-full group ${mainSettingsOpen ? 'pb-2' : ''}`}>
+                    <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Main Settings</h2>
+                    <ChevronRight className={`h-5 w-5 text-gray-500 transition-all duration-300 ${mainSettingsOpen ? 'rotate-90' : ''}`} />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+                    <div className={`bg-gray-800 dark:bg-gray-900 rounded-lg space-y-4 transition-all duration-300 ${
+                      mainSettingsOpen ? 'mt-4 p-4' : 'mt-0 p-0'
+                    }`}>
                   {/* Number of players */}
                   <div className="flex items-center justify-between">
                     <Label className="text-gray-700 dark:text-gray-300">Players</Label>
@@ -578,7 +586,9 @@ export default function GameOptionsScreen() {
                       </div>
                     </div>
                   )}
-                </div>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
 
               {/* Advanced Settings */}

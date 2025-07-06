@@ -179,30 +179,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Close dropdown when user starts typing
     closeDropdown(playerId, roundNumber);
     
-    // Validate score against full count setting
-    const numScore = parseInt(score);
-    if (!isNaN(numScore) && score !== "") {
-      // Check minimum score (must be 0 or >= 2)
-      if (numScore < 2 && numScore !== 0) {
-        toast({
-          title: "Invalid Score", 
-          description: "Minimum enterable score in rummy is 2",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
-      if (numScore > maxScore) {
-        toast({
-          title: "Invalid Score",
-          description: `Enter a score less than full count (${maxScore})`,
-          variant: "destructive",
-        });
-        return;
-      }
-    }
-
+    // Allow any input while typing
     setScores(prev => {
       const newScores = {
         ...prev,
@@ -220,6 +197,53 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       
       return newScores;
     });
+  };
+
+  const validateScore = (playerId: number, roundNumber: number) => {
+    const score = scores[playerId]?.[roundNumber];
+    if (!score || score === "") return true;
+    
+    const numScore = parseInt(score);
+    if (isNaN(numScore)) return true;
+    
+    // Check minimum score (must be 0 or >= 2)
+    if (numScore < 2 && numScore !== 0) {
+      toast({
+        title: "Invalid Score", 
+        description: "Minimum enterable score in rummy is 2",
+        variant: "destructive",
+      });
+      // Clear the invalid score
+      setScores(prev => ({
+        ...prev,
+        [playerId]: {
+          ...prev[playerId],
+          [roundNumber]: "",
+        },
+      }));
+      return false;
+    }
+    
+    // Check maximum score
+    const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
+    if (numScore > maxScore) {
+      toast({
+        title: "Invalid Score",
+        description: `Enter a score less than full count (${maxScore})`,
+        variant: "destructive",
+      });
+      // Clear the invalid score
+      setScores(prev => ({
+        ...prev,
+        [playerId]: {
+          ...prev[playerId],
+          [roundNumber]: "",
+        },
+      }));
+      return false;
+    }
+    
+    return true;
   };
 
   const handleReEntryClick = (player: PlayerWithScores) => {
@@ -687,6 +711,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                         // Close all dropdowns first, then open this one
                                         openSingleDropdown(player.id, roundNumber);
                                       }}
+                                      onBlur={() => validateScore(player.id, roundNumber)}
                                       className="w-full text-center h-8 cursor-text text-sm"
                                     />
                                     {openDropdowns[getDropdownKey(player.id, roundNumber)] && (
@@ -809,6 +834,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   const key = getDropdownKey(player.id, currentRound);
                                   setOpenDropdowns(prev => ({ ...prev, [key]: true }));
                                 }}
+                                onBlur={() => validateScore(player.id, currentRound)}
                                 className={`w-full text-center h-10 cursor-text text-sm min-w-20 ${!scores[player.id]?.[currentRound] ? "border-blue-500 dark:border-blue-400 border-2" : ""}`}
                               />
                               {openDropdowns[getDropdownKey(player.id, currentRound)] && (

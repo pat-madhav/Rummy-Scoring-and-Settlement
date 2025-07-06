@@ -179,3 +179,4 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Restored conditional Joker Type sub-options - "All Jokers Full Money" appears indented when "Opposite" selected, "All Jokers Type" with Closed/Open buttons appears indented when "All" selected
 - July 06, 2025: Added shaded background pane to Advanced Settings section matching screenshot design
 - July 06, 2025: Fixed "All Jokers Full Money" to default to toggled on (true) instead of off when "Opposite" joker type is selected
+- July 06, 2025: Fixed Full-Count rule text visibility issue in Implied Game Rules - changed from nested list to block spans with proper whitespace handling to ensure complete text display

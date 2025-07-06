@@ -645,11 +645,9 @@ export default function GameOptionsScreen() {
                     <li>• Packs/Game = {packsPerGame}</li>
 
                     {showFullCountRule && (
-                      <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
-                        • Full-Count points = Sum of all cards in non winning players' hands
-                        <ul className="ml-4 mt-1 space-y-1">
-                          <li>› not counting the 2 legal sequences</li>
-                        </ul>
+                      <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation} whitespace-normal`}>
+                        <span className="block">• Full-Count points = Sum of all cards in non winning players' hands</span>
+                        <span className="block ml-4 mt-1">› not counting the 2 legal sequences</span>
                       </li>
                     )}
 

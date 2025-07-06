@@ -231,6 +231,52 @@
       width: 7rem;
     }
   }
+  
+  /* Button container responsive sizing */
+  .button-container-fixed {
+    @apply w-[70%] mx-auto relative;
+  }
+  
+  /* Mobile - use responsive 70% width */
+  @media (max-width: 767px) {
+    .button-container-fixed.dual-buttons {
+      @apply flex space-x-4;
+    }
+    
+    .button-container-fixed .fixed-width-btn {
+      @apply flex-1;
+    }
+  }
+  
+  /* For larger screens, use fixed 3-inch width buttons */
+  @media (min-width: 768px) {
+    .button-container-fixed {
+      width: auto;
+      max-width: calc(6in + 1rem); /* Max width for dual buttons */
+      @apply mx-auto relative flex justify-center;
+    }
+    
+    .button-container-fixed .fixed-width-btn {
+      width: 3in;
+      flex: none;
+    }
+    
+    .button-container-fixed.dual-buttons {
+      gap: 1rem;
+      max-width: calc(6in + 1rem);
+    }
+    
+    /* If viewport is too small for fixed sizes, fallback to responsive */
+    @media (max-width: 1024px) {
+      .button-container-fixed {
+        max-width: 90%;
+      }
+      
+      .button-container-fixed .fixed-width-btn {
+        width: min(3in, calc(45% - 0.5rem));
+      }
+    }
+  }
 
   @keyframes shrink-width {
     from {

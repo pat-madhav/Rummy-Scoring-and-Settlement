@@ -723,10 +723,10 @@ export default function GameOptionsScreen() {
       <div className="fixed bottom-6 left-0 right-0 z-50">
         {/* Subtle fade gradient overlay */}
         <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
-        <div className="w-[70%] mx-auto relative">
+        <div className="button-container-fixed">
           <Button
             onClick={() => setLocation("/player-names")}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px]"
+            className="w-full fixed-width-btn bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px]"
           >
             <Play className="w-4 h-4 mr-2" />
             Next

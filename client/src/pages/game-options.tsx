@@ -553,91 +553,43 @@ export default function GameOptionsScreen() {
                     {/* Buy-in Amount */}
                     <div className="flex items-center justify-between">
                       <Label className="text-gray-700 dark:text-gray-300">Buy-in Amount</Label>
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          type="number"
-                          placeholder="Amount"
-                          value={gameOptions.buyInAmount || ""}
-                          onChange={(e) => updateGameOptions({ buyInAmount: e.target.value })}
-                          className="w-24 text-center text-sm mobile-input"
-                          onFocus={(e) => e.target.select()}
-                        />
-                        <Select value={gameOptions.currency || "INR"} onValueChange={(value) => updateGameOptions({ currency: value })}>
-                          <SelectTrigger className="w-20">
-                            <SelectValue placeholder="Currency" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="INR">INR</SelectItem>
-                            <SelectItem value="USD">USD</SelectItem>
-                            <SelectItem value="EUR">EUR</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      <Input
+                        type="number"
+                        placeholder="Enter amount"
+                        value={gameOptions.buyInAmount || ""}
+                        onChange={(e) => updateGameOptions({ buyInAmount: e.target.value })}
+                        className="w-32 text-center text-sm mobile-input"
+                        onFocus={(e) => e.target.select()}
+                      />
                     </div>
 
                     {/* Other Settings */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Other Settings</h4>
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <h4 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Other Settings</h4>
                       
-                      {/* All Trips Double Points */}
-                      <div className="flex items-center justify-between">
-                        <Label className="text-gray-700 dark:text-gray-300">All Trips Double Points</Label>
-                        <Switch
-                          checked={gameOptions.allTripsDoublePoints || false}
-                          onCheckedChange={(checked) => updateGameOptions({ allTripsDoublePoints: checked })}
-                        />
-                      </div>
-
-                      {/* All Sequences Double Points */}
-                      <div className="flex items-center justify-between">
-                        <Label className="text-gray-700 dark:text-gray-300">All Sequences Double Points</Label>
-                        <Switch
-                          checked={gameOptions.allSeqsDoublePoints || false}
-                          onCheckedChange={(checked) => updateGameOptions({ allSeqsDoublePoints: checked })}
-                        />
-                      </div>
-
-                      {/* Re-entry Allowed */}
-                      <div className="flex items-center justify-between">
-                        <Label className="text-gray-700 dark:text-gray-300">Re-entry Allowed</Label>
-                        <Switch
-                          checked={gameOptions.reEntryAllowed || false}
-                          onCheckedChange={(checked) => updateGameOptions({ reEntryAllowed: checked })}
-                        />
-                      </div>
-
-                      {/* Joker Type specific options */}
-                      {gameOptions.jokerType === "all" && (
+                      <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <Label className="text-gray-700 dark:text-gray-300">All Jokers Type</Label>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant={gameOptions.allJokersType === "Closed" ? "default" : "outline"}
-                              onClick={() => updateGameOptions({ allJokersType: "Closed" })}
-                              className={`px-3 py-1 text-sm transition-all duration-300 ${
-                                gameOptions.allJokersType === "Closed" 
-                                  ? "" 
-                                  : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-                              }`}
-                              size="sm"
-                            >
-                              Closed
-                            </Button>
-                            <Button
-                              variant={gameOptions.allJokersType === "Open" ? "default" : "outline"}
-                              onClick={() => updateGameOptions({ allJokersType: "Open" })}
-                              className={`px-3 py-1 text-sm transition-all duration-300 ${
-                                gameOptions.allJokersType === "Open" 
-                                  ? "" 
-                                  : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-                              }`}
-                              size="sm"
-                            >
-                              Open
-                            </Button>
-                          </div>
+                          <Label className="text-gray-700 dark:text-gray-300">All Trips Double Points</Label>
+                          <Switch
+                            checked={gameOptions.allTripsDoublePoints || false}
+                            onCheckedChange={(checked) => updateGameOptions({ allTripsDoublePoints: checked })}
+                          />
                         </div>
-                      )}
+                        <div className="flex items-center justify-between">
+                          <Label className="text-gray-700 dark:text-gray-300">All Sequences Double Points</Label>
+                          <Switch
+                            checked={gameOptions.allSeqsDoublePoints || false}
+                            onCheckedChange={(checked) => updateGameOptions({ allSeqsDoublePoints: checked })}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Label className="text-gray-700 dark:text-gray-300">Re-entry Allowed</Label>
+                          <Switch
+                            checked={gameOptions.reEntryAllowed || false}
+                            onCheckedChange={(checked) => updateGameOptions({ reEntryAllowed: checked })}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </CollapsibleContent>
                 </Collapsible>

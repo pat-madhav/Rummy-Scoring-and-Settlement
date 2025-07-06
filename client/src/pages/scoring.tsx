@@ -648,36 +648,32 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                           return (
                             <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
                               {getPlayerState(player.id).state !== "Out" ? (
-                                <div className="relative dropdown-container">
-                                  <Input
-                                    type="number"
-                                    placeholder="Score"
-                                    value={savedScore || ""}
-                                    onChange={(e) => handleScoreChange(player.id, roundNumber, e.target.value)}
-                                    onFocus={(e) => {
-                                      e.target.select();
-                                      // Close all dropdowns first, then open this one
-                                      if (isEditing) {
+                                isEditing ? (
+                                  <div className="relative dropdown-container">
+                                    <Input
+                                      type="number"
+                                      placeholder="Score"
+                                      value={savedScore || ""}
+                                      onChange={(e) => handleScoreChange(player.id, roundNumber, e.target.value)}
+                                      onFocus={(e) => {
+                                        e.target.select();
+                                        // Close all dropdowns first, then open this one
                                         openSingleDropdown(player.id, roundNumber);
-                                      }
-                                    }}
-                                    onKeyDown={(e) => {
-                                      // Close dropdown when user starts typing (any key except tab, enter, escape)
-                                      if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-                                        closeDropdown(player.id, roundNumber);
-                                      }
-                                    }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      // Close all dropdowns first, then open this one
-                                      if (isEditing) {
+                                      }}
+                                      onKeyDown={(e) => {
+                                        // Close dropdown when user starts typing (any key except tab, enter, escape)
+                                        if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                                          closeDropdown(player.id, roundNumber);
+                                        }
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        // Close all dropdowns first, then open this one
                                         openSingleDropdown(player.id, roundNumber);
-                                      }
-                                    }}
-                                    disabled={!isEditing}
-                                    className={`w-full text-center h-8 text-sm ${isEditing ? 'cursor-text' : 'cursor-not-allowed'}`}
-                                  />
-                                  {openDropdowns[getDropdownKey(player.id, roundNumber)] && isEditing && (
+                                      }}
+                                      className="w-full text-center h-8 cursor-text text-sm"
+                                    />
+                                    {openDropdowns[getDropdownKey(player.id, roundNumber)] && (
                                     <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
                                       <div
                                         onClick={() => handleScoreOption(player.id, roundNumber, "rummy")}
@@ -739,9 +735,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     </div>
                                   )}
                                 </div>
+                                ) : (
+                                  <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm">
+                                    {displayScore}
+                                  </div>
+                                )
                               ) : (
-                                <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm">
-                                  {displayScore}
+                                <div className="text-center text-gray-500 dark:text-gray-400 text-sm">
+                                  {displayScore || "Out"}
                                 </div>
                               )}
                             </td>

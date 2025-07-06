@@ -990,10 +990,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const isPlayerOut = getPlayerState(player.id).state === "Out";
                       const playerTotal = calculatePlayerTotal(player.id);
                       const hasScores = playerTotal > 0; // Player has entered at least one score
+                      const maxPoints = gameStateQuery.data?.game.forPoints || 0;
+                      const isNearMaxPoints = playerTotal >= (maxPoints - 1);
                       
                       return (
                         <td key={player.id} className={`px-4 py-3 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
-                          {!hasScores ? "" : (!isPlayerOut && packSafePoints === 0 ? "Yes" : packSafePoints)}
+                          {!hasScores || isNearMaxPoints ? "" : (!isPlayerOut && packSafePoints === 0 ? "Yes" : packSafePoints)}
                         </td>
                       );
                     })}

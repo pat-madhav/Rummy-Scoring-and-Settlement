@@ -183,3 +183,6 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Improved UI spacing - changed Advanced Settings and Implied Game Rules sections to use consistent py-4 (padding top and bottom) for equal spacing
 - July 06, 2025: Enhanced Advanced Settings animation - added smooth glide-down effect with duration-500 and slide animations for seamless expansion/collapse
 - July 06, 2025: Implemented proper Radix UI Collapsible animation using CSS variables - added collapsible-down and collapsible-up keyframes to tailwind.config.ts with 0.3s duration to match deployment timing
+- July 06, 2025: Made "Implied Game Rules" section collapsible with automatic slide-out animation when landing on Set Game Rules page, matching behavior of other sections
+- July 06, 2025: Fixed Advanced Settings heading position to stay in place when expanded instead of moving to top
+- July 06, 2025: Updated Pack Safe logic to show empty when player's total score >= Max Points - 1, preventing Pack Safe display for players near the point limit

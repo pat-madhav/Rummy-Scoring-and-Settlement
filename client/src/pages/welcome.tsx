@@ -52,7 +52,7 @@ export default function WelcomeScreen() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col justify-between p-4 min-h-[calc(100vh-80px)]">
         <div className="flex-1 flex items-center justify-center">
-          <Card className="w-full max-w-md animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
+          <Card className="w-full max-w-2xl animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
             <CardContent className="p-8">
               <div className="text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">

@@ -214,9 +214,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Close dropdown when user starts typing
     closeDropdown(playerId, roundNumber);
     
-    // Clear invalid state when user modifies the input
-    const key = getDropdownKey(playerId, roundNumber);
-    setInvalidInputs(prev => ({ ...prev, [key]: false }));
+    // Don't clear invalid state immediately - let validateScore handle it
     
     // Allow any input while typing
     setScores(prev => {
@@ -228,11 +226,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       };
       
-      // Check if round should advance
-      const shouldContinue = checkRoundAdvancement(newScores, roundNumber);
-      if (!shouldContinue) {
-        return prev;
-      }
+      // Check if round should advance after this change
+      checkRoundAdvancement(newScores, roundNumber);
       
       return newScores;
     });
@@ -245,12 +240,16 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     if (!score || score === "") {
       // Clear invalid state if score is empty
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
+      // Re-check round advancement when clearing a score
+      checkRoundAdvancement(scores, roundNumber);
       return true;
     }
     
     const numScore = parseInt(score);
     if (isNaN(numScore)) {
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
+      // Re-check round advancement
+      checkRoundAdvancement(scores, roundNumber);
       return true;
     }
     
@@ -281,6 +280,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Clear invalid state if validation passes
     setInvalidInputs(prev => ({ ...prev, [key]: false }));
+    // Re-check round advancement after validation passes
+    checkRoundAdvancement(scores, roundNumber);
     return true;
   };
 
@@ -908,6 +909,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   // Close dropdown when user starts typing (any key except tab, enter, escape)
                                   if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
                                     closeDropdown(player.id, currentRound);
+                                  }
+                                  // Clear invalid state when user starts typing to fix the error
+                                  if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                                    const key = getDropdownKey(player.id, currentRound);
+                                    setInvalidInputs(prev => ({ ...prev, [key]: false }));
                                   }
                                 }}
                                 onClick={(e) => {

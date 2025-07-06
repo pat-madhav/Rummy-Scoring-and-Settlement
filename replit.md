@@ -161,3 +161,4 @@ Preferred communication style: Simple, everyday language.
 - July 05, 2025: Updated hover button positioning to vertically stack Edit and Remove buttons to the immediate right of Round number within table row for better visual organization
 - July 05, 2025: Fixed button sizing inconsistency between player count buttons and other option buttons in game settings page for unified visual appearance
 - July 05, 2025: Updated home page card width from max-w-md to max-w-2xl to match the consistent card sizing used across other pages
+- July 05, 2025: Fixed scoring page editing functionality - score inputs for previous rounds are now properly disabled until Edit button is clicked, ensuring clear editing state and preventing input confusion

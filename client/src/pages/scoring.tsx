@@ -657,7 +657,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     onFocus={(e) => {
                                       e.target.select();
                                       // Close all dropdowns first, then open this one
-                                      openSingleDropdown(player.id, roundNumber);
+                                      if (isEditing) {
+                                        openSingleDropdown(player.id, roundNumber);
+                                      }
                                     }}
                                     onKeyDown={(e) => {
                                       // Close dropdown when user starts typing (any key except tab, enter, escape)
@@ -668,11 +670,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       // Close all dropdowns first, then open this one
-                                      openSingleDropdown(player.id, roundNumber);
+                                      if (isEditing) {
+                                        openSingleDropdown(player.id, roundNumber);
+                                      }
                                     }}
-                                    className="w-full text-center h-8 cursor-text text-sm"
+                                    disabled={!isEditing}
+                                    className={`w-full text-center h-8 text-sm ${isEditing ? 'cursor-text' : 'cursor-not-allowed'}`}
                                   />
-                                  {openDropdowns[getDropdownKey(player.id, roundNumber)] && (
+                                  {openDropdowns[getDropdownKey(player.id, roundNumber)] && isEditing && (
                                     <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
                                       <div
                                         onClick={() => handleScoreOption(player.id, roundNumber, "rummy")}

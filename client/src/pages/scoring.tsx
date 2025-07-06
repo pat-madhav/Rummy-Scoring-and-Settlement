@@ -271,11 +271,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       
       toast({
         title: "Minimum legal score is '2'", 
-        description: `Fix score for the player ${playerName}`,
+        description: (
+          <span>
+            Enter legal score for <strong style={{ fontStyle: 'italic' }}>{playerName}</strong>
+          </span>
+        ),
         variant: "destructive",
       });
-      // Clear invalid state since we've cleared the score
-      setInvalidInputs(prev => ({ ...prev, [key]: false }));
+      // Keep invalid state active (red border) until a valid score is entered
+      setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
     }
     
@@ -293,11 +297,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       
       toast({
         title: "Invalid Score",
-        description: `Enter a score less than full count (${maxScore}) for ${playerName}`,
+        description: (
+          <span>
+            Enter a score less than full count ({maxScore}) for <strong style={{ fontStyle: 'italic' }}>{playerName}</strong>
+          </span>
+        ),
         variant: "destructive",
       });
-      // Clear invalid state since we've cleared the score
-      setInvalidInputs(prev => ({ ...prev, [key]: false }));
+      // Keep invalid state active (red border) until a valid score is entered
+      setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
     }
     

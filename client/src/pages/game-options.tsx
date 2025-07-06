@@ -239,11 +239,12 @@ export default function GameOptionsScreen() {
                         key={count}
                         variant={gameOptions.playerCount === count ? "default" : "outline"}
                         onClick={() => handlePlayerCountChange(count)}
-                        className={`px-4 py-2 text-sm transition-all duration-300 ${
+                        className={`px-3 py-1 text-sm transition-all duration-300 ${
                           gameOptions.playerCount === count 
                             ? "" 
                             : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
                         }`}
+                        size="sm"
                       >
                         {count}
                       </Button>

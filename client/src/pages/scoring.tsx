@@ -239,6 +239,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const validateScore = (playerId: number, roundNumber: number) => {
     const score = scores[playerId]?.[roundNumber];
     const key = getDropdownKey(playerId, roundNumber);
+    const player = players.find(p => p.id === playerId);
+    const playerName = player?.name || "Player";
     
     if (!score || score === "") {
       // Clear invalid state if score is empty
@@ -258,26 +260,44 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Check minimum score (must be 0 or >= 2)
     if (numScore < 2 && numScore !== 0) {
+      // Clear the invalid score
+      setScores(prev => ({
+        ...prev,
+        [playerId]: {
+          ...prev[playerId],
+          [roundNumber]: "",
+        },
+      }));
+      
       toast({
-        title: "Invalid Score", 
-        description: "Minimum enterable score in rummy is 2",
+        title: "Minimum legal score is '2'", 
+        description: `Fix score for the player ${playerName}`,
         variant: "destructive",
       });
-      // Mark as invalid
-      setInvalidInputs(prev => ({ ...prev, [key]: true }));
+      // Clear invalid state since we've cleared the score
+      setInvalidInputs(prev => ({ ...prev, [key]: false }));
       return false;
     }
     
     // Check maximum score
     const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
     if (numScore > maxScore) {
+      // Clear the invalid score
+      setScores(prev => ({
+        ...prev,
+        [playerId]: {
+          ...prev[playerId],
+          [roundNumber]: "",
+        },
+      }));
+      
       toast({
         title: "Invalid Score",
-        description: `Enter a score less than full count (${maxScore})`,
+        description: `Enter a score less than full count (${maxScore}) for ${playerName}`,
         variant: "destructive",
       });
-      // Mark as invalid
-      setInvalidInputs(prev => ({ ...prev, [key]: true }));
+      // Clear invalid state since we've cleared the score
+      setInvalidInputs(prev => ({ ...prev, [key]: false }));
       return false;
     }
     

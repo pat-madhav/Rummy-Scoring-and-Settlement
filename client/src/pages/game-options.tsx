@@ -647,9 +647,7 @@ export default function GameOptionsScreen() {
                     {showFullCountRule && (
                       <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
                         • Full-Count points = Sum of all cards in non winning players' hands
-                        <ul className="ml-4 mt-1 space-y-1">
-                          <li>› not counting the 2 legal sequences</li>
-                        </ul>
+                        <br />› not counting the 2 legal sequences
                       </li>
                     )}
 

@@ -640,14 +640,16 @@ export default function GameOptionsScreen() {
               {/* Implied Game Rules */}
               <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
+                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg overflow-visible">
+                  <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2 overflow-visible">
                     <li>• Packs/Game = {packsPerGame}</li>
 
                     {showFullCountRule && (
-                      <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation} whitespace-normal`}>
-                        <span className="block">• Full-Count points = Sum of all cards in non winning players' hands</span>
-                        <span className="block ml-4 mt-1">› not counting the 2 legal sequences</span>
+                      <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
+                        <div className="flex flex-col space-y-1">
+                          <div className="whitespace-normal break-words">• Full-Count points = Sum of all cards in non winning players' hands</div>
+                          <div className="ml-4 whitespace-normal break-words">› not counting the 2 legal sequences</div>
+                        </div>
                       </li>
                     )}
 

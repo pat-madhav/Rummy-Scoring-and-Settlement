@@ -586,7 +586,7 @@ export default function GameOptionsScreen() {
                 <Collapsible open={advancedSettingsOpen} onOpenChange={setAdvancedSettingsOpen}>
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
                     <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Advanced Settings</h3>
-                    <ChevronRight className={`h-5 w-5 text-gray-500 transition-all duration-1000 ${advancedSettingsOpen ? 'rotate-90' : ''}`} />
+                    <ChevronRight className={`h-5 w-5 text-gray-500 transition-all duration-300 ${advancedSettingsOpen ? 'rotate-90' : ''}`} />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                     <div className="bg-gray-800 dark:bg-gray-900 rounded-lg p-4 space-y-4 mt-4">

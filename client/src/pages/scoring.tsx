@@ -714,8 +714,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                           const displayScore = savedScore ? parseInt(savedScore) : 0;
                           return (
                             <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>
-                              {getPlayerState(player.id).state !== "Out" ? (
-                                isEditing ? (
+                              {isEditing ? (
+                                getPlayerState(player.id).state !== "Out" ? (
                                   <div className="relative dropdown-container">
                                     <Input
                                       type="number"
@@ -819,8 +819,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   </div>
                                 )
                               ) : (
-                                <div className="text-center text-gray-500 dark:text-gray-400 text-sm">
-                                  {displayScore || "Out"}
+                                <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm">
+                                  {displayScore}
                                 </div>
                               )}
                             </td>

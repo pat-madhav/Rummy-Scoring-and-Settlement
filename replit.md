@@ -172,3 +172,4 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Enhanced dropdown positioning for score options - dropdowns now appear to the right or left of input boxes instead of below, preventing options from wrapping to multiple lines and improving usability
 - July 06, 2025: Updated Set Game Rules page styling - added black background card container to match other pages, made all unselected buttons consistently gray, updated label colors for consistent theme
 - July 06, 2025: Fixed scoring page "Round" heading font size to match player names in header row (changed from text-sm to text-lg font-bold)
+- July 06, 2025: Fixed scoring page display issue where completed round scores for "Out" players were incorrectly showing "Out" instead of their actual numeric scores

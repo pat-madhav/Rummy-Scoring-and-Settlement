@@ -841,8 +841,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const currentScore = scores[player.id]?.[currentRound];
                       const willBecomeOut = currentScore && (currentTotalScore >= game.forPoints);
                       
-                      // Show input if player is not out yet, or if they're becoming out in this round
-                      const showInput = !isPlayerOut || (willBecomeOut && currentScore);
+                      // Show input only if player is not out yet
+                      const showInput = !isPlayerOut;
                       
                       return (
                         <td key={player.id} className={`px-4 py-3 ${getPlayerState(player.id).color}`}>

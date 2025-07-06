@@ -25,12 +25,22 @@ export default function GameOptionsScreen() {
   const [showCustomMidPackPoints, setShowCustomMidPackPoints] = useState(false);
   const [mainSettingsOpen, setMainSettingsOpen] = useState(false);
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
+  const [impliedRulesOpen, setImpliedRulesOpen] = useState(false);
 
   // Auto-expand Main Settings with slide-out animation on page load
   useEffect(() => {
     const timer = setTimeout(() => {
       setMainSettingsOpen(true);
     }, 100); // Small delay to ensure the animation is visible
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Auto-expand Implied Game Rules with slide-out animation on page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setImpliedRulesOpen(true);
+    }, 200); // Slightly later delay to create a sequential effect
     
     return () => clearTimeout(timer);
   }, []);
@@ -659,9 +669,17 @@ export default function GameOptionsScreen() {
               </div>
 
               {/* Implied Game Rules */}
-              <div className="pt-6 pb-0 border-t border-gray-200 dark:border-gray-700">
-                <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg overflow-visible">
+              <div className={`${impliedRulesOpen ? 'pt-2 pb-0' : 'pt-6 pb-0'} border-t border-gray-200 dark:border-gray-700`}>
+                <Collapsible open={impliedRulesOpen} onOpenChange={setImpliedRulesOpen}>
+                  <CollapsibleTrigger className={`flex items-center justify-between w-full group ${impliedRulesOpen ? 'pb-2' : ''}`}>
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Implied Game Rules</h3>
+                    <ChevronRight className={`h-5 w-5 text-gray-500 transition-all duration-300 ${impliedRulesOpen ? 'rotate-90' : ''}`} />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+                    <div className={`transition-all duration-300 ${
+                      impliedRulesOpen ? 'mt-4' : 'mt-0'
+                    }`}>
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg overflow-visible">
                   <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2 overflow-visible">
                     <li>• Packs/Game = {packsPerGame}</li>
 
@@ -691,7 +709,10 @@ export default function GameOptionsScreen() {
                       </li>
                     )}
                   </ul>
-                </div>
+                      </div>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
             </div>
           </CardContent>

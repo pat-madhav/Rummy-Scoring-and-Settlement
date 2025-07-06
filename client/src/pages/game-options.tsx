@@ -99,8 +99,6 @@ export default function GameOptionsScreen() {
 
   const packsPerGame = calculatePacksPerGame(gameOptions.forPoints || 101, gameOptions.packPoints || 25);
 
-
-
   // Handle Full-Count rule animation
   useEffect(() => {
     const shouldShow = gameOptions.fullCountPoints !== 80;
@@ -221,289 +219,298 @@ export default function GameOptionsScreen() {
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto p-4 py-8 pb-24 main-content">
-        
-        <div className="space-y-8">
-          {/* Game Settings - Merged section with all settings */}
-          <Card className="bg-gray-900/50 border-gray-800 main-settings-card">
-            <CardHeader>
-              <CardTitle className="text-xl font-bold text-white bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Main Settings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Number of players */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-white">Players</Label>
-                  <div className="flex items-center space-x-2 mobile-button-group">
-                    {[2, 3, 4, 5, 6, 7].map((count) => (
-                      <Button
-                        key={count}
-                        variant={gameOptions.playerCount === count ? "default" : "outline"}
-                        onClick={() => handlePlayerCountChange(count)}
-                        className={`px-3 py-1 text-sm transition-all duration-300 ${
-                          gameOptions.playerCount === count 
-                            ? "" 
-                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        }`}
-                        size="sm"
-                      >
-                        {count}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Max Points */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-white">Max Points</Label>
-                  <div className="flex items-center space-x-2 relative">
-                    <div className={`flex items-center space-x-2 transition-all duration-500 ease-in-out ${
-                      showCustomPoints ? 'transform -translate-x-8' : 'transform translate-x-0'
-                    }`}>
-                      <Button
-                        variant={gameOptions.forPoints === 100 ? "default" : "outline"}
-                        onClick={() => handlePointsChange(100)}
-                        className={`px-3 py-1 text-sm transition-all duration-300 ${
-                          gameOptions.forPoints === 100 
-                            ? "" 
-                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        }`}
-                        size="sm"
-                      >
-                        100
-                      </Button>
-                      <Button
-                        variant={gameOptions.forPoints === 101 ? "default" : "outline"}
-                        onClick={() => handlePointsChange(101)}
-                        className={`px-3 py-1 text-sm transition-all duration-300 ${
-                          gameOptions.forPoints === 101 
-                            ? "" 
-                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        }`}
-                        size="sm"
-                      >
-                        101
-                      </Button>
-                    </div>
-                    
-                    {/* Custom Button/Input with smooth transformation */}
-                    <div className="relative flex items-center">
-                      {!showCustomPoints ? (
+        <Card>
+          <CardContent className="p-6">
+            <div className="space-y-8">
+              {/* Main Settings */}
+              <div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-6">Main Settings</h2>
+                <div className="space-y-4">
+                  {/* Number of players */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-gray-700 dark:text-gray-300">Players</Label>
+                    <div className="flex items-center space-x-2 mobile-button-group">
+                      {[2, 3, 4, 5, 6, 7].map((count) => (
                         <Button
-                          variant="outline"
-                          onClick={() => handlePointsChange("custom")}
-                          className="px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
-                          size="sm"
-                        >
-                          Custom
-                        </Button>
-                      ) : (
-                        <div className="flex items-center space-x-2">
-                          <Input
-                            type="number"
-                            placeholder="Enter points"
-                            value={customPoints}
-                            onChange={(e) => handleCustomPointsChange(e.target.value)}
-                            className="w-28 text-center text-sm h-8 mobile-input transform transition-all duration-500 ease-in-out 
-                                     bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
-                                     border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
-                                     animate-in slide-in-from-right-3 fade-in-0"
-                            autoFocus
-                            onBlur={() => {
-                              if (!customPoints) {
-                                setShowCustomPoints(false);
-                              }
-                            }}
-                          />
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setShowCustomPoints(false);
-                              setCustomPoints("");
-                            }}
-                            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                          >
-                            ×
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Pack Points */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-white">Pack Points</Label>
-                  <div className="flex items-center space-x-2 relative">
-                    <div className={`flex items-center space-x-2 transition-all duration-500 ease-in-out ${
-                      showCustomPackPoints ? 'transform -translate-x-8' : 'transform translate-x-0'
-                    }`}>
-                      <Button
-                        variant={gameOptions.packPoints === 25 && !showCustomPackPoints ? "default" : "outline"}
-                        onClick={() => handlePackPointsChange(25)}
-                        className={`px-3 py-1 text-sm transition-all duration-300 ${
-                          gameOptions.packPoints === 25 && !showCustomPackPoints
-                            ? "" 
-                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        }`}
-                        size="sm"
-                      >
-                        25
-                      </Button>
-                    </div>
-                    
-                    {/* Custom Button/Input with smooth transformation */}
-                    <div className="relative flex items-center">
-                      {!showCustomPackPoints ? (
-                        <Button
-                          variant={gameOptions.packPoints !== 25 ? "default" : "outline"}
-                          onClick={() => handlePackPointsChange("custom")}
-                          className={`px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105 ${
-                            gameOptions.packPoints !== 25 
+                          key={count}
+                          variant={gameOptions.playerCount === count ? "default" : "outline"}
+                          onClick={() => handlePlayerCountChange(count)}
+                          className={`px-3 py-1 text-sm transition-all duration-300 ${
+                            gameOptions.playerCount === count 
                               ? "" 
-                              : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                              : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                           }`}
                           size="sm"
                         >
-                          Custom
+                          {count}
                         </Button>
-                      ) : (
-                        <div className="flex items-center space-x-2">
-                          <Input
-                            type="number"
-                            placeholder="Enter points"
-                            value={customPackPoints}
-                            onChange={(e) => handleCustomPackPointsChange(e.target.value)}
-                            className="w-28 text-center text-sm h-8 transform transition-all duration-500 ease-in-out 
-                                     bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
-                                     border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
-                                     animate-in slide-in-from-right-3 fade-in-0"
-                            autoFocus
-                            onBlur={() => {
-                              if (!customPackPoints) {
-                                setShowCustomPackPoints(false);
-                              }
-                            }}
-                            min="1"
-                          />
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setShowCustomPackPoints(false);
-                              setCustomPackPoints("");
-                              updateGameOptions({ packPoints: 25 });
-                            }}
-                            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                          >
-                            ×
-                          </Button>
-                        </div>
-                      )}
+                      ))}
                     </div>
                   </div>
-                </div>
 
-                {/* Mid-Pack Points */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-white">Mid-Pack Points</Label>
-                  <div className="flex items-center space-x-2 relative">
-                    <div className={`flex items-center space-x-2 transition-all duration-500 ease-in-out ${
-                      showCustomMidPackPoints ? 'transform -translate-x-8' : 'transform translate-x-0'
-                    }`}>
-                      <Button
-                        variant={gameOptions.midPackPoints === 50 && !showCustomMidPackPoints ? "default" : "outline"}
-                        onClick={() => handleMidPackPointsChange(50)}
-                        className="px-3 py-1 text-sm transition-all duration-300"
-                        size="sm"
-                      >
-                        50
-                      </Button>
-                    </div>
-                    
-                    {/* Custom Button/Input with smooth transformation */}
-                    <div className="relative flex items-center">
-                      {!showCustomMidPackPoints ? (
+                  {/* Max Points */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-gray-700 dark:text-gray-300">Max Points</Label>
+                    <div className="flex items-center space-x-2 relative">
+                      <div className={`flex items-center space-x-2 transition-all duration-500 ease-in-out ${
+                        showCustomPoints ? 'transform -translate-x-8' : 'transform translate-x-0'
+                      }`}>
                         <Button
-                          variant={gameOptions.midPackPoints !== 50 ? "default" : "outline"}
-                          onClick={() => handleMidPackPointsChange("custom")}
-                          className="px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105"
+                          variant={gameOptions.forPoints === 100 ? "default" : "outline"}
+                          onClick={() => handlePointsChange(100)}
+                          className={`px-3 py-1 text-sm transition-all duration-300 ${
+                            gameOptions.forPoints === 100 
+                              ? "" 
+                              : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                          }`}
                           size="sm"
                         >
-                          Custom
+                          100
                         </Button>
-                      ) : (
-                        <div className="flex items-center space-x-2">
-                          <Input
-                            type="number"
-                            placeholder="Enter points"
-                            value={customMidPackPoints}
-                            onChange={(e) => handleCustomMidPackPointsChange(e.target.value)}
-                            className="w-28 text-center text-sm h-8 transform transition-all duration-500 ease-in-out 
-                                     bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
-                                     border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
-                                     animate-in slide-in-from-right-3 fade-in-0"
-                            autoFocus
-                            onBlur={() => {
-                              if (!customMidPackPoints) {
-                                setShowCustomMidPackPoints(false);
-                              }
-                            }}
-                            min="1"
-                          />
+                        <Button
+                          variant={gameOptions.forPoints === 101 ? "default" : "outline"}
+                          onClick={() => handlePointsChange(101)}
+                          className={`px-3 py-1 text-sm transition-all duration-300 ${
+                            gameOptions.forPoints === 101 
+                              ? "" 
+                              : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                          }`}
+                          size="sm"
+                        >
+                          101
+                        </Button>
+                      </div>
+                      
+                      {/* Custom Button/Input with smooth transformation */}
+                      <div className="relative flex items-center">
+                        {!showCustomPoints ? (
                           <Button
-                            variant="ghost"
+                            variant="outline"
+                            onClick={() => handlePointsChange("custom")}
+                            className="px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                             size="sm"
-                            onClick={() => {
-                              setShowCustomMidPackPoints(false);
-                              setCustomMidPackPoints("");
-                              updateGameOptions({ midPackPoints: 50 });
-                            }}
-                            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                           >
-                            ×
+                            Custom
                           </Button>
-                        </div>
-                      )}
+                        ) : (
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              type="number"
+                              placeholder="Enter points"
+                              value={customPoints}
+                              onChange={(e) => handleCustomPointsChange(e.target.value)}
+                              className="w-28 text-center text-sm h-8 mobile-input transform transition-all duration-500 ease-in-out 
+                                       bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
+                                       border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
+                                       animate-in slide-in-from-right-3 fade-in-0"
+                              autoFocus
+                              onBlur={() => {
+                                if (!customPoints) {
+                                  setShowCustomPoints(false);
+                                }
+                              }}
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setShowCustomPoints(false);
+                                setCustomPoints("");
+                              }}
+                              className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            >
+                              ×
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Full-Count Points */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-white">Full-Count Points</Label>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant={gameOptions.fullCountPoints === 80 ? "default" : "outline"}
-                      onClick={() => handleFullCountChange(80)}
-                      className="px-3 py-1 text-sm"
-                      size="sm"
-                    >
-                      80
-                    </Button>
-                    <Button
-                      variant={gameOptions.fullCountPoints !== 80 ? "default" : "outline"}
-                      onClick={() => handleFullCountChange("fullCount")}
-                      className="px-3 py-1 text-sm"
-                      size="sm"
-                    >
-                      Full-Count
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Joker Type */}
-                <div className="space-y-3">
+                  {/* Pack Points */}
                   <div className="flex items-center justify-between">
-                    <Label className="text-white">Joker Type</Label>
-                    <div className="flex items-center space-x-2">
+                    <Label className="text-gray-700 dark:text-gray-300">Pack Points</Label>
+                    <div className="flex items-center space-x-2 relative">
+                      <div className={`flex items-center space-x-2 transition-all duration-500 ease-in-out ${
+                        showCustomPackPoints ? 'transform -translate-x-8' : 'transform translate-x-0'
+                      }`}>
+                        <Button
+                          variant={gameOptions.packPoints === 25 && !showCustomPackPoints ? "default" : "outline"}
+                          onClick={() => handlePackPointsChange(25)}
+                          className={`px-3 py-1 text-sm transition-all duration-300 ${
+                            gameOptions.packPoints === 25 && !showCustomPackPoints
+                              ? "" 
+                              : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                          }`}
+                          size="sm"
+                        >
+                          25
+                        </Button>
+                      </div>
+                      
+                      {/* Custom Button/Input with smooth transformation */}
+                      <div className="relative flex items-center">
+                        {!showCustomPackPoints ? (
+                          <Button
+                            variant={gameOptions.packPoints !== 25 ? "default" : "outline"}
+                            onClick={() => handlePackPointsChange("custom")}
+                            className={`px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105 ${
+                              gameOptions.packPoints !== 25 
+                                ? "" 
+                                : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                            }`}
+                            size="sm"
+                          >
+                            Custom
+                          </Button>
+                        ) : (
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              type="number"
+                              placeholder="Enter points"
+                              value={customPackPoints}
+                              onChange={(e) => handleCustomPackPointsChange(e.target.value)}
+                              className="w-28 text-center text-sm h-8 mobile-input transform transition-all duration-500 ease-in-out 
+                                       bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
+                                       border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
+                                       animate-in slide-in-from-right-3 fade-in-0"
+                              autoFocus
+                              onBlur={() => {
+                                if (!customPackPoints) {
+                                  setShowCustomPackPoints(false);
+                                }
+                              }}
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setShowCustomPackPoints(false);
+                                setCustomPackPoints("");
+                              }}
+                              className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            >
+                              ×
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mid-Pack Points */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-gray-700 dark:text-gray-300">Mid-Pack Points</Label>
+                    <div className="flex items-center space-x-2 relative">
+                      <div className={`flex items-center space-x-2 transition-all duration-500 ease-in-out ${
+                        showCustomMidPackPoints ? 'transform -translate-x-8' : 'transform translate-x-0'
+                      }`}>
+                        <Button
+                          variant={gameOptions.midPackPoints === 50 && !showCustomMidPackPoints ? "default" : "outline"}
+                          onClick={() => handleMidPackPointsChange(50)}
+                          className={`px-3 py-1 text-sm transition-all duration-300 ${
+                            gameOptions.midPackPoints === 50 && !showCustomMidPackPoints
+                              ? "" 
+                              : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                          }`}
+                          size="sm"
+                        >
+                          50
+                        </Button>
+                      </div>
+                      
+                      {/* Custom Button/Input with smooth transformation */}
+                      <div className="relative flex items-center">
+                        {!showCustomMidPackPoints ? (
+                          <Button
+                            variant={gameOptions.midPackPoints !== 50 ? "default" : "outline"}
+                            onClick={() => handleMidPackPointsChange("custom")}
+                            className={`px-3 py-1 text-sm transform transition-all duration-500 ease-in-out hover:scale-105 ${
+                              gameOptions.midPackPoints !== 50 
+                                ? "" 
+                                : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                            }`}
+                            size="sm"
+                          >
+                            Custom
+                          </Button>
+                        ) : (
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              type="number"
+                              placeholder="Enter points"
+                              value={customMidPackPoints}
+                              onChange={(e) => handleCustomMidPackPointsChange(e.target.value)}
+                              className="w-28 text-center text-sm h-8 mobile-input transform transition-all duration-500 ease-in-out 
+                                       bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 
+                                       border-blue-200 dark:border-blue-700 focus:border-blue-500 dark:focus:border-blue-400
+                                       animate-in slide-in-from-right-3 fade-in-0"
+                              autoFocus
+                              onBlur={() => {
+                                if (!customMidPackPoints) {
+                                  setShowCustomMidPackPoints(false);
+                                }
+                              }}
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setShowCustomMidPackPoints(false);
+                                setCustomMidPackPoints("");
+                              }}
+                              className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            >
+                              ×
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Full-Count Points */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-gray-700 dark:text-gray-300">Full-Count Points</Label>
+                    <div className="flex items-center space-x-2 mobile-button-group">
+                      <Button
+                        variant={gameOptions.fullCountPoints === 80 ? "default" : "outline"}
+                        onClick={() => handleFullCountChange(80)}
+                        className={`px-3 py-1 text-sm transition-all duration-300 ${
+                          gameOptions.fullCountPoints === 80 
+                            ? "" 
+                            : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                        }`}
+                        size="sm"
+                      >
+                        80
+                      </Button>
+                      <Button
+                        variant={gameOptions.fullCountPoints === (gameOptions.forPoints || 101) ? "default" : "outline"}
+                        onClick={() => handleFullCountChange("fullCount")}
+                        className={`px-3 py-1 text-sm transition-all duration-300 ${
+                          gameOptions.fullCountPoints === (gameOptions.forPoints || 101)
+                            ? "" 
+                            : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                        }`}
+                        size="sm"
+                      >
+                        Full-Count
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Joker Type */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-gray-700 dark:text-gray-300">Joker Type</Label>
+                    <div className="flex items-center space-x-2 mobile-button-group">
                       <Button
                         variant={gameOptions.jokerType === "opposite" ? "default" : "outline"}
                         onClick={() => handleJokerTypeChange("opposite")}
-                        className={`px-3 py-1 text-sm ${
+                        className={`px-3 py-1 text-sm transition-all duration-300 ${
                           gameOptions.jokerType === "opposite" 
                             ? "" 
-                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                         }`}
                         size="sm"
                       >
@@ -512,10 +519,10 @@ export default function GameOptionsScreen() {
                       <Button
                         variant={gameOptions.jokerType === "all" ? "default" : "outline"}
                         onClick={() => handleJokerTypeChange("all")}
-                        className={`px-3 py-1 text-sm ${
+                        className={`px-3 py-1 text-sm transition-all duration-300 ${
                           gameOptions.jokerType === "all" 
                             ? "" 
-                            : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                         }`}
                         size="sm"
                       >
@@ -523,160 +530,161 @@ export default function GameOptionsScreen() {
                       </Button>
                     </div>
                   </div>
-                  
-                  {/* All Jokers Sub-options */}
-                  {showJokerSubOptions && (
-                    <div className={`ml-6 transition-all duration-800 ease-out ${jokerSubOptionsAnimation}`}>
-                      <div className="flex items-center justify-between">
-                        <Label className="text-white text-sm opacity-80">All Jokers Type</Label>
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant={gameOptions.allJokersType === "Closed" ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ allJokersType: "Closed" })}
-                            className={`px-2 py-1 text-xs ${
-                              gameOptions.allJokersType === "Closed" 
-                                ? "" 
-                                : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            }`}
-                            size="sm"
-                          >
-                            Closed
-                          </Button>
-                          <Button
-                            variant={gameOptions.allJokersType === "Open" ? "default" : "outline"}
-                            onClick={() => updateGameOptions({ allJokersType: "Open" })}
-                            className={`px-2 py-1 text-xs ${
-                              gameOptions.allJokersType === "Open" 
-                                ? "" 
-                                : "bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            }`}
-                            size="sm"
-                          >
-                            Open
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Opposite Jokers Sub-options */}
-                  {showOppositeJokerOptions && (
-                    <div className={`ml-6 transition-all duration-800 ease-out ${oppositeJokerOptionsAnimation}`}>
-                      <div className="flex items-center justify-between">
-                        <Label className="text-white text-sm opacity-80">All Jokers Full Money</Label>
-                        <Switch
-                          checked={gameOptions.allJokersFullMoney}
-                          onCheckedChange={(checked) => updateGameOptions({ allJokersFullMoney: checked })}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
 
-                {/* Advanced Settings - Collapsible */}
-                <div className="pt-4 border-t border-gray-700">
-                  <Collapsible open={advancedSettingsOpen} onOpenChange={setAdvancedSettingsOpen}>
-                    <CollapsibleTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-between p-0 h-auto text-left hover:bg-transparent"
-                      >
-                        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Advanced Settings</h3>
-                        <ChevronRight className={`h-4 w-4 text-white transition-transform duration-500 ease-in-out ${
-                          advancedSettingsOpen ? 'rotate-90' : 'rotate-0'
-                        }`} />
-                      </Button>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="collapsible-content space-y-4 transition-all duration-700 ease-out overflow-hidden">
-                      {/* Buy-In Amount */}
-                      <div className="flex items-center justify-between">
-                        <Label className="text-white">Buy-In Amount</Label>
+                  {/* All Jokers Full Money */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-gray-700 dark:text-gray-300">All Jokers Full Money</Label>
+                    <Switch
+                      checked={gameOptions.allJokersFullMoney || false}
+                      onCheckedChange={(checked) => updateGameOptions({ allJokersFullMoney: checked })}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Advanced Settings */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <Collapsible open={advancedSettingsOpen} onOpenChange={setAdvancedSettingsOpen}>
+                  <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Advanced Settings</h3>
+                    <ChevronRight className={`h-5 w-5 text-gray-500 transition-transform group-data-[state=open]:rotate-90`} />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-4 space-y-4">
+                    {/* Buy-in Amount */}
+                    <div className="flex items-center justify-between">
+                      <Label className="text-gray-700 dark:text-gray-300">Buy-in Amount</Label>
+                      <div className="flex items-center space-x-2">
                         <Input
                           type="number"
-                          placeholder="Enter amount"
-                          value={gameOptions.buyInAmount}
+                          placeholder="Amount"
+                          value={gameOptions.buyInAmount || ""}
                           onChange={(e) => updateGameOptions({ buyInAmount: e.target.value })}
-                          className="w-32 text-center"
+                          className="w-24 text-center text-sm mobile-input"
+                          onFocus={(e) => e.target.select()}
+                        />
+                        <Select value={gameOptions.currency || "INR"} onValueChange={(value) => updateGameOptions({ currency: value })}>
+                          <SelectTrigger className="w-20">
+                            <SelectValue placeholder="Currency" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="INR">INR</SelectItem>
+                            <SelectItem value="USD">USD</SelectItem>
+                            <SelectItem value="EUR">EUR</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    {/* Other Settings */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Other Settings</h4>
+                      
+                      {/* All Trips Double Points */}
+                      <div className="flex items-center justify-between">
+                        <Label className="text-gray-700 dark:text-gray-300">All Trips Double Points</Label>
+                        <Switch
+                          checked={gameOptions.allTripsDoublePoints || false}
+                          onCheckedChange={(checked) => updateGameOptions({ allTripsDoublePoints: checked })}
                         />
                       </div>
 
-
-
-                      {/* Re-Entry Allowed */}
+                      {/* All Sequences Double Points */}
                       <div className="flex items-center justify-between">
-                        <Label className="text-white">Re-Entry Allowed</Label>
+                        <Label className="text-gray-700 dark:text-gray-300">All Sequences Double Points</Label>
                         <Switch
-                          checked={gameOptions.reEntryAllowed}
+                          checked={gameOptions.allSeqsDoublePoints || false}
+                          onCheckedChange={(checked) => updateGameOptions({ allSeqsDoublePoints: checked })}
+                        />
+                      </div>
+
+                      {/* Re-entry Allowed */}
+                      <div className="flex items-center justify-between">
+                        <Label className="text-gray-700 dark:text-gray-300">Re-entry Allowed</Label>
+                        <Switch
+                          checked={gameOptions.reEntryAllowed || false}
                           onCheckedChange={(checked) => updateGameOptions({ reEntryAllowed: checked })}
                         />
                       </div>
 
-                      {/* Double Points Section */}
-                      <div className="space-y-4">
-                        <div className="pt-2 border-t border-gray-600">
-                          <h4 className="text-sm font-medium text-white mb-3">All opponents get double points when a winning player shows</h4>
-                          <div className="space-y-3 ml-4">
-                            <div className="flex items-center justify-between">
-                              <Label className="text-white">All Trips w/o Joker</Label>
-                              <Switch
-                                checked={gameOptions.allTripsDoublePoints}
-                                onCheckedChange={(checked) => updateGameOptions({ allTripsDoublePoints: checked })}
-                              />
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <Label className="text-white">All Sequences w/o Joker</Label>
-                              <Switch
-                                checked={gameOptions.allSeqsDoublePoints}
-                                onCheckedChange={(checked) => updateGameOptions({ allSeqsDoublePoints: checked })}
-                              />
-                            </div>
+                      {/* Joker Type specific options */}
+                      {gameOptions.jokerType === "all" && (
+                        <div className="flex items-center justify-between">
+                          <Label className="text-gray-700 dark:text-gray-300">All Jokers Type</Label>
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              variant={gameOptions.allJokersType === "Closed" ? "default" : "outline"}
+                              onClick={() => updateGameOptions({ allJokersType: "Closed" })}
+                              className={`px-3 py-1 text-sm transition-all duration-300 ${
+                                gameOptions.allJokersType === "Closed" 
+                                  ? "" 
+                                  : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                              }`}
+                              size="sm"
+                            >
+                              Closed
+                            </Button>
+                            <Button
+                              variant={gameOptions.allJokersType === "Open" ? "default" : "outline"}
+                              onClick={() => updateGameOptions({ allJokersType: "Open" })}
+                              className={`px-3 py-1 text-sm transition-all duration-300 ${
+                                gameOptions.allJokersType === "Open" 
+                                  ? "" 
+                                  : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                              }`}
+                              size="sm"
+                            >
+                              Open
+                            </Button>
                           </div>
                         </div>
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
-                </div>
-
-                {/* Implied Game Rules */}
-                <div className="pt-4 border-t border-gray-700">
-                  <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
-                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                    <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
-                      <li>• Packs/Game = {packsPerGame}</li>
-
-                      {showFullCountRule && (
-                        <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
-                          • Full-Count points = Sum of all cards in non winning players' hands
-                          <ul className="ml-4 mt-1 space-y-1">
-                            <li>› not counting the 2 legal sequences</li>
-                          </ul>
-                        </li>
                       )}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
 
-                      {/* Joker Type Rules - Animated slidedown */}
-                      {gameOptions.jokerType === "opposite" && (
-                        <li className="transition-all duration-800 ease-out animate-in slide-in-from-bottom-3 fade-in-0">
-                          • Add 1 Joker card to 2 decks of playing cards
-                          <ul className="ml-4 mt-1 space-y-1">
-                            <li>› The Joker card 🃏 is a replacement for the actual joker picked by the player before the dealer</li>
-                            <li>› The Joker card 🃏 does not serve as a Joker</li>
-                          </ul>
-                        </li>
-                      )}
+              {/* Implied Game Rules */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
+                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
+                    <li>• Packs/Game = {packsPerGame}</li>
 
-                      {gameOptions.jokerType === "all" && (
-                        <li className="transition-all duration-800 ease-out animate-in slide-in-from-bottom-3 fade-in-0">
-                          • Add 2 Joker cards to 2 decks of playing cards
-                        </li>
-                      )}
-                    </ul>
-                  </div>
+                    {showFullCountRule && (
+                      <li className={`transition-all duration-800 ease-out ${fullCountRuleAnimation}`}>
+                        • Full-Count points = Sum of all cards in non winning players' hands
+                        <ul className="ml-4 mt-1 space-y-1">
+                          <li>› not counting the 2 legal sequences</li>
+                        </ul>
+                      </li>
+                    )}
+
+                    <li>• A player must make minimum 2 sequences to win</li>
+                    <li>• At least 1 sequence must be pure (no jokers)</li>
+                    <li>• The second sequence can be impure (with jokers)</li>
+                    <li>• Remaining cards can be sequences or sets</li>
+
+                    {showOppositeJokerOptions && (
+                      <li className={`transition-all duration-800 ease-out ${oppositeJokerOptionsAnimation}`}>
+                        • The Joker card 🃏 timing and rules:
+                        <ul className="ml-4 mt-1 space-y-1">
+                          <li>› The Joker card 🃏 is a replacement for the actual joker picked by the player before the dealer</li>
+                          <li>› The Joker card 🃏 does not serve as a Joker</li>
+                        </ul>
+                      </li>
+                    )}
+
+                    {gameOptions.jokerType === "all" && (
+                      <li className="transition-all duration-800 ease-out animate-in slide-in-from-bottom-3 fade-in-0">
+                        • Add 2 Joker cards to 2 decks of playing cards
+                      </li>
+                    )}
+                  </ul>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </main>
 
       {/* Fixed Bottom Navigation - Consistent across all pages */}

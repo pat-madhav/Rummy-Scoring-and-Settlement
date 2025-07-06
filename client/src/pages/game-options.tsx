@@ -582,7 +582,7 @@ export default function GameOptionsScreen() {
               </div>
 
               {/* Advanced Settings */}
-              <div className={`${advancedSettingsOpen ? 'py-4' : 'py-0'} border-t border-gray-200 dark:border-gray-700 transition-all duration-300`}>
+              <div className="py-4 border-t border-gray-200 dark:border-gray-700">
                 <Collapsible open={advancedSettingsOpen} onOpenChange={setAdvancedSettingsOpen}>
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
                     <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Advanced Settings</h3>
@@ -640,7 +640,7 @@ export default function GameOptionsScreen() {
               </div>
 
               {/* Implied Game Rules */}
-              <div className={`${advancedSettingsOpen ? 'py-4' : 'py-0'} border-t border-gray-200 dark:border-gray-700 transition-all duration-300`}>
+              <div className="py-4 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg overflow-visible">
                   <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2 overflow-visible">

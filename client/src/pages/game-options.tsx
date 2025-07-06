@@ -638,7 +638,7 @@ export default function GameOptionsScreen() {
               </div>
 
               {/* Implied Game Rules */}
-              <div className="py-4 border-t border-gray-200 dark:border-gray-700">
+              <div className={`${advancedSettingsOpen ? 'pt-4' : 'pt-0'} pb-4 border-t border-gray-200 dark:border-gray-700 transition-all duration-300`}>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-3">Implied Game Rules</h3>
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg overflow-visible">
                   <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2 overflow-visible">

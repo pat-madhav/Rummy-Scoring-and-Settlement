@@ -168,3 +168,4 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Updated button colors - "Settle Game" uses standard blue, "Restart" uses light red
 - July 06, 2025: Added dynamic button behavior - when only 1 player remains, "Restart" transforms to "Finish" with pulsating animation to prompt game completion
 - July 06, 2025: Implemented Rummy restriction - once a player enters Rummy (0) in a round, that option is disabled for all other players in the same round
+- July 06, 2025: Added red border validation for invalid scores (like 1) - shows red border on blur, clears when user starts typing to correct

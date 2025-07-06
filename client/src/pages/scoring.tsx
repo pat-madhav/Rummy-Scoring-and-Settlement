@@ -35,6 +35,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [editingRound, setEditingRound] = useState<number | null>(null);
   const [hoveredRound, setHoveredRound] = useState<number | null>(null);
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isOpen
+  const [invalidInputs, setInvalidInputs] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isInvalid
 
 
   const gameStateQuery = useQuery({
@@ -179,6 +180,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Close dropdown when user starts typing
     closeDropdown(playerId, roundNumber);
     
+    // Clear invalid state when user modifies the input
+    const key = getDropdownKey(playerId, roundNumber);
+    setInvalidInputs(prev => ({ ...prev, [key]: false }));
+    
     // Allow any input while typing
     setScores(prev => {
       const newScores = {
@@ -201,10 +206,19 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
   const validateScore = (playerId: number, roundNumber: number) => {
     const score = scores[playerId]?.[roundNumber];
-    if (!score || score === "") return true;
+    const key = getDropdownKey(playerId, roundNumber);
+    
+    if (!score || score === "") {
+      // Clear invalid state if score is empty
+      setInvalidInputs(prev => ({ ...prev, [key]: false }));
+      return true;
+    }
     
     const numScore = parseInt(score);
-    if (isNaN(numScore)) return true;
+    if (isNaN(numScore)) {
+      setInvalidInputs(prev => ({ ...prev, [key]: false }));
+      return true;
+    }
     
     // Check minimum score (must be 0 or >= 2)
     if (numScore < 2 && numScore !== 0) {
@@ -213,14 +227,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         description: "Minimum enterable score in rummy is 2",
         variant: "destructive",
       });
-      // Clear the invalid score
-      setScores(prev => ({
-        ...prev,
-        [playerId]: {
-          ...prev[playerId],
-          [roundNumber]: "",
-        },
-      }));
+      // Mark as invalid
+      setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
     }
     
@@ -232,17 +240,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         description: `Enter a score less than full count (${maxScore})`,
         variant: "destructive",
       });
-      // Clear the invalid score
-      setScores(prev => ({
-        ...prev,
-        [playerId]: {
-          ...prev[playerId],
-          [roundNumber]: "",
-        },
-      }));
+      // Mark as invalid
+      setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
     }
     
+    // Clear invalid state if validation passes
+    setInvalidInputs(prev => ({ ...prev, [key]: false }));
     return true;
   };
 
@@ -720,7 +724,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                         openSingleDropdown(player.id, roundNumber);
                                       }}
                                       onBlur={() => validateScore(player.id, roundNumber)}
-                                      className="w-full text-center h-8 cursor-text text-sm"
+                                      className={`w-full text-center h-8 cursor-text text-sm ${
+                                        invalidInputs[getDropdownKey(player.id, roundNumber)] 
+                                          ? "border-red-500 dark:border-red-400 border-2" 
+                                          : ""
+                                      }`}
                                     />
                                     {openDropdowns[getDropdownKey(player.id, roundNumber)] && (
                                     <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
@@ -849,7 +857,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   setOpenDropdowns(prev => ({ ...prev, [key]: true }));
                                 }}
                                 onBlur={() => validateScore(player.id, currentRound)}
-                                className={`w-full text-center h-10 cursor-text text-sm min-w-20 ${!scores[player.id]?.[currentRound] ? "border-blue-500 dark:border-blue-400 border-2" : ""}`}
+                                className={`w-full text-center h-10 cursor-text text-sm min-w-20 ${
+                                  invalidInputs[getDropdownKey(player.id, currentRound)] 
+                                    ? "border-red-500 dark:border-red-400 border-2" 
+                                    : !scores[player.id]?.[currentRound] 
+                                    ? "border-blue-500 dark:border-blue-400 border-2" 
+                                    : ""
+                                }`}
                               />
                               {openDropdowns[getDropdownKey(player.id, currentRound)] && (
                                 <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">

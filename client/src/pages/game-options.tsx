@@ -164,7 +164,7 @@ export default function GameOptionsScreen() {
     } else if (type === "opposite") {
       updateGameOptions({ 
         jokerType: type,
-        allJokersFullMoney: false // Default to off when Opposite is selected
+        allJokersFullMoney: true // Default to on when Opposite is selected
       });
     } else {
       updateGameOptions({ jokerType: type });

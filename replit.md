@@ -176,3 +176,6 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Fixed Set Game Rules page structure - removed currency dropdown from Buy-in Amount, removed duplicate "All Jokers Type" from Advanced Settings, restored proper "Other Settings" section with double points settings and Re-entry Allowed
 - July 06, 2025: Restored complete Set Game Rules functionality from previous checkpoint - added back conditional Joker Type sub-options, restored proper Implied Game Rules with correct conditional rules based on selections
 - July 06, 2025: Updated Set Game Rules page structure to match screenshots exactly - removed conditional Joker Type sub-options, made "All Jokers Full Money" a direct Main Settings toggle, restructured Advanced Settings with proper section headers and labels ("All Trips w/o Joker", "All Sequences w/o Joker")
+- July 06, 2025: Restored conditional Joker Type sub-options - "All Jokers Full Money" appears indented when "Opposite" selected, "All Jokers Type" with Closed/Open buttons appears indented when "All" selected
+- July 06, 2025: Added shaded background pane to Advanced Settings section matching screenshot design
+- July 06, 2025: Fixed "All Jokers Full Money" to default to toggled on (true) instead of off when "Opposite" joker type is selected

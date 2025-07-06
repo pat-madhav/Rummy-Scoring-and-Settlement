@@ -182,6 +182,16 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Validate score against full count setting
     const numScore = parseInt(score);
     if (!isNaN(numScore) && score !== "") {
+      // Check minimum score (must be 0 or >= 2)
+      if (numScore < 2 && numScore !== 0) {
+        toast({
+          title: "Invalid Score", 
+          description: "Minimum enterable score in rummy is 2",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const maxScore = game.fullCountPoints === 80 ? 80 : game.forPoints;
       if (numScore > maxScore) {
         toast({
@@ -419,6 +429,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     const pointsLeft = calculatePointsLeft(playerId);
     return pointsLeft % game.packPoints;
   };
+  
+  // Calculate active players (not out and still playing)
+  const activePlayers = players.filter(p => {
+    const playerTotal = calculatePlayerTotal(p.id);
+    return playerTotal < game.forPoints && p.isActive;
+  });
 
   const handleScoreOption = (playerId: number, roundNumber: number, option: string) => {
     // Check if player has 0 packs left and is trying to pack
@@ -918,20 +934,20 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       <div className="fixed bottom-6 left-0 right-0 z-50">
         {/* Subtle fade gradient overlay */}
         <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
-        <div className="w-[70%] mx-auto relative flex space-x-4">
+        <div className={`w-[70%] mx-auto relative flex space-x-4 ${activePlayers.length === 1 ? 'animate-pulse' : ''}`}>
           <Button
             onClick={handleSettleGame}
-            className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px] settlement-btn"
+            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px] settlement-btn"
           >
             <Calculator className="w-4 h-4 mr-2" />
             Settle Game
           </Button>
           <Button
             onClick={handleRestartGame}
-            className="flex-1 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px]"
+            className="flex-1 bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-base min-h-[56px]"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
-            Restart Game
+            {activePlayers.length === 1 ? 'Finish' : 'Restart'}
           </Button>
         </div>
       </div>

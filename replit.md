@@ -163,3 +163,7 @@ Preferred communication style: Simple, everyday language.
 - July 05, 2025: Updated home page card width from max-w-md to max-w-2xl to match the consistent card sizing used across other pages
 - July 05, 2025: Fixed scoring page editing functionality - score inputs for previous rounds are now properly disabled until Edit button is clicked, ensuring clear editing state and preventing input confusion
 - July 05, 2025: Fixed dropdown behavior to close all open dropdowns when clicking on a different score input box, preventing multiple dropdowns from staying open simultaneously
+- July 06, 2025: Added minimum score validation (scores must be 0 or >= 2) with popup message for invalid entries
+- July 06, 2025: Renamed "Restart Game" button to "Restart" for cleaner UI
+- July 06, 2025: Updated button colors - "Settle Game" uses standard blue, "Restart" uses light red
+- July 06, 2025: Added dynamic button behavior - when only 1 player remains, "Restart" transforms to "Finish" with pulsating animation to prompt game completion

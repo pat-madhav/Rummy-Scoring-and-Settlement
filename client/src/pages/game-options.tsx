@@ -243,7 +243,7 @@ export default function GameOptionsScreen() {
           <CardContent className="p-6">
             <div className="space-y-8">
               {/* Main Settings */}
-              <div className={`${mainSettingsOpen ? 'pt-2 pb-0' : 'pt-6 pb-0'} border-t border-gray-200 dark:border-gray-700`}>
+              <div className={`${mainSettingsOpen ? 'pt-2 pb-0' : 'pt-6 pb-0'}`}>
                 <Collapsible open={mainSettingsOpen} onOpenChange={setMainSettingsOpen}>
                   <CollapsibleTrigger className={`flex items-center justify-between w-full group ${mainSettingsOpen ? 'pb-2' : ''}`}>
                     <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Main Settings</h2>

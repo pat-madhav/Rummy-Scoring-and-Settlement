@@ -131,7 +131,7 @@ export default function PlayerNamesScreen() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-2xl mx-auto p-4 py-8 pb-24 main-content">
+      <main className="max-w-2xl mx-auto p-4 py-8 pb-20 main-content">
         
         <Card>
           <CardContent className="p-6">
@@ -160,14 +160,14 @@ export default function PlayerNamesScreen() {
               <Button
                 onClick={clearAllNames}
                 variant="outline"
-                className="flex-1"
+                className="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border-gray-300 dark:border-gray-600"
               >
                 Clear All Names
               </Button>
               <Button
                 onClick={assignDefaultNames}
                 variant="outline"
-                className="flex-1"
+                className="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border-gray-300 dark:border-gray-600"
               >
                 Default Names
               </Button>

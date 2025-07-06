@@ -187,3 +187,4 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Fixed Advanced Settings heading position to stay in place when expanded instead of moving to top
 - July 06, 2025: Updated Pack Safe logic to show empty when player's total score >= Max Points - 1, preventing Pack Safe display for players near the point limit
 - July 06, 2025: Fixed scoring display for "Out" players - subsequent rounds now show "-" instead of score input boxes for players who went out in previous rounds
+- July 06, 2025: Updated player names page buttons with consistent light grey styling (Clear All Names and Default Names) to match app-wide button design and fixed bottom padding consistency

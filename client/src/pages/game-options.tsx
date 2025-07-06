@@ -588,7 +588,7 @@ export default function GameOptionsScreen() {
                     <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Advanced Settings</h3>
                     <ChevronRight className={`h-5 w-5 text-gray-500 transition-all duration-300 group-data-[state=open]:rotate-90`} />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="transition-all duration-500 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-up-2 data-[state=open]:slide-down-2">
+                  <CollapsibleContent className="transition-all duration-700 ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-up-3 data-[state=open]:slide-down-3">
                     <div className="bg-gray-800 dark:bg-gray-900 rounded-lg p-4 space-y-4 mt-4">
                       {/* Buy-in Amount */}
                       <div className="flex items-center justify-between">

@@ -4,6 +4,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Smooth Collapsible Animation */
+@keyframes smoothSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px;
+  }
+}
+
+@keyframes smoothSlideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+}
+
+.collapsible-smooth-enter {
+  animation: smoothSlideDown 0.7s ease-out forwards;
+}
+
+.collapsible-smooth-exit {
+  animation: smoothSlideUp 0.7s ease-out forwards;
+}
+
 /* Tutorial Styles */
 .tutorial-highlight {
   position: relative;

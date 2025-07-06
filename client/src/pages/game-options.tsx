@@ -225,7 +225,7 @@ export default function GameOptionsScreen() {
               {/* Main Settings */}
               <div>
                 <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-6">Main Settings</h2>
-                <div className="space-y-4">
+                <div className="bg-gray-800 dark:bg-gray-900 rounded-lg p-4 space-y-4">
                   {/* Number of players */}
                   <div className="flex items-center justify-between">
                     <Label className="text-gray-700 dark:text-gray-300">Players</Label>

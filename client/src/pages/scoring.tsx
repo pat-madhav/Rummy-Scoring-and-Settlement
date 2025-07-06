@@ -459,6 +459,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     const playerTotal = calculatePlayerTotal(p.id);
     return playerTotal < game.forPoints && p.isActive;
   });
+  
+  // Check if a round already has a rummy (0) score
+  const hasRummyInRound = (roundNumber: number) => {
+    return players.some(player => {
+      const score = scores[player.id]?.[roundNumber];
+      return score === "0" || score === "Rummy";
+    });
+  };
 
   const handleScoreOption = (playerId: number, roundNumber: number, option: string) => {
     // Check if player has 0 packs left and is trying to pack
@@ -716,12 +724,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     />
                                     {openDropdowns[getDropdownKey(player.id, roundNumber)] && (
                                     <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
-                                      <div
-                                        onClick={() => handleScoreOption(player.id, roundNumber, "rummy")}
-                                        className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
-                                      >
-                                        Rummy (0)
-                                      </div>
+                                      {!hasRummyInRound(roundNumber) || scores[player.id]?.[roundNumber] === "0" ? (
+                                        <div
+                                          onClick={() => handleScoreOption(player.id, roundNumber, "rummy")}
+                                          className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
+                                        >
+                                          Rummy (0)
+                                        </div>
+                                      ) : (
+                                        <div className="px-3 py-2 text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed border-b border-gray-100 dark:border-gray-600">
+                                          Rummy (0) - Already taken
+                                        </div>
+                                      )}
                                       {calculatePacksRemaining(player.id) > 0 ? (
                                         <>
                                           <div
@@ -839,12 +853,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                               />
                               {openDropdowns[getDropdownKey(player.id, currentRound)] && (
                                 <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container">
-                                  <div
-                                    onClick={() => handleScoreOption(player.id, currentRound, "rummy")}
-                                    className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
-                                  >
-                                    Rummy (0)
-                                  </div>
+                                  {!hasRummyInRound(currentRound) || scores[player.id]?.[currentRound] === "0" ? (
+                                    <div
+                                      onClick={() => handleScoreOption(player.id, currentRound, "rummy")}
+                                      className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
+                                    >
+                                      Rummy (0)
+                                    </div>
+                                  ) : (
+                                    <div className="px-3 py-2 text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed border-b border-gray-100 dark:border-gray-600">
+                                      Rummy (0) - Already taken
+                                    </div>
+                                  )}
                                   {calculatePacksRemaining(player.id) > 0 ? (
                                     <>
                                       <div

@@ -174,3 +174,4 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Fixed scoring page "Round" heading font size to match player names in header row (changed from text-sm to text-lg font-bold)
 - July 06, 2025: Fixed scoring page display issue where completed round scores for "Out" players were incorrectly showing "Out" instead of their actual numeric scores
 - July 06, 2025: Fixed Set Game Rules page structure - removed currency dropdown from Buy-in Amount, removed duplicate "All Jokers Type" from Advanced Settings, restored proper "Other Settings" section with double points settings and Re-entry Allowed
+- July 06, 2025: Restored complete Set Game Rules functionality from previous checkpoint - added back conditional Joker Type sub-options, restored proper Implied Game Rules with correct conditional rules based on selections

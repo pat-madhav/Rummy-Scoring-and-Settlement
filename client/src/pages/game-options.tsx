@@ -530,6 +530,54 @@ export default function GameOptionsScreen() {
                       </Button>
                     </div>
                   </div>
+                  
+                  {/* All Jokers Sub-options */}
+                  {showJokerSubOptions && (
+                    <div className={`ml-6 transition-all duration-800 ease-out ${jokerSubOptionsAnimation}`}>
+                      <div className="flex items-center justify-between">
+                        <Label className="text-gray-700 dark:text-gray-300 text-sm opacity-80">All Jokers Type</Label>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant={gameOptions.allJokersType === "Closed" ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ allJokersType: "Closed" })}
+                            className={`px-2 py-1 text-xs ${
+                              gameOptions.allJokersType === "Closed" 
+                                ? "" 
+                                : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                            }`}
+                            size="sm"
+                          >
+                            Closed
+                          </Button>
+                          <Button
+                            variant={gameOptions.allJokersType === "Open" ? "default" : "outline"}
+                            onClick={() => updateGameOptions({ allJokersType: "Open" })}
+                            className={`px-2 py-1 text-xs ${
+                              gameOptions.allJokersType === "Open" 
+                                ? "" 
+                                : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                            }`}
+                            size="sm"
+                          >
+                            Open
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Opposite Jokers Sub-options */}
+                  {showOppositeJokerOptions && (
+                    <div className={`ml-6 transition-all duration-800 ease-out ${oppositeJokerOptionsAnimation}`}>
+                      <div className="flex items-center justify-between">
+                        <Label className="text-gray-700 dark:text-gray-300 text-sm opacity-80">All Jokers Full Money</Label>
+                        <Switch
+                          checked={gameOptions.allJokersFullMoney || false}
+                          onCheckedChange={(checked) => updateGameOptions({ allJokersFullMoney: checked })}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   {/* All Jokers Full Money */}
                   <div className="flex items-center justify-between">
@@ -611,14 +659,10 @@ export default function GameOptionsScreen() {
                       </li>
                     )}
 
-                    <li>• A player must make minimum 2 sequences to win</li>
-                    <li>• At least 1 sequence must be pure (no jokers)</li>
-                    <li>• The second sequence can be impure (with jokers)</li>
-                    <li>• Remaining cards can be sequences or sets</li>
-
-                    {showOppositeJokerOptions && (
-                      <li className={`transition-all duration-800 ease-out ${oppositeJokerOptionsAnimation}`}>
-                        • The Joker card 🃏 timing and rules:
+                    {/* Joker Type Rules - Animated slidedown */}
+                    {gameOptions.jokerType === "opposite" && (
+                      <li className="transition-all duration-800 ease-out animate-in slide-in-from-bottom-3 fade-in-0">
+                        • Add 1 Joker card to 2 decks of playing cards
                         <ul className="ml-4 mt-1 space-y-1">
                           <li>› The Joker card 🃏 is a replacement for the actual joker picked by the player before the dealer</li>
                           <li>› The Joker card 🃏 does not serve as a Joker</li>

@@ -25,6 +25,15 @@ export default function GameOptionsScreen() {
   const [showCustomMidPackPoints, setShowCustomMidPackPoints] = useState(false);
   const [mainSettingsOpen, setMainSettingsOpen] = useState(false);
   const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
+
+  // Auto-expand Main Settings with slide-out animation on page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMainSettingsOpen(true);
+    }, 100); // Small delay to ensure the animation is visible
+    
+    return () => clearTimeout(timer);
+  }, []);
   const [showFullCountRule, setShowFullCountRule] = useState(false);
   const [fullCountRuleAnimation, setFullCountRuleAnimation] = useState("");
   const [showJokerSubOptions, setShowJokerSubOptions] = useState(false);

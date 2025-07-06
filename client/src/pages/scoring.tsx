@@ -227,7 +227,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       };
       
       // Check if round should advance after this change
-      checkRoundAdvancement(newScores, roundNumber);
+      // Use setTimeout to ensure state updates are processed
+      setTimeout(() => {
+        checkRoundAdvancement(newScores, roundNumber);
+      }, 0);
       
       return newScores;
     });
@@ -565,11 +568,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       };
       
-      // Use shared function to check round advancement (prevents duplicate rounds)
-      const shouldContinue = checkRoundAdvancement(newScores, roundNumber);
-      if (!shouldContinue) {
-        return prev;
-      }
+      // Check round advancement but don't block score entry
+      setTimeout(() => {
+        checkRoundAdvancement(newScores, roundNumber);
+      }, 0);
       
       return newScores;
     });

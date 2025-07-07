@@ -499,12 +499,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
     }
     
-    // Check if player has "Compulsory" (no packs left) - use current total for immediate validation
-    const currentPointsLeft = Math.max(0, game.forPoints - currentTotal - 1);
-    const currentPacksRemaining = Math.floor(currentPointsLeft / game.packPoints);
+    // Check if player has "Compulsory" (no packs left) - use committed total to avoid triggering while typing
+    const committedPointsLeft = Math.max(0, game.forPoints - committedTotal - 1);
+    const committedPacksRemaining = Math.floor(committedPointsLeft / game.packPoints);
     
-    // Compulsory when packs = 0 and player has entered at least one score
-    if (currentPacksRemaining === 0 && currentTotal > 0 && currentTotal < game.forPoints) {
+    // Compulsory when packs = 0 and player has entered at least one committed score
+    if (committedPacksRemaining === 0 && committedTotal > 0 && committedTotal < game.forPoints) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     

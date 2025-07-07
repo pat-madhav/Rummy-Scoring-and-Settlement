@@ -440,11 +440,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     });
     
     if (activePlayers.length < 2) {
-      toast({
-        title: "Cannot Settle Game",
-        description: "Settlement requires at least 2 active players",
-        variant: "destructive",
-      });
+      setErrorMessage("Cannot Settle Game\nSettlement requires at least 2 active players");
       return;
     }
 
@@ -482,10 +478,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
   // Helper functions for player state
   const getPlayerState = (playerId: number) => {
-    // Use committed scores for Out/Compulsory validation, but display scores for everything else
+    // Use committed scores for validation
     const committedTotal = calculateCommittedPlayerTotal(playerId);
     const displayTotal = calculatePlayerTotal(playerId);
-    const packsRemaining = calculatePacksRemaining(playerId);
     
     // Calculate active players based on committed scores
     const activePlayers = players.filter(p => {
@@ -506,25 +501,35 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Check if player has "Compulsory" (no packs left) - use committed total for validation
     const committedPointsLeft = Math.max(0, game.forPoints - committedTotal - 1);
     const committedPacksRemaining = Math.floor(committedPointsLeft / game.packPoints);
-    if (committedPacksRemaining === 0 && committedTotal > 0) {
+    
+    // Compulsory when packs = 0 and player has entered at least one score
+    if (committedPacksRemaining === 0 && committedTotal > 0 && committedTotal < game.forPoints) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if round 1 is completed (all active players have scores for round 1)
-    let round1Completed = false;
+    // Check if round 1 is FULLY COMMITTED (all active players have committed scores for round 1)
+    let round1FullyCommitted = false;
     
-    if (currentRound >= 1) {
-      // Check if all active players have scores for round 1
-      const playersWithRound1Scores = activePlayers.filter(p => scores[p.id]?.[1]);
-      round1Completed = playersWithRound1Scores.length === activePlayers.length;
+    // Only check for round 1 committed scores after we've moved past round 1
+    if (currentRound > 1) {
+      // Check if all active players have committed scores for round 1
+      const playersWithCommittedRound1Scores = activePlayers.filter(p => committedScores[p.id]?.[1] !== undefined);
+      round1FullyCommitted = playersWithCommittedRound1Scores.length === activePlayers.length && activePlayers.length > 0;
     }
     
-    // Apply "Least" highlighting if round 1 is completed and there are multiple active players
-    if (round1Completed && activePlayers.length > 1) {
-      const activeTotals = activePlayers.map(p => calculatePlayerTotal(p.id));
+    // Apply "Least" highlighting only if round 1 is fully committed and there are multiple active players
+    if (round1FullyCommitted && activePlayers.length > 1) {
+      const activeTotals = activePlayers.map(p => {
+        // Calculate total from only committed scores
+        const playerCommittedScores = committedScores[p.id] || {};
+        return Object.values(playerCommittedScores).reduce((total, score) => {
+          const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
+          return total + numScore;
+        }, 0);
+      });
       const minTotal = Math.min(...activeTotals);
       
-      if (displayTotal === minTotal && displayTotal >= 0) {
+      if (committedTotal === minTotal && committedTotal > 0) {
         return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
       }
     }
@@ -572,6 +577,19 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return total + numScore;
     }, 0);
   };
+
+  // Check if all active players have entered scores for the current round
+  const isRoundComplete = () => {
+    const activePlayers = players.filter(p => {
+      const pTotal = calculateCommittedPlayerTotal(p.id);
+      return pTotal < game.forPoints && p.isActive;
+    });
+    
+    return activePlayers.every(player => {
+      const playerScores = scores[player.id] || {};
+      return playerScores[currentRound] !== undefined && playerScores[currentRound] !== '';
+    });
+  };
   
   const calculatePointsLeft = (playerId: number) => {
     const total = calculatePlayerTotal(playerId);
@@ -606,11 +624,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Check if player has 0 packs left and is trying to pack
     const packsRemaining = calculatePacksRemaining(playerId);
     if (packsRemaining === 0 && (option === "pack" || option === "mid-pack")) {
-      toast({
-        title: "Compulsory",
-        description: "Player with 0 packs left cannot pack or mid-pack",
-        variant: "destructive",
-      });
+      setErrorMessage("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
       return;
     }
 
@@ -902,11 +916,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                         <>
                                           <div
                                             onClick={() => {
-                                              toast({
-                                                title: "Compulsory",
-                                                description: "Player with 0 packs left cannot pack or mid-pack",
-                                                variant: "destructive",
-                                              });
+                                              setErrorMessage("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
                                             }}
                                             className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                           >
@@ -914,11 +924,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                           </div>
                                           <div
                                             onClick={() => {
-                                              toast({
-                                                title: "Compulsory",
-                                                description: "Player with 0 packs left cannot pack or mid-pack",
-                                                variant: "destructive",
-                                              });
+                                              setErrorMessage("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
                                             }}
                                             className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                           >

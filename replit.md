@@ -190,3 +190,4 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Updated player names page buttons with consistent light grey styling (Clear All Names and Default Names) to match app-wide button design and fixed bottom padding consistency
 - July 06, 2025: Implemented responsive button sizing - mobile devices use 70% width, tablets/desktops use fixed 3-inch width buttons for consistent sizing across devices
 - July 06, 2025: Added symmetrical gradient fade effect on both top and bottom of navigation buttons for enhanced visual aesthetics
+- July 06, 2025: Updated scoring page dropdown position to spawn at bottom right of score textboxes instead of top right for better usability

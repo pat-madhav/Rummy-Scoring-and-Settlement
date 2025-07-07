@@ -110,12 +110,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       const isRightmostPlayer = playerIndex >= playersWithScores.length - 2;
       
       if (isRightmostPlayer) {
-        return "absolute top-0 right-full z-50 mr-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
+        return "absolute top-full right-0 z-50 mt-1 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
       }
     }
     
-    // Default position: to the right
-    return "absolute top-0 left-full z-50 ml-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
+    // Default position: to the bottom right
+    return "absolute top-full right-0 z-50 mt-1 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
   };
 
   // Click outside effect to close dropdowns

@@ -880,31 +880,41 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
                         <td className="px-4 py-3 font-medium relative sticky-column-header bg-scoring-light bg-scoring-dark w-28">
-                          <div className="flex items-center justify-between w-full h-full">
+                          <div className="flex items-center w-full h-full relative">
                             <div className="flex-1 flex justify-center">
-                              <span className="text-blue-400 text-lg font-bold">{roundNumber}</span>
+                              <span 
+                                className={`text-blue-400 text-lg font-bold transition-transform duration-300 ease-in-out ${
+                                  hoveredRound === roundNumber || isEditing 
+                                    ? 'transform -translate-x-3' 
+                                    : 'transform translate-x-0'
+                                }`}
+                              >
+                                {roundNumber}
+                              </span>
                             </div>
                             {/* Edit and Remove icons - appear on hover/tap */}
-                            {(hoveredRound === roundNumber || isEditing) && (
-                              <div className="flex flex-col gap-1 h-full justify-center" style={{ marginRight: '25%' }}>
-                                <Pencil
+                            <div className={`flex flex-col gap-1 h-full justify-center absolute right-0 transition-all duration-300 ease-in-out ${
+                              hoveredRound === roundNumber || isEditing 
+                                ? 'opacity-100 translate-x-0' 
+                                : 'opacity-0 translate-x-4'
+                            }`} style={{ marginRight: '25%' }}>
+                              <Pencil
+                                className="w-4 h-4 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditingRound(isEditing ? null : roundNumber);
+                                }}
+                              />
+                              {!isEditing && (
+                                <Trash2
                                   className="w-4 h-4 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setEditingRound(isEditing ? null : roundNumber);
+                                    handleRemoveRound(roundNumber);
                                   }}
                                 />
-                                {!isEditing && (
-                                  <Trash2
-                                    className="w-4 h-4 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleRemoveRound(roundNumber);
-                                    }}
-                                  />
-                                )}
-                              </div>
-                            )}
+                              )}
+                            </div>
                           </div>
                         </td>
                         {players.map((player) => {

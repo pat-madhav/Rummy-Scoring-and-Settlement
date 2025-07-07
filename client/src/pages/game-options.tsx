@@ -7,14 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Switch } from "@/components/ui/switch";
-import { useTheme } from "@/components/theme-provider";
+
 import { useGameState } from "@/hooks/use-game-state";
 import { calculatePacksPerGame } from "@/lib/game-utils";
-import { Moon, Sun, ArrowLeft, Settings, ChevronDown, ChevronRight, Play } from "lucide-react";
+import { ArrowLeft, Settings, ChevronDown, ChevronRight, Play } from "lucide-react";
 
 export default function GameOptionsScreen() {
   const [, setLocation] = useLocation();
-  const { theme, setTheme } = useTheme();
+
   const { gameOptions, updateGameOptions } = useGameState();
   
   const [customPoints, setCustomPoints] = useState("");
@@ -52,9 +52,7 @@ export default function GameOptionsScreen() {
   const [oppositeJokerOptionsAnimation, setOppositeJokerOptionsAnimation] = useState("");
 
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+
 
   const handlePlayerCountChange = (count: number) => {
     updateGameOptions({ playerCount: count });
@@ -211,19 +209,6 @@ export default function GameOptionsScreen() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-5 w-5 text-yellow-500" />
-                ) : (
-                  <Moon className="h-5 w-5 text-gray-600" />
-                )}
-              </Button>
-              
               <Button
                 variant="ghost"
                 size="icon"

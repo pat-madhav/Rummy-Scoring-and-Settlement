@@ -4,14 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useTheme } from "@/components/theme-provider";
 import { useGameState } from "@/hooks/use-game-state";
 import { useToast } from "@/hooks/use-toast";
-import { Moon, Sun, ArrowLeft, Play } from "lucide-react";
+import { ArrowLeft, Play } from "lucide-react";
 
 export default function PlayerNamesScreen() {
   const [, setLocation] = useLocation();
-  const { theme, setTheme } = useTheme();
+
   const { gameOptions, updateGameOptions, startNewGame, createGameMutation } = useGameState();
   const { toast } = useToast();
   
@@ -20,9 +19,7 @@ export default function PlayerNamesScreen() {
   );
 
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+
 
 
 
@@ -104,19 +101,6 @@ export default function PlayerNamesScreen() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-5 w-5 text-yellow-500" />
-                ) : (
-                  <Moon className="h-5 w-5 text-gray-600" />
-                )}
-              </Button>
-              
               <Button
                 variant="ghost"
                 size="icon"

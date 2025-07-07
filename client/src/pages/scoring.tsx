@@ -10,12 +10,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTheme } from "@/components/theme-provider";
+
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { calculatePlayerStats, validateReEntryConditions, shouldShowSettlement } from "@/lib/game-utils";
 import { ReEntryModal } from "@/components/re-entry-modal";
-import { Moon, Sun, X, Calculator, RotateCcw, ChevronDown } from "lucide-react";
+import { X, Calculator, RotateCcw, ChevronDown } from "lucide-react";
 import type { GameState, PlayerWithScores } from "@shared/schema";
 
 interface ScoringScreenProps {
@@ -24,7 +24,7 @@ interface ScoringScreenProps {
 
 export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [, setLocation] = useLocation();
-  const { theme, setTheme } = useTheme();
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -75,9 +75,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     },
   });
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+
 
   // Helper functions for dropdown management
   const getDropdownKey = useCallback((playerId: number, roundNumber: number) => `${playerId}-${roundNumber}`, []);
@@ -664,19 +662,6 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-5 w-5 text-yellow-500" />
-                ) : (
-                  <Moon className="h-5 w-5 text-gray-600" />
-                )}
-              </Button>
-              
               <Button
                 variant="ghost"
                 size="icon"

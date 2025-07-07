@@ -1,16 +1,11 @@
 import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/components/theme-provider";
-import { Moon, Sun, Play } from "lucide-react";
+import { Play } from "lucide-react";
 
 export default function WelcomeScreen() {
   const [, setLocation] = useLocation();
-  const { theme, setTheme } = useTheme();
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -31,20 +26,7 @@ export default function WelcomeScreen() {
               </h1>
             </div>
             
-            <div className="flex items-center space-x-3">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-5 w-5 text-yellow-500" />
-                ) : (
-                  <Moon className="h-5 w-5 text-gray-600" />
-                )}
-              </Button>
-            </div>
+            <div className="w-8 h-8"></div>
           </div>
         </div>
       </header>

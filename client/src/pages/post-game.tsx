@@ -3,9 +3,8 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/components/theme-provider";
 import { getWinner } from "@/lib/game-utils";
-import { Moon, Sun, Home, RotateCcw } from "lucide-react";
+import { Home, RotateCcw } from "lucide-react";
 import type { GameState } from "@shared/schema";
 
 interface PostGameScreenProps {
@@ -14,7 +13,7 @@ interface PostGameScreenProps {
 
 export default function PostGameScreen({ gameId }: PostGameScreenProps) {
   const [, setLocation] = useLocation();
-  const { theme, setTheme } = useTheme();
+
 
 
   const gameStateQuery = useQuery({
@@ -27,9 +26,7 @@ export default function PostGameScreen({ gameId }: PostGameScreenProps) {
     enabled: !!gameId,
   });
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+
 
 
 
@@ -91,18 +88,7 @@ export default function PostGameScreen({ gameId }: PostGameScreenProps) {
               </h1>
             </div>
             
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5 text-yellow-500" />
-              ) : (
-                <Moon className="h-5 w-5 text-gray-600" />
-              )}
-            </Button>
+            <div className="w-8 h-8"></div>
           </div>
         </div>
       </header>

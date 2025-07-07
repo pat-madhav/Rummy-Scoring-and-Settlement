@@ -756,9 +756,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onMouseLeave={() => setHoveredRound(null)}
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
-                        <td className="px-4 py-3 font-medium text-white relative sticky-column-header bg-scoring-light bg-scoring-dark">
+                        <td className="px-4 py-3 font-medium relative sticky-column-header bg-scoring-light bg-scoring-dark">
                           <div className="flex items-center justify-between w-full h-full">
-                            <span className="mr-2">{roundNumber}</span>
+                            <span className="mr-2 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-bold">{roundNumber}</span>
                             {/* Edit and Remove buttons - appear on hover/tap */}
                             {(hoveredRound === roundNumber || isEditing) && (
                               <div className="flex flex-col gap-0.5 h-full justify-center">
@@ -930,7 +930,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   
                   {/* Current round input - only one empty row */}
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
-                    <td className="px-4 py-3 font-medium text-white sticky-column-header bg-scoring-light bg-scoring-dark">{currentRound}</td>
+                    <td className="px-4 py-3 font-medium sticky-column-header bg-scoring-light bg-scoring-dark">
+                      <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-bold">{currentRound}</span>
+                    </td>
                     {players.map((player) => {
                       const currentTotalScore = calculatePlayerTotal(player.id);
                       

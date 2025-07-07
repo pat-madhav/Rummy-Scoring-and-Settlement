@@ -498,9 +498,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Winner", color: "bg-green-800 dark:bg-green-900" };
     }
     
-    // Check if player is "Out" - use current total for immediate validation
-    const currentTotal = calculatePlayerTotal(playerId);
-    if (currentTotal >= game.forPoints) {
+    // Check if player is "Out" - use committed total only (after onBlur)
+    if (committedTotal >= game.forPoints) {
       return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
     }
     

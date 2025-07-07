@@ -4,6 +4,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Scoring table freeze pane styles */
+@layer components {
+  /* Create proper isolation for sticky columns */
+  .sticky-column-header {
+    @apply sticky left-0 z-30;
+    isolation: isolate;
+  }
+  
+  .sticky-column-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  
+  /* Light theme backgrounds */
+  .sticky-column-header.bg-header-light::after {
+    background-color: rgb(249, 250, 251); /* gray-50 */
+  }
+  
+  .sticky-column-header.bg-row-light::after {
+    background-color: rgb(255, 255, 255); /* white */
+  }
+  
+  .sticky-column-header.bg-current-light::after {
+    background-color: rgb(239, 246, 255); /* blue-50 */
+  }
+  
+  /* Dark theme backgrounds */
+  .dark .sticky-column-header.bg-header-dark::after {
+    background-color: rgb(55, 65, 81); /* gray-700 */
+  }
+  
+  .dark .sticky-column-header.bg-row-dark::after {
+    background-color: rgb(31, 41, 55); /* gray-800 */
+  }
+  
+  .dark .sticky-column-header.bg-current-dark::after {
+    background-color: rgba(30, 58, 138, 0.1); /* blue-900/10 */
+  }
+}
+
 /* Smooth Collapsible Animation */
 @keyframes smoothSlideDown {
   from {

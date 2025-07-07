@@ -211,26 +211,22 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         }
       }
       
+      // LEAST COUNT VALIDATION - Only after entire round is complete
       // Validate minimum 1 Rummy rule
       const rummyScores = Object.values(currentRoundScores).filter(scoreStr => parseInt(scoreStr) === 0);
       if (rummyScores.length === 0) {
-        toast({
-          title: "Invalid Round",
-          description: "At least one player must have a Rummy (0 points) in each round",
-          variant: "destructive",
-        });
+        setErrorMessage("Invalid Round\nAt least one player must have a Rummy (0 points) in each round");
         return false;
       }
       
       // Validate maximum 1 Rummy rule
       if (rummyScores.length > 1) {
-        toast({
-          title: "Invalid Round",
-          description: "Only one player can have a Rummy (0 points) in each round",
-          variant: "destructive",
-        });
+        setErrorMessage("Invalid Round\nOnly one player can have a Rummy (0 points) in each round");
         return false;
       }
+      
+      // Clear any error message if validation passes
+      setErrorMessage(null);
       
       // Check if game should continue (more than 1 player remaining)
       if (playersNotOut.length > 1) {
@@ -246,6 +242,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const handleScoreChange = (playerId: number, roundNumber: number, score: string) => {
     // Close dropdown when user starts typing
     closeDropdown(playerId, roundNumber);
+    
+    // Clear error message when user starts typing
+    if (errorMessage) {
+      setErrorMessage(null);
+    }
     
     // Don't clear invalid state immediately - let validateScore handle it
     
@@ -341,11 +342,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
   const handleReEntryClick = (player: PlayerWithScores) => {
     if (!gameStateQuery.data?.game.reEntryAllowed) {
-      toast({
-        title: "Re-entry Not Allowed",
-        description: "Re-entry is disabled for this game",
-        variant: "destructive",
-      });
+      setErrorMessage("Re-entry Not Allowed\nRe-entry is disabled for this game");
       return;
     }
 
@@ -353,11 +350,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     const validation = validateReEntryConditions(activePlayers, playersWithScoresQuery.data?.map(p => ({ player: p, packsRemaining: p.packsRemaining })) || []);
     
     if (!validation.isValid) {
-      toast({
-        title: "Re-entry Not Allowed",
-        description: validation.reason,
-        variant: "destructive",
-      });
+      setErrorMessage("Re-entry Not Allowed\n" + validation.reason);
       return;
     }
 
@@ -375,19 +368,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         hasReEntered: true,
       });
 
-      toast({
-        title: "Re-entry Confirmed",
-        description: `${selectedPlayer.name} has re-entered the game`,
-      });
+      // Clear any error message on successful re-entry
+      setErrorMessage(null);
 
       setShowReEntryModal(false);
       setSelectedPlayer(null);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to process re-entry",
-        variant: "destructive",
-      });
+      setErrorMessage("Error\nFailed to process re-entry");
     }
   };
 

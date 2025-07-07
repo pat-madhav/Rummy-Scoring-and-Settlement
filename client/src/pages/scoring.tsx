@@ -880,11 +880,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
                         <td className="px-4 py-3 font-medium relative sticky-column-header bg-scoring-light bg-scoring-dark w-28">
-                          <div className="flex items-center justify-center w-full h-full relative">
-                            <span className="text-blue-400 text-lg font-bold">{roundNumber}</span>
+                          <div className="flex items-center justify-between w-full h-full">
+                            <div className="flex-1 flex justify-center">
+                              <span className="text-blue-400 text-lg font-bold">{roundNumber}</span>
+                            </div>
                             {/* Edit and Remove icons - appear on hover/tap */}
                             {(hoveredRound === roundNumber || isEditing) && (
-                              <div className="absolute flex flex-col gap-1 h-full justify-center" style={{ right: '25%' }}>
+                              <div className="flex flex-col gap-1 h-full justify-center" style={{ marginRight: '25%' }}>
                                 <Pencil
                                   className="w-20 h-20 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
                                   onClick={(e) => {

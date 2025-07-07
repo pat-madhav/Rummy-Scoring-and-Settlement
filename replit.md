@@ -222,5 +222,5 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Implemented comprehensive number-only validation for all score input boxes with real-time checking, red border indicators, and consistent error messaging
 - July 07, 2025: Enhanced input validation to prevent non-numeric characters while typing and clear invalid scores with appropriate error messages
 - July 07, 2025: Updated both current round and previous round editing inputs to use unified numeric validation system
-- July 07, 2025: Enlarged edit and remove icons by 50% (w-14 h-14 → w-20 h-20) and positioned them at exactly 25% from the right border using inline styles
+- July 07, 2025: Enlarged edit and remove icons by 50% (w-14 h-14 → w-20 h-20) and repositioned them to the right of round numbers using flex layout with marginRight: '25%'
 - July 07, 2025: Updated all round numbers to match top header row font size (added text-lg font-bold) for consistent typography

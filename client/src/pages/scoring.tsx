@@ -702,7 +702,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const playerState = getPlayerState(player.id);
                       
                       return (
-                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent w-32 ${playerState.color}`}>
+                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent w-16 ${playerState.color}`}>
                           <div>{player.name}</div>
                           {gameStateQuery.data?.game.reEntryAllowed && (
                             <Button
@@ -730,7 +730,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const playerState = getPlayerState(player.id);
                       
                       return (
-                        <th key={`state-${player.id}`} className={`px-4 py-2 w-32 text-center text-xs font-medium ${playerState.color} text-gray-700 dark:text-gray-300`}>
+                        <th key={`state-${player.id}`} className={`px-4 py-2 w-16 text-center text-xs font-medium ${playerState.color} text-gray-700 dark:text-gray-300`}>
                           {playerState.state}
                         </th>
                       );
@@ -802,7 +802,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                           const isPlayerOutBeforeThisRound = wasPlayerOutBeforeRound(player.id, roundNumber);
                           
                           return (
-                            <td key={player.id} className={`px-4 py-3 w-32 ${getPlayerState(player.id).color}`}>
+                            <td key={player.id} className={`px-4 py-3 w-16 ${getPlayerState(player.id).color}`}>
                               {isEditing ? (
                                 // For editing mode, only show input if player wasn't out before this round
                                 !isPlayerOutBeforeThisRound ? (
@@ -945,7 +945,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const showInput = !wasPlayerOutBeforeCurrentRound;
                       
                       return (
-                        <td key={player.id} className={`px-4 py-3 w-32 ${getPlayerState(player.id).color}`}>
+                        <td key={player.id} className={`px-4 py-3 w-16 ${getPlayerState(player.id).color}`}>
                           {showInput ? (
                             <div className="relative dropdown-container">
                               <Input
@@ -983,7 +983,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   }, 0);
                                 }}
                                 onBlur={() => validateScore(player.id, currentRound)}
-                                className={`w-24 text-center h-10 cursor-text text-sm ${
+                                className={`w-12 text-center h-10 cursor-text text-sm ${
                                   invalidInputs[getDropdownKey(player.id, currentRound)] 
                                     ? "border-red-500 dark:border-red-400 border-2" 
                                     : !scores[player.id]?.[currentRound] 
@@ -1073,7 +1073,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   <tr className="font-semibold border-t-4 border-b-4 border-gray-800 dark:border-gray-200">
                     <td className="px-4 py-3 text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Total</td>
                     {players.map((player) => (
-                      <td key={player.id} className={`px-4 py-3 w-32 text-center text-lg font-bold text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
+                      <td key={player.id} className={`px-4 py-3 w-16 text-center text-lg font-bold text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
                         {calculatePlayerTotal(player.id)}
                       </td>
                     ))}
@@ -1081,7 +1081,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   <tr className="text-sm">
                     <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Points left</td>
                     {players.map((player) => (
-                      <td key={player.id} className={`px-4 py-3 w-32 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
+                      <td key={player.id} className={`px-4 py-3 w-16 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePointsLeft(player.id)}
                       </td>
                     ))}
@@ -1089,7 +1089,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   <tr className="text-sm">
                     <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Packs</td>
                     {players.map((player) => (
-                      <td key={player.id} className={`px-4 py-3 w-32 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
+                      <td key={player.id} className={`px-4 py-3 w-16 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePacksRemaining(player.id)}
                       </td>
                     ))}
@@ -1105,7 +1105,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const isNearMaxPoints = playerTotal >= (maxPoints - 1);
                       
                       return (
-                        <td key={player.id} className={`px-4 py-3 w-32 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
+                        <td key={player.id} className={`px-4 py-3 w-16 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                           {!hasScores || isNearMaxPoints ? "" : (!isPlayerOut && packSafePoints === 0 ? "Yes" : packSafePoints)}
                         </td>
                       );

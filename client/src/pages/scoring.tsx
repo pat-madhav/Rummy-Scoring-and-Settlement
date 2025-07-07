@@ -29,6 +29,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const queryClient = useQueryClient();
   
   const [scores, setScores] = useState<Record<number, Record<number, string>>>({}); // playerId -> roundNumber -> score
+  const [committedScores, setCommittedScores] = useState<Record<number, Record<number, string>>>({}); // playerId -> roundNumber -> score (only after onBlur)
   const [currentRound, setCurrentRound] = useState(1);
   const [showReEntryModal, setShowReEntryModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerWithScores | null>(null);
@@ -48,6 +49,22 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     queryKey: [`/api/games/${gameId}/players-with-scores`],
     enabled: !!gameId,
   });
+
+  // Initialize scores and committed scores from database data
+  useEffect(() => {
+    if (gameStateQuery.data?.scores) {
+      const dbScores: Record<number, Record<number, string>> = {};
+      gameStateQuery.data.scores.forEach(score => {
+        if (!dbScores[score.playerId]) {
+          dbScores[score.playerId] = {};
+        }
+        dbScores[score.playerId][score.roundNumber] = score.score.toString();
+      });
+      setScores(dbScores);
+      // Initialize committed scores with database data (since they're already validated)
+      setCommittedScores(dbScores);
+    }
+  }, [gameStateQuery.data?.scores]);
 
   const createScoreMutation = useMutation({
     mutationFn: async ({ playerId, roundId, score }: { playerId: number, roundId: number, score: number }) => {
@@ -276,6 +293,20 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     if (!score || score === "") {
       // Clear invalid state if score is empty
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
+      
+      // Clear from committed scores as well
+      setCommittedScores(prev => {
+        const newCommitted = { ...prev };
+        if (newCommitted[playerId]) {
+          delete newCommitted[playerId][roundNumber];
+          // If no more rounds for this player, remove the player entirely
+          if (Object.keys(newCommitted[playerId]).length === 0) {
+            delete newCommitted[playerId];
+          }
+        }
+        return newCommitted;
+      });
+      
       // Re-check round advancement when clearing a score (on blur)
       if (roundNumber === currentRound) {
         checkRoundAdvancement(scores, roundNumber);
@@ -331,6 +362,16 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Clear invalid state and error message if validation passes
     setInvalidInputs(prev => ({ ...prev, [key]: false }));
     setErrorMessage(null);
+    
+    // COMMIT the score after validation passes (this enables Out/Compulsory validation)
+    setCommittedScores(prev => ({
+      ...prev,
+      [playerId]: {
+        ...prev[playerId],
+        [roundNumber]: score,
+      },
+    }));
+    
     // Re-check round advancement after validation passes, with a delay to ensure focus has moved
     if (roundNumber === currentRound) {
       setTimeout(() => {
@@ -441,12 +482,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
   // Helper functions for player state
   const getPlayerState = (playerId: number) => {
-    const totalScore = calculatePlayerTotal(playerId);
+    // Use committed scores for Out/Compulsory validation, but display scores for everything else
+    const committedTotal = calculateCommittedPlayerTotal(playerId);
+    const displayTotal = calculatePlayerTotal(playerId);
     const packsRemaining = calculatePacksRemaining(playerId);
     
-    // Calculate active players first
+    // Calculate active players based on committed scores
     const activePlayers = players.filter(p => {
-      const pTotal = calculatePlayerTotal(p.id);
+      const pTotal = calculateCommittedPlayerTotal(p.id);
       return pTotal < game.forPoints && p.isActive;
     });
     
@@ -455,13 +498,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Winner", color: "bg-green-800 dark:bg-green-900" };
     }
     
-    // Check if player is "Out" - total score >= max score
-    if (totalScore >= game.forPoints) {
+    // Check if player is "Out" - use committed total for validation
+    if (committedTotal >= game.forPoints) {
       return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
     }
     
-    // Check if player has "Compulsory" (no packs left)
-    if (packsRemaining === 0) {
+    // Check if player has "Compulsory" (no packs left) - use committed total for validation
+    const committedPointsLeft = Math.max(0, game.forPoints - committedTotal - 1);
+    const committedPacksRemaining = Math.floor(committedPointsLeft / game.packPoints);
+    if (committedPacksRemaining === 0 && committedTotal > 0) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
@@ -510,9 +555,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const { game, players } = gameStateQuery.data;
   const playersWithScores = playersWithScoresQuery.data || [];
   
-  // Calculate current totals from scores state
+  // Calculate current totals from scores state (for display)
   const calculatePlayerTotal = (playerId: number) => {
     const playerScores = scores[playerId] || {};
+    return Object.values(playerScores).reduce((total, score) => {
+      const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
+      return total + numScore;
+    }, 0);
+  };
+
+  // Calculate totals from committed scores (for Out/Compulsory validation)
+  const calculateCommittedPlayerTotal = (playerId: number) => {
+    const playerScores = committedScores[playerId] || {};
     return Object.values(playerScores).reduce((total, score) => {
       const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
       return total + numScore;

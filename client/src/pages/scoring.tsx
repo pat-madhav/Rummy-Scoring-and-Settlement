@@ -866,7 +866,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                             {(hoveredRound === roundNumber || isEditing) && (
                               <div className="absolute right-1 flex flex-col gap-1 h-full justify-center">
                                 <Pencil
-                                  className="w-4 h-4 text-orange-400 hover:text-orange-500 cursor-pointer transition-colors duration-200"
+                                  className="w-6 h-6 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setEditingRound(isEditing ? null : roundNumber);
@@ -874,7 +874,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                 />
                                 {!isEditing && (
                                   <Trash2
-                                    className="w-4 h-4 text-red-500 hover:text-red-600 cursor-pointer transition-colors duration-200"
+                                    className="w-6 h-6 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       handleRemoveRound(roundNumber);

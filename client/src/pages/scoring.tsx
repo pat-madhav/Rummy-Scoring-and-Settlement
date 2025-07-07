@@ -37,6 +37,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isOpen
   const [invalidInputs, setInvalidInputs] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isInvalid
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [confirmedOutPlayers, setConfirmedOutPlayers] = useState<Set<number>>(new Set());
 
 
   const gameStateQuery = useQuery({
@@ -131,6 +132,38 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     return `${baseClasses} top-full left-full ml-2`;
   };
 
+  // Initialize scores and confirmed out players when data is available
+  useEffect(() => {
+    if (playersWithScoresQuery.data && gameStateQuery.data?.game) {
+      // Initialize scores state from API data
+      const newScores: Record<number, Record<number, string>> = {};
+      
+      playersWithScoresQuery.data.forEach(player => {
+        newScores[player.id] = {};
+        player.scores.forEach(score => {
+          newScores[player.id][score.roundNumber] = score.score.toString();
+        });
+      });
+      
+      setScores(newScores);
+      
+      // Calculate the current round (highest round + 1)
+      const allRounds = playersWithScoresQuery.data.flatMap(p => p.scores.map(s => s.roundNumber));
+      const maxRound = allRounds.length > 0 ? Math.max(...allRounds) : 0;
+      setCurrentRound(maxRound + 1);
+      
+      // Initialize confirmed out players based on existing scores
+      const newConfirmedOutPlayers = new Set<number>();
+      playersWithScoresQuery.data.forEach(player => {
+        const playerTotal = player.scores.reduce((total, score) => total + score.score, 0);
+        if (playerTotal >= gameStateQuery.data.game.forPoints) {
+          newConfirmedOutPlayers.add(player.id);
+        }
+      });
+      setConfirmedOutPlayers(newConfirmedOutPlayers);
+    }
+  }, [playersWithScoresQuery.data, gameStateQuery.data?.game]);
+
   // Click outside effect to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -182,11 +215,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // If all active players have entered scores for current round, validate and advance
     const allPlayers = players || [];
     const playersNotOut = allPlayers.filter(p => {
-      const playerTotal = Object.values(newScores[p.id] || {}).reduce((total, score) => {
-        const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
-        return total + numScore;
-      }, 0);
-      return playerTotal < game.forPoints && p.isActive;
+      return !confirmedOutPlayers.has(p.id) && p.isActive;
     });
     
     const currentRoundPlayersWithScores = playersNotOut.filter(p => newScores[p.id]?.[roundNumber]);
@@ -275,6 +304,20 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     if (!score || score === "") {
       // Clear invalid state if score is empty
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
+      
+      // Recalculate confirmed out players when score is cleared
+      setConfirmedOutPlayers(prev => {
+        const newConfirmedOutPlayers = new Set(prev);
+        const newTotalScore = calculatePlayerTotal(playerId, { 
+          ...scores, 
+          [playerId]: { ...scores[playerId], [roundNumber]: "" } 
+        });
+        if (newTotalScore < game.forPoints) {
+          newConfirmedOutPlayers.delete(playerId);
+        }
+        return newConfirmedOutPlayers;
+      });
+      
       // Re-check round advancement when clearing a score (on blur)
       if (roundNumber === currentRound) {
         checkRoundAdvancement(scores, roundNumber);
@@ -330,6 +373,17 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Clear invalid state and error message if validation passes
     setInvalidInputs(prev => ({ ...prev, [key]: false }));
     setErrorMessage(null);
+    
+    // Check if player should be marked as "Out" after completing their score entry
+    const newTotalScore = calculatePlayerTotal(playerId, { 
+      ...scores, 
+      [playerId]: { ...scores[playerId], [roundNumber]: score } 
+    });
+    
+    if (newTotalScore >= game.forPoints) {
+      setConfirmedOutPlayers(prev => new Set(prev).add(playerId));
+    }
+    
     // Re-check round advancement after validation passes, with a delay to ensure focus has moved
     if (roundNumber === currentRound) {
       setTimeout(() => {
@@ -445,6 +499,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       setEditingRound(null);
       setHoveredRound(null);
       
+      // Recalculate confirmed out players since scores have changed
+      setTimeout(() => {
+        const newConfirmedOutPlayers = new Set<number>();
+        players.forEach(player => {
+          const playerTotal = calculatePlayerTotal(player.id);
+          if (playerTotal >= game.forPoints) {
+            newConfirmedOutPlayers.add(player.id);
+          }
+        });
+        setConfirmedOutPlayers(newConfirmedOutPlayers);
+      }, 0);
+      
       toast({
         title: "Round Removed",
         description: `Round ${roundNumber} has been deleted`,
@@ -457,10 +523,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     const totalScore = calculatePlayerTotal(playerId);
     const packsRemaining = calculatePacksRemaining(playerId);
     
-    // Calculate active players first
+    // Calculate active players first - use confirmed out players state
     const activePlayers = players.filter(p => {
-      const pTotal = calculatePlayerTotal(p.id);
-      return pTotal < game.forPoints && p.isActive;
+      return !confirmedOutPlayers.has(p.id) && p.isActive;
     });
     
     // Check if player is the winner (only one active player left) - this overrides all other states
@@ -468,8 +533,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Winner", color: "bg-green-800 dark:bg-green-900" };
     }
     
-    // Check if player is "Out" - total score >= max score
-    if (totalScore >= game.forPoints) {
+    // Check if player is "Out" - only show if player has been confirmed as out after completing score entry
+    if (confirmedOutPlayers.has(playerId)) {
       return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
     }
     
@@ -478,17 +543,20 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if round 1 is completed (all active players have scores for round 1)
-    let round1Completed = false;
+    // Check if the current round is completed (all active players have scores for the current round)
+    let currentRoundCompleted = false;
     
     if (currentRound >= 1) {
-      // Check if all active players have scores for round 1
-      const playersWithRound1Scores = activePlayers.filter(p => scores[p.id]?.[1]);
-      round1Completed = playersWithRound1Scores.length === activePlayers.length;
+      // Check if all active players have scores for the current round
+      const playersWithCurrentRoundScores = activePlayers.filter(p => {
+        const score = scores[p.id]?.[currentRound];
+        return score !== undefined && score !== "";
+      });
+      currentRoundCompleted = playersWithCurrentRoundScores.length === activePlayers.length;
     }
     
-    // Apply "Least" highlighting if round 1 is completed and there are multiple active players
-    if (round1Completed && activePlayers.length > 1) {
+    // Apply "Least" highlighting only after the current round is completed and there are multiple active players
+    if (currentRoundCompleted && activePlayers.length > 1) {
       const activeTotals = activePlayers.map(p => calculatePlayerTotal(p.id));
       const minTotal = Math.min(...activeTotals);
       
@@ -524,8 +592,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const playersWithScores = playersWithScoresQuery.data || [];
   
   // Calculate current totals from scores state
-  const calculatePlayerTotal = (playerId: number) => {
-    const playerScores = scores[playerId] || {};
+  const calculatePlayerTotal = (playerId: number, customScores?: Record<number, Record<number, string>>) => {
+    const scoreSet = customScores || scores;
+    const playerScores = scoreSet[playerId] || {};
     return Object.values(playerScores).reduce((total, score) => {
       const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
       return total + numScore;

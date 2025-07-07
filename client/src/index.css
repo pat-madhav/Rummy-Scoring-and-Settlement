@@ -8,7 +8,9 @@
 @layer components {
   /* Create proper isolation for sticky columns */
   .sticky-column-header {
-    @apply sticky left-0 z-30;
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 30 !important;
     isolation: isolate;
   }
   
@@ -17,6 +19,15 @@
     position: absolute;
     inset: 0;
     z-index: -1;
+  }
+  
+  /* Add prominent inner border */
+  .sticky-column-header {
+    border-right: 3px solid rgb(107, 114, 128) !important; /* gray-500 */
+  }
+  
+  .dark .sticky-column-header {
+    border-right: 3px solid rgb(156, 163, 175) !important; /* gray-400 */
   }
   
   /* Light theme backgrounds */

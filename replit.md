@@ -203,3 +203,4 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Added Excel-like freeze pane functionality for leftmost column - Round, Total, Points left, Packs, Pack Safe headers stay sticky while player columns scroll horizontally
 - July 07, 2025: Fixed Excel freeze pane implementation - created custom CSS components with proper isolation and z-index layering to ensure leftmost column completely hides scrolling content
 - July 07, 2025: Applied sticky positioning to state row and gave scoring rows (both previous and current rounds) black backgrounds in leftmost column for better visibility
+- July 07, 2025: Fixed all previous round numbers to be properly sticky, added "Status" heading to state row, and implemented prominent 3px inner border on leftmost column

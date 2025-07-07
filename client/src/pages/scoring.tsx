@@ -115,14 +115,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       // 2. Current round row (for all player scores visibility)
       // 3. Player names header row (for header visibility)
       
-      // Determine horizontal position to avoid blocking same column
-      const isRightmostPlayer = playerIndex >= totalPlayers - 2;
-      
-      if (isRightmostPlayer) {
-        // For rightmost players: position to the left and below to avoid blocking header and column
-        return `${baseClasses} top-full right-0 mt-2`;
+      // Strategy: Position dropdown below the score box and to the side (away from same column)
+      if (playerIndex === 0) {
+        // First player: position to the right and below to avoid blocking own column
+        return `${baseClasses} top-full left-full ml-2`;
+      } else if (playerIndex === totalPlayers - 1) {
+        // Last player: position to the left and below to avoid blocking own column
+        return `${baseClasses} top-full right-full mr-2`;
       } else {
-        // For leftmost/middle players: position to the right and below to avoid blocking header and row
+        // Middle players: position to the right and below to avoid blocking own column
         return `${baseClasses} top-full left-full ml-2`;
       }
     }

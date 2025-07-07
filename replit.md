@@ -191,3 +191,4 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Implemented responsive button sizing - mobile devices use 70% width, tablets/desktops use fixed 3-inch width buttons for consistent sizing across devices
 - July 06, 2025: Added symmetrical gradient fade effect on both top and bottom of navigation buttons for enhanced visual aesthetics
 - July 06, 2025: Updated scoring page dropdown position so top corner of options menu aligns with bottom corner of score box - top-left of dropdown at bottom-right of score box (default), top-right of dropdown at bottom-left of score box (rightmost players)
+- July 06, 2025: Fixed dropdown behavior to close all other dropdowns when clicking on any scorebox, preventing multiple dropdowns from staying open simultaneously

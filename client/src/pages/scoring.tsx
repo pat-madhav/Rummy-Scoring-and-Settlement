@@ -122,7 +122,17 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      // Don't close if clicking on dropdown content or input
+      
+      // Check if clicking on a score input (different from current open dropdown)
+      const scoreInput = target.closest('input[type="text"]') as HTMLInputElement;
+      
+      if (scoreInput) {
+        // If clicking on a different score input, close all dropdowns first
+        closeAllDropdowns();
+        return;
+      }
+      
+      // Don't close if clicking on dropdown content
       if (!target.closest('.dropdown-container')) {
         closeAllDropdowns();
       }
@@ -931,9 +941,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                 onChange={(e) => handleScoreChange(player.id, currentRound, e.target.value)}
                                 onFocus={(e) => {
                                   e.target.select();
-                                  // Open dropdown when focusing on input
+                                  // Close all other dropdowns first, then open this one
                                   const key = getDropdownKey(player.id, currentRound);
-                                  setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                  closeAllDropdowns();
+                                  setTimeout(() => {
+                                    setOpenDropdowns({ [key]: true });
+                                  }, 0);
                                 }}
                                 onKeyDown={(e) => {
                                   // Close dropdown when user starts typing (any key except tab, enter, escape)
@@ -948,9 +961,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                 }}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  // Open dropdown when clicking on input
+                                  // Close all other dropdowns first, then open this one
                                   const key = getDropdownKey(player.id, currentRound);
-                                  setOpenDropdowns(prev => ({ ...prev, [key]: true }));
+                                  closeAllDropdowns();
+                                  setTimeout(() => {
+                                    setOpenDropdowns({ [key]: true });
+                                  }, 0);
                                 }}
                                 onBlur={() => validateScore(player.id, currentRound)}
                                 className={`w-full text-center h-10 cursor-text text-sm min-w-20 ${

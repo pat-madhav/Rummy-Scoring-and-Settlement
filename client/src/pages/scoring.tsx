@@ -728,7 +728,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   </tr>
                   {/* Player State Row */}
                   <tr className="bg-gray-100 dark:bg-gray-800">
-                    <th className="px-4 py-2 text-left text-xs text-gray-600 dark:text-gray-400 sticky-column-header bg-state-light bg-state-dark">Status</th>
+                    <th className="px-4 py-2 text-left text-xs sticky-column-header bg-state-light bg-state-dark">
+                      <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Status</span>
+                    </th>
                     {players.map((player) => {
                       const playerState = getPlayerState(player.id);
                       

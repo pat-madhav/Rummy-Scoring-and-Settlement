@@ -21,13 +21,20 @@
     z-index: -1;
   }
   
-  /* Add prominent inner border */
-  .sticky-column-header {
-    border-right: 3px solid rgb(107, 114, 128) !important; /* gray-500 */
+  /* Add prominent inner border that stays with sticky column */
+  .sticky-column-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: rgb(107, 114, 128); /* gray-500 */
+    z-index: 40;
   }
   
-  .dark .sticky-column-header {
-    border-right: 3px solid rgb(156, 163, 175) !important; /* gray-400 */
+  .dark .sticky-column-header::before {
+    background-color: rgb(156, 163, 175); /* gray-400 */
   }
   
   /* Light theme backgrounds */

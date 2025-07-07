@@ -524,7 +524,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       const activeTotals = activePlayers.map(p => calculatePlayerTotal(p.id));
       const minTotal = Math.min(...activeTotals);
       
-      if (totalScore === minTotal && totalScore >= 0) {
+      if (displayTotal === minTotal && displayTotal >= 0) {
         return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
       }
     }

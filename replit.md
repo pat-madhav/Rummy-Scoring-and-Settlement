@@ -216,3 +216,6 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Updated error message format - "Invalid Score" with specific underlined text for minimum score (2) and full count (80)
 - July 07, 2025: Converted all toast notifications to consistent error message display pattern in scoring and player names pages
 - July 07, 2025: Added automatic error message clearing when users start typing to fix errors
+- July 07, 2025: Fixed validation timing for Compulsory, Out, and Least validations to work immediately after score entry completion
+- July 07, 2025: Updated Compulsory validation to use previous round scores immediately and current round scores only after commit (onBlur)
+- July 07, 2025: Fixed Least validation to check total scores from all completed rounds, not just Round 1

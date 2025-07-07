@@ -1090,8 +1090,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
       {/* Fixed Bottom Navigation - Consistent across all pages */}
       <div className="fixed bottom-6 left-0 right-0 z-50">
-        {/* Subtle fade gradient overlay */}
+        {/* Subtle fade gradient overlay - top */}
         <div className="absolute inset-x-0 -top-16 bottom-0 bg-gradient-to-t from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
+        {/* Subtle fade gradient overlay - bottom */}
+        <div className="absolute inset-x-0 top-12 -bottom-16 bg-gradient-to-b from-gray-50 via-gray-50/70 via-gray-50/40 via-gray-50/20 to-transparent dark:from-gray-900 dark:via-gray-900/70 dark:via-gray-900/40 dark:via-gray-900/20 dark:to-transparent pointer-events-none"></div>
         <div className={`button-container-fixed dual-buttons ${activePlayers.length === 1 ? 'animate-pulse' : ''}`}>
           <Button
             onClick={handleSettleGame}

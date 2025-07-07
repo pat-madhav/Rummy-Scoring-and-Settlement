@@ -1232,10 +1232,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const hasScores = playerTotal > 0; // Player has entered at least one score
                       const maxPoints = gameStateQuery.data?.game.forPoints || 0;
                       const isNearMaxPoints = playerTotal >= (maxPoints - 1);
+                      const packsRemaining = calculatePacksRemaining(player.id);
                       
                       return (
                         <td key={player.id} className={`px-4 py-3 w-20 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
-                          {!hasScores || isNearMaxPoints ? "" : (!isPlayerOut && packSafePoints === 0 ? "Yes" : packSafePoints)}
+                          {!hasScores || isNearMaxPoints || packsRemaining === 0 ? "" : (!isPlayerOut && packSafePoints === 0 ? "Yes" : packSafePoints)}
                         </td>
                       );
                     })}

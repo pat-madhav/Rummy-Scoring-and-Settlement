@@ -698,7 +698,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 <thead>
                   {/* Player Names Row */}
                   <tr className="bg-blue-500 dark:bg-blue-600">
-                    <th className="px-4 py-3 text-center text-lg font-bold sticky-column-header bg-blue-500 dark:bg-blue-600">
+                    <th className="px-4 py-3 text-center text-lg font-bold sticky-column-header bg-blue-500 dark:bg-blue-600 w-28">
                       <span className="relative z-10 text-white">Round</span>
                     </th>
                     {players.map((player) => {
@@ -730,7 +730,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   </tr>
                   {/* Player State Row */}
                   <tr className="bg-gray-100 dark:bg-gray-800">
-                    <th className="px-4 py-2 text-center text-xs sticky-column-header bg-state-light bg-state-dark">
+                    <th className="px-4 py-2 text-center text-xs sticky-column-header bg-state-light bg-state-dark w-28">
                       <span className="text-blue-400 font-semibold">Status</span>
                     </th>
                     {players.map((player) => {
@@ -758,7 +758,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onMouseLeave={() => setHoveredRound(null)}
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
-                        <td className="px-4 py-3 font-medium relative sticky-column-header bg-scoring-light bg-scoring-dark">
+                        <td className="px-4 py-3 font-medium relative sticky-column-header bg-scoring-light bg-scoring-dark w-28">
                           <div className="flex items-center justify-center w-full h-full relative">
                             <span className="text-blue-400 font-bold">{roundNumber}</span>
                             {/* Edit and Remove buttons - appear on hover/tap */}
@@ -932,7 +932,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   
                   {/* Current round input - only one empty row */}
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
-                    <td className="px-4 py-3 font-medium sticky-column-header bg-scoring-light bg-scoring-dark text-center">
+                    <td className="px-4 py-3 font-medium sticky-column-header bg-scoring-light bg-scoring-dark text-center w-28">
                       <span className="text-blue-400 font-bold">{currentRound}</span>
                     </td>
                     {players.map((player) => {
@@ -1080,7 +1080,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 {/* Summary Rows */}
                 <tfoot className="bg-gray-50 dark:bg-gray-700">
                   <tr className="font-semibold border-t-4 border-b-4 border-gray-800 dark:border-gray-200">
-                    <td className="px-4 py-3 text-lg font-bold sticky-column-header bg-header-light bg-header-dark text-center">
+                    <td className="px-4 py-3 text-lg font-bold sticky-column-header bg-header-light bg-header-dark text-center w-28">
                       <span className="relative z-10 text-blue-400">Total</span>
                     </td>
                     {players.map((player) => (
@@ -1090,7 +1090,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 font-semibold sticky-column-header bg-header-light bg-header-dark text-center">
+                    <td className="px-4 py-3 font-semibold sticky-column-header bg-header-light bg-header-dark text-center w-28">
                       <span className="relative z-10 text-blue-400">Points left</span>
                     </td>
                     {players.map((player) => (
@@ -1100,7 +1100,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 font-semibold sticky-column-header bg-header-light bg-header-dark text-center">
+                    <td className="px-4 py-3 font-semibold sticky-column-header bg-header-light bg-header-dark text-center w-28">
                       <span className="relative z-10 text-blue-400">Packs</span>
                     </td>
                     {players.map((player) => (
@@ -1110,7 +1110,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 font-semibold sticky-column-header bg-header-light bg-header-dark text-center">
+                    <td className="px-4 py-3 font-semibold sticky-column-header bg-header-light bg-header-dark text-center w-28">
                       <span className="relative z-10 text-blue-400">Pack Safe</span>
                     </td>
                     {players.map((player) => {

@@ -690,10 +690,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         )}
 
         {/* Scoring Table */}
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
+        <div className="flex justify-center">
+          <Card className="w-auto">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="table-auto border-collapse">
                 <thead>
                   {/* Player Names Row */}
                   <tr className="bg-gray-50 dark:bg-gray-700">
@@ -1113,9 +1114,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   </tr>
                 </tfoot>
               </table>
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </main>
 
       {/* Fixed Bottom Navigation - Consistent across all pages */}

@@ -198,3 +198,4 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Standardized player column widths to match "Out" player column width - all player columns now have consistent w-32 width including headers, scoring cells, and footer cells
 - July 07, 2025: Removed scoring arrows from input boxes by changing input type from "number" to "text"
 - July 07, 2025: Reduced player column width by 10% from w-32 (128px) to w-28 (112px) for more compact table layout
+- July 07, 2025: Made table width dynamic using table-auto and centered table on screen with flex justify-center wrapper

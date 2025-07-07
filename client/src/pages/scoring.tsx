@@ -172,6 +172,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [closeAllDropdowns]);
 
+  // Clear error messages when round changes
+  useEffect(() => {
+    setErrorMessage(null);
+  }, [currentRound]);
+
 
 
   // Shared function to check if round should advance and validate

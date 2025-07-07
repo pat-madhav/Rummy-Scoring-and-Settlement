@@ -209,3 +209,4 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Fixed scoring timing issue where round would advance prematurely while entering last player's score - now waits for user to finish input (blur event) before checking round advancement
 - July 07, 2025: Center-aligned all elements in player scoring columns including player names, re-entry buttons, and score input boxes using text-center and flex justify-center
 - July 07, 2025: Center-aligned all leftmost column elements (Round, Status, Total, Points left, Packs, Pack Safe) for consistent table alignment
+- July 07, 2025: Changed top header row background to blue (bg-blue-500/600) with white text for better visual hierarchy and contrast

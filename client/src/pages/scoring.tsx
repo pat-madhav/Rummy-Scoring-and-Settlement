@@ -712,15 +712,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 <table className="w-full border-collapse relative">
                 <thead>
                   {/* Player Names Row */}
-                  <tr className="bg-gray-50 dark:bg-gray-700">
-                    <th className="px-4 py-3 text-center text-lg font-bold sticky-column-header bg-header-light bg-header-dark">
-                      <span className="relative z-10 text-blue-400">Round</span>
+                  <tr className="bg-blue-500 dark:bg-blue-600">
+                    <th className="px-4 py-3 text-center text-lg font-bold sticky-column-header bg-blue-500 dark:bg-blue-600">
+                      <span className="relative z-10 text-white">Round</span>
                     </th>
                     {players.map((player) => {
                       const playerState = getPlayerState(player.id);
                       
                       return (
-                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-blue-400 w-20 ${playerState.color}`}>
+                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-white w-20 bg-blue-500 dark:bg-blue-600`}>
                           <div className="text-center">{player.name}</div>
                           {gameStateQuery.data?.game.reEntryAllowed && (
                             <div className="flex justify-center">

@@ -36,6 +36,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [hoveredRound, setHoveredRound] = useState<number | null>(null);
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isOpen
   const [invalidInputs, setInvalidInputs] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isInvalid
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 
   const gameStateQuery = useQuery({
@@ -302,15 +303,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       }));
       
-      toast({
-        title: "Minimum legal score is '2'", 
-        description: (
-          <span>
-            Enter legal score for <strong style={{ fontStyle: 'italic' }}>{playerName}</strong>
-          </span>
-        ),
-        variant: "destructive",
-      });
+      setErrorMessage(`Minimum legal score is '2'\nEnter legal score for ${playerName}`);
       // Keep invalid state active (red border) until a valid score is entered
       setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
@@ -328,22 +321,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       }));
       
-      toast({
-        title: "Invalid Score",
-        description: (
-          <span>
-            Enter a score less than full count ({maxScore}) for <strong style={{ fontStyle: 'italic' }}>{playerName}</strong>
-          </span>
-        ),
-        variant: "destructive",
-      });
+      setErrorMessage(`Invalid Score\nEnter a score less than or equal to full count (${maxScore}) for ${playerName}`);
       // Keep invalid state active (red border) until a valid score is entered
       setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
     }
     
-    // Clear invalid state if validation passes
+    // Clear invalid state and error message if validation passes
     setInvalidInputs(prev => ({ ...prev, [key]: false }));
+    setErrorMessage(null);
     // Re-check round advancement after validation passes, with a delay to ensure focus has moved
     if (roundNumber === currentRound) {
       setTimeout(() => {
@@ -976,10 +962,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
                                     closeDropdown(player.id, currentRound);
                                   }
-                                  // Clear invalid state when user starts typing to fix the error
+                                  // Clear invalid state and error message when user starts typing to fix the error
                                   if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
                                     const key = getDropdownKey(player.id, currentRound);
                                     setInvalidInputs(prev => ({ ...prev, [key]: false }));
+                                    setErrorMessage(null);
                                   }
                                 }}
                                 onClick={(e) => {
@@ -1135,6 +1122,21 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
           </Card>
         </div>
       </main>
+
+      {/* Error Message Display - Centered above bottom buttons */}
+      {errorMessage && (
+        <div className="fixed bottom-24 left-0 right-0 z-40 flex justify-center px-4">
+          <div className="bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4 max-w-md mx-auto shadow-lg">
+            <div className="text-center">
+              {errorMessage.split('\n').map((line, index) => (
+                <p key={index} className={`text-red-800 dark:text-red-200 ${index === 0 ? 'font-semibold text-sm' : 'text-sm mt-1'}`}>
+                  {line}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Fixed Bottom Navigation - Consistent across all pages */}
       <div className="fixed bottom-6 left-0 right-0 z-50">

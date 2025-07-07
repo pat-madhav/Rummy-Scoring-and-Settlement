@@ -206,3 +206,4 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Fixed all previous round numbers to be properly sticky, added "Status" heading to state row with blue gradient color, and implemented prominent 3px inner border on leftmost column using pseudo-element to ensure it stays visible during scrolling
 - July 07, 2025: Updated all round numbers (both previous and current rounds) to display with blue gradient color matching other column headings
 - July 07, 2025: Changed all scoring page headings from gradient to solid bright blue color (text-blue-400) for better visibility against dark backgrounds
+- July 07, 2025: Fixed scoring timing issue where round would advance prematurely while entering last player's score - now waits for user to finish input (blur event) before checking round advancement

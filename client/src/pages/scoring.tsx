@@ -162,6 +162,16 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const checkRoundAdvancement = (newScores: Record<number, Record<number, string>>, roundNumber: number) => {
     if (roundNumber !== currentRound) return;
     
+    // Don't advance round if any score input is currently focused
+    const activeElement = document.activeElement;
+    if (activeElement && activeElement.tagName === 'INPUT' && activeElement.getAttribute('type') === 'text') {
+      // Check if it's a score input for the current round
+      const inputContainer = activeElement.closest('[data-round]');
+      if (inputContainer && inputContainer.getAttribute('data-round') === String(currentRound)) {
+        return; // Don't advance while user is still typing
+      }
+    }
+    
     const currentRoundScores = Object.keys(newScores).reduce((acc, playerIdStr) => {
       const playerScore = newScores[playerIdStr]?.[roundNumber];
       if (playerScore && playerScore !== "") {
@@ -250,11 +260,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       };
       
-      // Check if round should advance after this change
-      // Use setTimeout to ensure state updates are processed
-      setTimeout(() => {
-        checkRoundAdvancement(newScores, roundNumber);
-      }, 0);
+      // Don't check round advancement while typing
+      // Round advancement will be handled on blur
       
       return newScores;
     });
@@ -269,16 +276,20 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     if (!score || score === "") {
       // Clear invalid state if score is empty
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
-      // Re-check round advancement when clearing a score
-      checkRoundAdvancement(scores, roundNumber);
+      // Re-check round advancement when clearing a score (on blur)
+      if (roundNumber === currentRound) {
+        checkRoundAdvancement(scores, roundNumber);
+      }
       return true;
     }
     
     const numScore = parseInt(score);
     if (isNaN(numScore)) {
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
-      // Re-check round advancement
-      checkRoundAdvancement(scores, roundNumber);
+      // Re-check round advancement (on blur)
+      if (roundNumber === currentRound) {
+        checkRoundAdvancement(scores, roundNumber);
+      }
       return true;
     }
     
@@ -335,8 +346,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Clear invalid state if validation passes
     setInvalidInputs(prev => ({ ...prev, [key]: false }));
-    // Re-check round advancement after validation passes
-    checkRoundAdvancement(scores, roundNumber);
+    // Re-check round advancement after validation passes, with a delay to ensure focus has moved
+    if (roundNumber === currentRound) {
+      setTimeout(() => {
+        checkRoundAdvancement(scores, roundNumber);
+      }, 100);
+    }
     return true;
   };
 
@@ -954,7 +969,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       return (
                         <td key={player.id} className={`px-4 py-3 w-28 ${getPlayerState(player.id).color}`}>
                           {showInput ? (
-                            <div className="relative dropdown-container">
+                            <div className="relative dropdown-container" data-round={currentRound}>
                               <Input
                                 type="text"
                                 placeholder="Score"

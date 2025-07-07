@@ -256,6 +256,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         setTimeout(() => {
           setCurrentRound(prev => prev + 1);
         }, 500);
+      } else {
+        // Game is complete - show green completion message
+        setErrorMessage("Game Complete!\nAll rounds finished. Ready for settlement.");
       }
     }
     return true;
@@ -1249,10 +1252,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         </div>
       </main>
 
-      {/* Error Message Display - Centered above bottom buttons */}
+      {/* Error/Success Message Display - Centered above bottom buttons */}
       {errorMessage && (
         <div className="fixed bottom-24 left-0 right-0 z-40 flex justify-center px-4">
-          <div className="bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4 max-w-md mx-auto shadow-lg">
+          <div className={`${
+            errorMessage.startsWith('Game Complete!') 
+              ? 'bg-green-100 dark:bg-green-900/20 border border-green-300 dark:border-green-700' 
+              : 'bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700'
+          } rounded-lg p-4 max-w-md mx-auto shadow-lg`}>
             <div className="text-center">
               {errorMessage.split('\n').map((line, index) => {
                 // Parse line to underline specific parts
@@ -1283,8 +1290,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   return text;
                 };
                 
+                const isSuccess = errorMessage.startsWith('Game Complete!');
                 return (
-                  <p key={index} className={`text-red-800 dark:text-red-200 ${index === 0 ? 'font-semibold text-sm' : 'text-sm mt-1'}`}>
+                  <p key={index} className={`${
+                    isSuccess 
+                      ? 'text-green-800 dark:text-green-200' 
+                      : 'text-red-800 dark:text-red-200'
+                  } ${index === 0 ? 'font-semibold text-sm' : 'text-sm mt-1'}`}>
                     {formatLine(line)}
                   </p>
                 );

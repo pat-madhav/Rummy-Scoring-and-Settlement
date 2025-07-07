@@ -728,7 +728,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   </tr>
                   {/* Player State Row */}
                   <tr className="bg-gray-100 dark:bg-gray-800">
-                    <th className="px-4 py-2 text-left text-xs text-gray-600 dark:text-gray-400"></th>
+                    <th className="px-4 py-2 text-left text-xs text-gray-600 dark:text-gray-400 sticky-column-header bg-state-light bg-state-dark border-r-2 border-gray-300 dark:border-gray-600"></th>
                     {players.map((player) => {
                       const playerState = getPlayerState(player.id);
                       
@@ -754,7 +754,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onMouseLeave={() => setHoveredRound(null)}
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
-                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white relative sticky-column-header bg-row-light bg-row-dark border-r-2 border-gray-300 dark:border-gray-600">
+                        <td className="px-4 py-3 font-medium text-white relative sticky-column-header bg-scoring-light bg-scoring-dark border-r-2 border-gray-300 dark:border-gray-600">
                           <div className="flex items-center justify-between w-full h-full">
                             <span className="mr-2">{roundNumber}</span>
                             {/* Edit and Remove buttons - appear on hover/tap */}
@@ -928,7 +928,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   
                   {/* Current round input - only one empty row */}
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white sticky-column-header bg-current-light bg-current-dark border-r-2 border-gray-300 dark:border-gray-600">{currentRound}</td>
+                    <td className="px-4 py-3 font-medium text-white sticky-column-header bg-scoring-light bg-scoring-dark border-r-2 border-gray-300 dark:border-gray-600">{currentRound}</td>
                     {players.map((player) => {
                       const currentTotalScore = calculatePlayerTotal(player.id);
                       

@@ -44,6 +44,24 @@
   .dark .sticky-column-header.bg-current-dark::after {
     background-color: rgba(30, 58, 138, 0.1); /* blue-900/10 */
   }
+  
+  /* State row backgrounds */
+  .sticky-column-header.bg-state-light::after {
+    background-color: rgb(243, 244, 246); /* gray-100 */
+  }
+  
+  .dark .sticky-column-header.bg-state-dark::after {
+    background-color: rgb(31, 41, 55); /* gray-800 */
+  }
+  
+  /* Scoring row backgrounds - black */
+  .sticky-column-header.bg-scoring-light::after {
+    background-color: rgb(0, 0, 0); /* black */
+  }
+  
+  .dark .sticky-column-header.bg-scoring-dark::after {
+    background-color: rgb(0, 0, 0); /* black */
+  }
 }
 
 /* Smooth Collapsible Animation */

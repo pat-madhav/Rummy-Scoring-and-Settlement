@@ -110,21 +110,25 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       const playerIndex = playersWithScores.findIndex(p => p.id === playerId);
       const totalPlayers = playersWithScores.length;
       
+      // Position dropdown to avoid blocking:
+      // 1. Same column (for total score visibility)
+      // 2. Current round row (for all player scores visibility)
+      // 3. Player names header row (for header visibility)
+      
       // Determine horizontal position to avoid blocking same column
       const isRightmostPlayer = playerIndex >= totalPlayers - 2;
       
-      // Position dropdown to avoid blocking current round row and same column
       if (isRightmostPlayer) {
-        // For rightmost players: position to the left and above to avoid blocking column and row
-        return `${baseClasses} bottom-full right-0 mb-2`;
+        // For rightmost players: position to the left and below to avoid blocking header and column
+        return `${baseClasses} top-full right-0 mt-2`;
       } else {
-        // For leftmost/middle players: position to the right and above to avoid blocking column and row
-        return `${baseClasses} bottom-full left-full ml-2`;
+        // For leftmost/middle players: position to the right and below to avoid blocking header and row
+        return `${baseClasses} top-full left-full ml-2`;
       }
     }
     
-    // Fallback: position above and to the right
-    return `${baseClasses} bottom-full left-full ml-2`;
+    // Fallback: position below and to the right
+    return `${baseClasses} top-full left-full ml-2`;
   };
 
   // Click outside effect to close dropdowns

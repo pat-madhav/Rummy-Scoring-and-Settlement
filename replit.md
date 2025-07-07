@@ -193,3 +193,4 @@ Preferred communication style: Simple, everyday language.
 - July 06, 2025: Updated scoring page dropdown position so top corner of options menu aligns with bottom corner of score box - top-left of dropdown at bottom-right of score box (default), top-right of dropdown at bottom-left of score box (rightmost players)
 - July 06, 2025: Fixed dropdown behavior to close all other dropdowns when clicking on any scorebox, preventing multiple dropdowns from staying open simultaneously
 - July 06, 2025: Enhanced dropdown positioning to avoid blocking same column (for total score visibility) and current round row (for all player scores visibility) - dropdowns now appear above and to the side of score boxes
+- July 07, 2025: Added 3rd criteria for dropdown positioning - dropdowns now avoid blocking player names header row by positioning below score boxes instead of above

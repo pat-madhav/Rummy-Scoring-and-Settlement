@@ -31,13 +31,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [scores, setScores] = useState<Record<number, Record<number, string>>>({}); // playerId -> roundNumber -> score
   const [committedScores, setCommittedScores] = useState<Record<number, Record<number, string>>>({}); // playerId -> roundNumber -> score (only after onBlur)
   const [currentRound, setCurrentRound] = useState(1);
+  const [gameComplete, setGameComplete] = useState(false);
   const [showReEntryModal, setShowReEntryModal] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerWithScores | null>(null);
   const [editingRound, setEditingRound] = useState<number | null>(null);
   const [hoveredRound, setHoveredRound] = useState<number | null>(null);
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isOpen
   const [invalidInputs, setInvalidInputs] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isInvalid
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [notification, setNotification] = useState<string | null>(null);
 
 
   const gameStateQuery = useQuery({
@@ -172,9 +173,9 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [closeAllDropdowns]);
 
-  // Clear error messages when round changes
+  // Clear notifications when round changes
   useEffect(() => {
-    setErrorMessage(null);
+    setNotification(null);
   }, [currentRound]);
 
 
@@ -240,18 +241,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       // Validate minimum 1 Rummy rule
       const rummyScores = Object.values(currentRoundScores).filter(scoreStr => parseInt(scoreStr) === 0);
       if (rummyScores.length === 0) {
-        setErrorMessage("Invalid Round\nAt least one player must have a Rummy (0 points) in each round");
+        setNotification("Invalid Round\nAt least one player must have a Rummy (0 points) in each round");
         return false;
       }
       
       // Validate maximum 1 Rummy rule
       if (rummyScores.length > 1) {
-        setErrorMessage("Invalid Round\nOnly one player can have a Rummy (0 points) in each round");
+        setNotification("Invalid Round\nOnly one player can have a Rummy (0 points) in each round");
         return false;
       }
       
-      // Clear any error message if validation passes
-      setErrorMessage(null);
+      // Clear any notification if validation passes
+      setNotification(null);
       
       // Check if game should continue (more than 1 player remaining)
       if (playersNotOut.length > 1) {
@@ -260,8 +261,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
           setCurrentRound(prev => prev + 1);
         }, 500);
       } else {
-        // Game is complete - show green completion message
-        setErrorMessage("Game Complete!\nAll rounds finished. Ready for settlement.");
+        // Game is complete - find winner and show completion message
+        const winner = playersNotOut[0];
+        if (winner) {
+          setNotification(`Game Complete!\nThe winner is ${winner.name}`);
+        } else {
+          setNotification("Game Complete!\nAll rounds finished. Ready for settlement.");
+        }
+        // Mark game as complete - this will prevent current round inputs
+        setGameComplete(true);
       }
     }
     return true;
@@ -279,13 +287,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     if (score !== "" && !/^\d+$/.test(score)) {
       // Show red border for non-numeric input
       setInvalidInputs(prev => ({ ...prev, [key]: true }));
-      setErrorMessage(`Invalid Score\nEnter numbers only for ${playerName}`);
+      setNotification(`Invalid Score\nEnter numbers only for ${playerName}`);
       return; // Don't update scores with invalid input
     }
     
-    // Clear error message and invalid state when user enters valid input
-    if (errorMessage || invalidInputs[key]) {
-      setErrorMessage(null);
+    // Clear notification and invalid state when user enters valid input
+    if (notification || invalidInputs[key]) {
+      setNotification(null);
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
     }
     
@@ -347,7 +355,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       }));
       
-      setErrorMessage(`Invalid Score\nEnter numbers only for ${playerName}`);
+      setNotification(`Invalid Score\nEnter numbers only for ${playerName}`);
       // Keep invalid state active (red border) until a valid score is entered
       setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
@@ -366,7 +374,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       }));
       
-      setErrorMessage(`Invalid Score\nEnter a score >= minimum score (2) for ${playerName}`);
+      setNotification(`Invalid Score\nEnter a score >= minimum score (2) for ${playerName}`);
       // Keep invalid state active (red border) until a valid score is entered
       setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
@@ -384,7 +392,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       }));
       
-      setErrorMessage(`Invalid Score\nEnter a score <= full count (${maxScore}) for ${playerName}`);
+      setNotification(`Invalid Score\nEnter a score <= full count (${maxScore}) for ${playerName}`);
       // Keep invalid state active (red border) until a valid score is entered
       setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
@@ -392,7 +400,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Clear invalid state and error message if validation passes
     setInvalidInputs(prev => ({ ...prev, [key]: false }));
-    setErrorMessage(null);
+    setNotification(null);
     
     // COMMIT the score after validation passes (this enables Out/Compulsory validation)
     setCommittedScores(prev => ({
@@ -414,7 +422,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
   const handleReEntryClick = (player: PlayerWithScores) => {
     if (!gameStateQuery.data?.game.reEntryAllowed) {
-      setErrorMessage("Re-entry Not Allowed\nRe-entry is disabled for this game");
+      setNotification("Re-entry Not Allowed\nRe-entry is disabled for this game");
       return;
     }
 
@@ -422,7 +430,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     const validation = validateReEntryConditions(activePlayers, playersWithScoresQuery.data?.map(p => ({ player: p, packsRemaining: p.packsRemaining })) || []);
     
     if (!validation.isValid) {
-      setErrorMessage("Re-entry Not Allowed\n" + validation.reason);
+      setNotification("Re-entry Not Allowed\n" + validation.reason);
       return;
     }
 
@@ -441,12 +449,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       });
 
       // Clear any error message on successful re-entry
-      setErrorMessage(null);
+      setNotification(null);
 
       setShowReEntryModal(false);
       setSelectedPlayer(null);
     } catch (error) {
-      setErrorMessage("Error\nFailed to process re-entry");
+      setNotification("Error\nFailed to process re-entry");
     }
   };
 
@@ -471,7 +479,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     });
     
     if (activePlayers.length < 2) {
-      setErrorMessage("Cannot Settle Game\nSettlement requires at least 2 active players");
+      setNotification("Cannot Settle Game\nSettlement requires at least 2 active players");
       return;
     }
 
@@ -701,7 +709,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Check if player has 0 packs left based on previous rounds and is trying to pack
     const packsRemaining = calculatePacksRemainingFromPreviousRounds(playerId, roundNumber);
     if (packsRemaining === 0 && (option === "pack" || option === "mid-pack")) {
-      setErrorMessage("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
+      setNotification("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
       return;
     }
 
@@ -1007,7 +1015,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                           ) : (
                                             <div
                                               onClick={() => {
-                                                setErrorMessage("Compulsory\nPlayer must have at least 2 packs for mid-pack");
+                                                setNotification("Compulsory\nPlayer must have at least 2 packs for mid-pack");
                                               }}
                                               className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                             >
@@ -1019,7 +1027,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                         <>
                                           <div
                                             onClick={() => {
-                                              setErrorMessage("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
+                                              setNotification("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
                                             }}
                                             className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                           >
@@ -1027,7 +1035,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                           </div>
                                           <div
                                             onClick={() => {
-                                              setErrorMessage("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
+                                              setNotification("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
                                             }}
                                             className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                           >
@@ -1086,8 +1094,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         return cumulativeScore >= game.forPoints;
                       })();
                       
-                      // Show input only if player was not out before current round
-                      const showInput = !wasPlayerOutBeforeCurrentRound;
+                      // Show input only if player was not out before current round AND game is not complete
+                      const showInput = !wasPlayerOutBeforeCurrentRound && !gameComplete;
                       
                       return (
                         <td key={player.id} className={`px-4 py-3 w-20 ${getPlayerState(player.id).color}`}>
@@ -1116,7 +1124,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   if (!['Tab', 'Enter', 'Escape', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
                                     const key = getDropdownKey(player.id, currentRound);
                                     setInvalidInputs(prev => ({ ...prev, [key]: false }));
-                                    setErrorMessage(null);
+                                    setNotification(null);
                                   }
                                 }}
                                 onClick={(e) => {
@@ -1169,7 +1177,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                       ) : (
                                         <div
                                           onClick={() => {
-                                            setErrorMessage("Compulsory\nPlayer must have at least 2 packs for mid-pack");
+                                            setNotification("Compulsory\nPlayer must have at least 2 packs for mid-pack");
                                           }}
                                           className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                         >
@@ -1181,7 +1189,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     <>
                                       <div
                                         onClick={() => {
-                                          setErrorMessage(`Compulsory\nPlayer has no packs left - must play Rummy or Full-Count`);
+                                          setNotification(`Compulsory\nPlayer has no packs left - must play Rummy or Full-Count`);
                                         }}
                                         className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                       >
@@ -1189,7 +1197,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                       </div>
                                       <div
                                         onClick={() => {
-                                          setErrorMessage(`Compulsory\nPlayer has no packs left - must play Rummy or Full-Count`);
+                                          setNotification(`Compulsory\nPlayer has no packs left - must play Rummy or Full-Count`);
                                         }}
                                         className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                       >
@@ -1207,6 +1215,11 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                   )}
                                 </div>
                               )}
+                            </div>
+                          ) : gameComplete && scores[player.id]?.[currentRound] ? (
+                            // Game complete - show final score as completed round
+                            <div className="w-full text-center py-2 px-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm">
+                              {scores[player.id][currentRound]}
                             </div>
                           ) : (
                             <div className="text-center text-gray-400">-</div>
@@ -1277,16 +1290,16 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         </div>
       </main>
 
-      {/* Error/Success Message Display - Centered above bottom buttons */}
-      {errorMessage && (
+      {/* Notification Display - Centered above bottom buttons */}
+      {notification && (
         <div className="fixed bottom-24 left-0 right-0 z-40 flex justify-center px-4">
           <div className={`${
-            errorMessage.startsWith('Game Complete!') 
+            notification.startsWith('Game Complete!') 
               ? 'bg-green-100 dark:bg-green-900/20 border border-green-300 dark:border-green-700' 
               : 'bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700'
           } rounded-lg p-4 max-w-md mx-auto shadow-lg`}>
             <div className="text-center">
-              {errorMessage.split('\n').map((line, index) => {
+              {notification.split('\n').map((line, index) => {
                 // Parse line to underline specific parts
                 const formatLine = (text: string) => {
                   // Replace "minimum score (2)" with underlined version
@@ -1315,7 +1328,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   return text;
                 };
                 
-                const isSuccess = errorMessage.startsWith('Game Complete!');
+                const isSuccess = notification.startsWith('Game Complete!');
                 return (
                   <p key={index} className={`${
                     isSuccess 

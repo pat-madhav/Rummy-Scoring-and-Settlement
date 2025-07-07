@@ -230,3 +230,6 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Enhanced error/success message display with conditional green styling for completion messages (vs red for error messages)
 - July 07, 2025: Updated all round numbers to match top header row font size (added text-lg font-bold) for consistent typography
 - July 07, 2025: Implemented mid-pack validation rule - mid-pack option is disabled when player has fewer than 2 packs remaining, with appropriate error message
+- July 07, 2025: Updated game complete notification to show winner's name: "Game Complete!\nThe winner is <Player Name>"
+- July 07, 2025: Renamed "error message" system to "notification system" throughout codebase while maintaining all functionality
+- July 07, 2025: Fixed final round completion logic - when game is complete, final round becomes a previous round (shows completed scores) instead of staying as current round with input boxes

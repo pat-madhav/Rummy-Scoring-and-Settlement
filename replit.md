@@ -226,5 +226,6 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Added beautiful hover animation sequence for edit/remove buttons - round number slides left (-translate-x-3) while buttons fade in (opacity 0→1) and slide from right (translate-x-4→0) with 300ms ease-in-out transitions
 - July 07, 2025: Enhanced Pack Safe calculation with additional condition to hide Pack Safe display when player has 0 packs remaining
 - July 07, 2025: Modified game completion logic to finalize final round without creating new round and display green "Game Complete!" notification
+- July 07, 2025: Fixed round completion detection logic to properly trigger when only 1 player remains active (changed condition from playersNotOut.length > 1 to isRoundComplete check)
 - July 07, 2025: Enhanced error/success message display with conditional green styling for completion messages (vs red for error messages)
 - July 07, 2025: Updated all round numbers to match top header row font size (added text-lg font-bold) for consistent typography

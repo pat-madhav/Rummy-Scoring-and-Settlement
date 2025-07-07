@@ -213,7 +213,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     const currentRoundPlayersWithScores = playersNotOut.filter(p => newScores[p.id]?.[roundNumber]);
     
-    if (playersNotOut.length > 1 && currentRoundPlayersWithScores.length === playersNotOut.length) {
+    // Check if round is complete (all active players have entered scores)
+    const isRoundComplete = currentRoundPlayersWithScores.length === playersNotOut.length && playersNotOut.length > 0;
+    
+    if (isRoundComplete) {
       // First check if any player has an invalid score (red highlighted inputs)
       for (const player of playersNotOut) {
         const score = newScores[player.id]?.[roundNumber];

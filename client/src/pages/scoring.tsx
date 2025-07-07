@@ -691,14 +691,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
 
         {/* Scoring Table */}
         <div className="flex justify-center">
-          <Card className="w-auto">
+          <Card className="w-full max-w-[95%] md:max-w-[80%]">
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="table-auto border-collapse">
+                <table className="w-full border-collapse">
                 <thead>
                   {/* Player Names Row */}
                   <tr className="bg-gray-50 dark:bg-gray-700">
-                    <th className="px-4 py-3 text-left text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Round</th>
+                    <th className="px-4 py-3 text-left text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent sticky left-0 bg-gray-50 dark:bg-gray-700 z-10">Round</th>
                     {players.map((player) => {
                       const playerState = getPlayerState(player.id);
                       
@@ -752,7 +752,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onMouseLeave={() => setHoveredRound(null)}
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
-                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white relative">
+                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white relative sticky left-0 bg-white dark:bg-gray-800 z-10">
                           <div className="flex items-center justify-between w-full h-full">
                             <span className="mr-2">{roundNumber}</span>
                             {/* Edit and Remove buttons - appear on hover/tap */}
@@ -926,7 +926,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   
                   {/* Current round input - only one empty row */}
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{currentRound}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white sticky left-0 bg-blue-50 dark:bg-blue-900/10 z-10">{currentRound}</td>
                     {players.map((player) => {
                       const currentTotalScore = calculatePlayerTotal(player.id);
                       
@@ -1072,7 +1072,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 {/* Summary Rows */}
                 <tfoot className="bg-gray-50 dark:bg-gray-700">
                   <tr className="font-semibold border-t-4 border-b-4 border-gray-800 dark:border-gray-200">
-                    <td className="px-4 py-3 text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Total</td>
+                    <td className="px-4 py-3 text-lg font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent sticky left-0 bg-gray-50 dark:bg-gray-700 z-10">Total</td>
                     {players.map((player) => (
                       <td key={player.id} className={`px-4 py-3 w-28 text-center text-lg font-bold text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
                         {calculatePlayerTotal(player.id)}
@@ -1080,7 +1080,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Points left</td>
+                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold sticky left-0 bg-gray-50 dark:bg-gray-700 z-10">Points left</td>
                     {players.map((player) => (
                       <td key={player.id} className={`px-4 py-3 w-28 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePointsLeft(player.id)}
@@ -1088,7 +1088,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Packs</td>
+                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold sticky left-0 bg-gray-50 dark:bg-gray-700 z-10">Packs</td>
                     {players.map((player) => (
                       <td key={player.id} className={`px-4 py-3 w-28 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePacksRemaining(player.id)}
@@ -1096,7 +1096,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                     ))}
                   </tr>
                   <tr className="text-sm">
-                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold">Pack Safe</td>
+                    <td className="px-4 py-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent font-semibold sticky left-0 bg-gray-50 dark:bg-gray-700 z-10">Pack Safe</td>
                     {players.map((player) => {
                       const packSafePoints = calculatePackSafePoints(player.id);
                       const isPlayerOut = getPlayerState(player.id).state === "Out";

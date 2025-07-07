@@ -636,6 +636,23 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     return pointsLeft % game.packPoints;
   };
   
+  // Calculate packs remaining based only on previous rounds (for dropdown disable logic)
+  const calculatePacksRemainingFromPreviousRounds = (playerId: number, currentRoundNumber: number) => {
+    let totalFromPreviousRounds = 0;
+    
+    // Add up all previous round scores (not including current round)
+    for (let round = 1; round < currentRoundNumber; round++) {
+      const roundScore = scores[playerId]?.[round];
+      if (roundScore !== undefined && roundScore !== "") {
+        const numScore = typeof roundScore === 'string' ? parseInt(roundScore) || 0 : roundScore;
+        totalFromPreviousRounds += numScore;
+      }
+    }
+    
+    const pointsLeft = Math.max(0, game.forPoints - totalFromPreviousRounds - 1);
+    return Math.floor(pointsLeft / game.packPoints);
+  };
+  
   // Calculate active players (not out and still playing)
   const activePlayers = players.filter(p => {
     const playerTotal = calculatePlayerTotal(p.id);
@@ -651,8 +668,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   };
 
   const handleScoreOption = (playerId: number, roundNumber: number, option: string) => {
-    // Check if player has 0 packs left and is trying to pack
-    const packsRemaining = calculatePacksRemaining(playerId);
+    // Check if player has 0 packs left based on previous rounds and is trying to pack
+    const packsRemaining = calculatePacksRemainingFromPreviousRounds(playerId, roundNumber);
     if (packsRemaining === 0 && (option === "pack" || option === "mid-pack")) {
       setErrorMessage("Compulsory\nPlayer with 0 packs left cannot pack or mid-pack");
       return;
@@ -936,7 +953,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                           Rummy (0)
                                         </div>
                                       )}
-                                      {calculatePacksRemaining(player.id) > 0 ? (
+                                      {calculatePacksRemainingFromPreviousRounds(player.id, roundNumber) > 0 ? (
                                         <>
                                           <div
                                             onClick={() => handleScoreOption(player.id, roundNumber, "pack")}
@@ -1087,7 +1104,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                       Rummy (0)
                                     </div>
                                   )}
-                                  {calculatePacksRemaining(player.id) > 0 ? (
+                                  {calculatePacksRemainingFromPreviousRounds(player.id, currentRound) > 0 ? (
                                     <>
                                       <div
                                         onClick={() => handleScoreOption(player.id, currentRound, "pack")}

@@ -508,28 +508,38 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if round 1 is FULLY COMPLETED (all active players have entered scores for round 1)
-    let round1FullyCompleted = false;
+    // Check if the latest previous round is FULLY COMPLETED (all active players have entered scores)
+    let latestCompletedRound = 0;
+    for (let round = 1; round < currentRound; round++) {
+      const playersWithRoundScores = activePlayers.filter(p => scores[p.id]?.[round] !== undefined && scores[p.id]?.[round] !== "");
+      if (playersWithRoundScores.length === activePlayers.length && activePlayers.length > 0) {
+        latestCompletedRound = round;
+      }
+    }
     
-    // Check if all active players have entered scores for round 1
-    const playersWithRound1Scores = activePlayers.filter(p => scores[p.id]?.[1] !== undefined && scores[p.id]?.[1] !== "");
-    round1FullyCompleted = playersWithRound1Scores.length === activePlayers.length && activePlayers.length > 0;
-    
-    // Apply "Least" highlighting only if round 1 is fully completed and there are multiple active players
-    if (round1FullyCompleted && activePlayers.length > 1) {
+    // Apply "Least" highlighting only if at least one round is fully completed and there are multiple active players
+    if (latestCompletedRound > 0 && activePlayers.length > 1) {
       const activeTotals = activePlayers.map(p => {
-        // Calculate total from current scores for round 1
-        const round1Score = scores[p.id]?.[1];
-        const numScore = typeof round1Score === 'string' ? parseInt(round1Score) || 0 : (round1Score || 0);
-        return numScore;
+        // Calculate total from all completed rounds (1 to latestCompletedRound)
+        let total = 0;
+        for (let round = 1; round <= latestCompletedRound; round++) {
+          const roundScore = scores[p.id]?.[round];
+          const numScore = typeof roundScore === 'string' ? parseInt(roundScore) || 0 : (roundScore || 0);
+          total += numScore;
+        }
+        return total;
       });
       const minTotal = Math.min(...activeTotals);
       
-      // Check if this player has the minimum score in round 1
-      const playerRound1Score = scores[playerId]?.[1];
-      const playerNumScore = typeof playerRound1Score === 'string' ? parseInt(playerRound1Score) || 0 : (playerRound1Score || 0);
+      // Check if this player has the minimum total score across all completed rounds
+      let playerTotal = 0;
+      for (let round = 1; round <= latestCompletedRound; round++) {
+        const roundScore = scores[playerId]?.[round];
+        const numScore = typeof roundScore === 'string' ? parseInt(roundScore) || 0 : (roundScore || 0);
+        playerTotal += numScore;
+      }
       
-      if (playerNumScore === minTotal && playerNumScore >= 0) {
+      if (playerTotal === minTotal && playerTotal >= 0) {
         return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
       }
     }

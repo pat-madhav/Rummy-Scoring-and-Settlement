@@ -207,3 +207,4 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Updated all round numbers (both previous and current rounds) to display with blue gradient color matching other column headings
 - July 07, 2025: Changed all scoring page headings from gradient to solid bright blue color (text-blue-400) for better visibility against dark backgrounds
 - July 07, 2025: Fixed scoring timing issue where round would advance prematurely while entering last player's score - now waits for user to finish input (blur event) before checking round advancement
+- July 07, 2025: Center-aligned all elements in player scoring columns including player names, re-entry buttons, and score input boxes using text-center and flex justify-center

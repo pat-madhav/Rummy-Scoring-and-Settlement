@@ -721,21 +721,23 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       
                       return (
                         <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-blue-400 w-20 ${playerState.color}`}>
-                          <div>{player.name}</div>
+                          <div className="text-center">{player.name}</div>
                           {gameStateQuery.data?.game.reEntryAllowed && (
-                            <Button
-                              size="sm"
-                              variant="secondary"
-                              onClick={() => {
-                                const playerWithScores = playersWithScoresQuery.data?.find(p => p.id === player.id);
-                                if (playerWithScores) {
-                                  handleReEntryClick(playerWithScores);
-                                }
-                              }}
-                              className="mt-1 text-xs hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors"
-                            >
-                              Re-Entry
-                            </Button>
+                            <div className="flex justify-center">
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={() => {
+                                  const playerWithScores = playersWithScoresQuery.data?.find(p => p.id === player.id);
+                                  if (playerWithScores) {
+                                    handleReEntryClick(playerWithScores);
+                                  }
+                                }}
+                                className="mt-1 text-xs hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors"
+                              >
+                                Re-Entry
+                              </Button>
+                            </div>
                           )}
                         </th>
                       );
@@ -826,7 +828,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                               {isEditing ? (
                                 // For editing mode, only show input if player wasn't out before this round
                                 !isPlayerOutBeforeThisRound ? (
-                                  <div className="relative dropdown-container">
+                                  <div className="relative dropdown-container flex justify-center">
                                     <Input
                                       type="text"
                                       placeholder="Score"
@@ -969,7 +971,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       return (
                         <td key={player.id} className={`px-4 py-3 w-20 ${getPlayerState(player.id).color}`}>
                           {showInput ? (
-                            <div className="relative dropdown-container" data-round={currentRound}>
+                            <div className="relative dropdown-container flex justify-center" data-round={currentRound}>
                               <Input
                                 type="text"
                                 placeholder="Score"

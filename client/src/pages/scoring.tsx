@@ -508,29 +508,28 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     
-    // Check if round 1 is FULLY COMMITTED (all active players have committed scores for round 1)
-    let round1FullyCommitted = false;
+    // Check if round 1 is FULLY COMPLETED (all active players have entered scores for round 1)
+    let round1FullyCompleted = false;
     
-    // Only check for round 1 committed scores after we've moved past round 1
-    if (currentRound > 1) {
-      // Check if all active players have committed scores for round 1
-      const playersWithCommittedRound1Scores = activePlayers.filter(p => committedScores[p.id]?.[1] !== undefined);
-      round1FullyCommitted = playersWithCommittedRound1Scores.length === activePlayers.length && activePlayers.length > 0;
-    }
+    // Check if all active players have entered scores for round 1
+    const playersWithRound1Scores = activePlayers.filter(p => scores[p.id]?.[1] !== undefined && scores[p.id]?.[1] !== "");
+    round1FullyCompleted = playersWithRound1Scores.length === activePlayers.length && activePlayers.length > 0;
     
-    // Apply "Least" highlighting only if round 1 is fully committed and there are multiple active players
-    if (round1FullyCommitted && activePlayers.length > 1) {
+    // Apply "Least" highlighting only if round 1 is fully completed and there are multiple active players
+    if (round1FullyCompleted && activePlayers.length > 1) {
       const activeTotals = activePlayers.map(p => {
-        // Calculate total from only committed scores
-        const playerCommittedScores = committedScores[p.id] || {};
-        return Object.values(playerCommittedScores).reduce((total, score) => {
-          const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
-          return total + numScore;
-        }, 0);
+        // Calculate total from current scores for round 1
+        const round1Score = scores[p.id]?.[1];
+        const numScore = typeof round1Score === 'string' ? parseInt(round1Score) || 0 : (round1Score || 0);
+        return numScore;
       });
       const minTotal = Math.min(...activeTotals);
       
-      if (committedTotal === minTotal && committedTotal > 0) {
+      // Check if this player has the minimum score in round 1
+      const playerRound1Score = scores[playerId]?.[1];
+      const playerNumScore = typeof playerRound1Score === 'string' ? parseInt(playerRound1Score) || 0 : (playerRound1Score || 0);
+      
+      if (playerNumScore === minTotal && playerNumScore >= 0) {
         return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
       }
     }
@@ -1106,20 +1105,6 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 
                 {/* Summary Rows */}
                 <tfoot className="bg-gray-50 dark:bg-gray-700">
-                  {/* Status Row - Shows validation messages */}
-                  <tr className="text-sm">
-                    <td className="px-4 py-3 font-semibold sticky-column-header bg-header-light bg-header-dark text-center w-28">
-                      <span className="relative z-10 text-blue-400">Status</span>
-                    </td>
-                    {players.map((player) => {
-                      const playerState = getPlayerState(player.id);
-                      return (
-                        <td key={player.id} className={`px-4 py-3 w-20 text-center text-sm font-semibold ${playerState.color}`}>
-                          {playerState.state}
-                        </td>
-                      );
-                    })}
-                  </tr>
                   <tr className="font-semibold border-t-4 border-b-4 border-gray-800 dark:border-gray-200">
                     <td className="px-4 py-3 text-lg font-bold sticky-column-header bg-header-light bg-header-dark text-center w-28">
                       <span className="relative z-10 text-blue-400">Total</span>

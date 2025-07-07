@@ -711,6 +711,15 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       
       return newScores;
     });
+    
+    // COMMIT the score after setting it to trigger validation (Out/Compulsory/Least)
+    setCommittedScores(prev => ({
+      ...prev,
+      [playerId]: {
+        ...prev[playerId],
+        [roundNumber]: score,
+      },
+    }));
   };
 
   return (

@@ -229,3 +229,4 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Fixed round completion detection logic to properly trigger when only 1 player remains active (changed condition from playersNotOut.length > 1 to isRoundComplete check)
 - July 07, 2025: Enhanced error/success message display with conditional green styling for completion messages (vs red for error messages)
 - July 07, 2025: Updated all round numbers to match top header row font size (added text-lg font-bold) for consistent typography
+- July 07, 2025: Implemented mid-pack validation rule - mid-pack option is disabled when player has fewer than 2 packs remaining, with appropriate error message

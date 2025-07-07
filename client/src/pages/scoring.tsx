@@ -997,12 +997,23 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                           >
                                             Pack ({game.packPoints})
                                           </div>
-                                          <div
-                                            onClick={() => handleScoreOption(player.id, roundNumber, "mid-pack")}
-                                            className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
-                                          >
-                                            Mid-Pack ({game.midPackPoints})
-                                          </div>
+                                          {calculatePacksRemainingFromPreviousRounds(player.id, roundNumber) >= 2 ? (
+                                            <div
+                                              onClick={() => handleScoreOption(player.id, roundNumber, "mid-pack")}
+                                              className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
+                                            >
+                                              Mid-Pack ({game.midPackPoints})
+                                            </div>
+                                          ) : (
+                                            <div
+                                              onClick={() => {
+                                                setErrorMessage("Compulsory\nPlayer must have at least 2 packs for mid-pack");
+                                              }}
+                                              className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
+                                            >
+                                              Mid-Pack ({game.midPackPoints})
+                                            </div>
+                                          )}
                                         </>
                                       ) : (
                                         <>
@@ -1148,12 +1159,23 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                       >
                                         Pack ({game.packPoints})
                                       </div>
-                                      <div
-                                        onClick={() => handleScoreOption(player.id, currentRound, "mid-pack")}
-                                        className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
-                                      >
-                                        Mid-Pack ({game.midPackPoints})
-                                      </div>
+                                      {calculatePacksRemainingFromPreviousRounds(player.id, currentRound) >= 2 ? (
+                                        <div
+                                          onClick={() => handleScoreOption(player.id, currentRound, "mid-pack")}
+                                          className="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600"
+                                        >
+                                          Mid-Pack ({game.midPackPoints})
+                                        </div>
+                                      ) : (
+                                        <div
+                                          onClick={() => {
+                                            setErrorMessage("Compulsory\nPlayer must have at least 2 packs for mid-pack");
+                                          }}
+                                          className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
+                                        >
+                                          Mid-Pack ({game.midPackPoints})
+                                        </div>
+                                      )}
                                     </>
                                   ) : (
                                     <>

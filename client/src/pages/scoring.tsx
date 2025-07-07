@@ -303,7 +303,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       }));
       
-      setErrorMessage(`Minimum legal score is '2'\nEnter legal score for ${playerName}`);
+      setErrorMessage(`Invalid Score\nEnter a score >= minimum score (2) for ${playerName}`);
       // Keep invalid state active (red border) until a valid score is entered
       setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
@@ -321,7 +321,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         },
       }));
       
-      setErrorMessage(`Invalid Score\nEnter a score less than or equal to full count (${maxScore}) for ${playerName}`);
+      setErrorMessage(`Invalid Score\nEnter a score <= full count (${maxScore}) for ${playerName}`);
       // Keep invalid state active (red border) until a valid score is entered
       setInvalidInputs(prev => ({ ...prev, [key]: true }));
       return false;
@@ -1020,11 +1020,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                     <>
                                       <div
                                         onClick={() => {
-                                          toast({
-                                            title: "Compulsory",
-                                            description: "Player has no packs left - must play Rummy or Full-Count",
-                                            variant: "destructive",
-                                          });
+                                          setErrorMessage(`Compulsory\nPlayer has no packs left - must play Rummy or Full-Count`);
                                         }}
                                         className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                       >
@@ -1032,11 +1028,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                       </div>
                                       <div
                                         onClick={() => {
-                                          toast({
-                                            title: "Compulsory",
-                                            description: "Player has no packs left - must play Rummy or Full-Count",
-                                            variant: "destructive",
-                                          });
+                                          setErrorMessage(`Compulsory\nPlayer has no packs left - must play Rummy or Full-Count`);
                                         }}
                                         className="px-3 py-2 text-sm opacity-50 cursor-not-allowed border-b border-gray-100 dark:border-gray-600"
                                       >
@@ -1128,11 +1120,41 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         <div className="fixed bottom-24 left-0 right-0 z-40 flex justify-center px-4">
           <div className="bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4 max-w-md mx-auto shadow-lg">
             <div className="text-center">
-              {errorMessage.split('\n').map((line, index) => (
-                <p key={index} className={`text-red-800 dark:text-red-200 ${index === 0 ? 'font-semibold text-sm' : 'text-sm mt-1'}`}>
-                  {line}
-                </p>
-              ))}
+              {errorMessage.split('\n').map((line, index) => {
+                // Parse line to underline specific parts
+                const formatLine = (text: string) => {
+                  // Replace "minimum score (2)" with underlined version
+                  if (text.includes('minimum score (2)')) {
+                    const parts = text.split('minimum score (2)');
+                    return (
+                      <>
+                        {parts[0]}
+                        <span className="underline">minimum score (2)</span>
+                        {parts[1]}
+                      </>
+                    );
+                  }
+                  // Replace "full count (XX)" with underlined version
+                  const fullCountMatch = text.match(/full count \(\d+\)/);
+                  if (fullCountMatch) {
+                    const parts = text.split(fullCountMatch[0]);
+                    return (
+                      <>
+                        {parts[0]}
+                        <span className="underline">{fullCountMatch[0]}</span>
+                        {parts[1]}
+                      </>
+                    );
+                  }
+                  return text;
+                };
+                
+                return (
+                  <p key={index} className={`text-red-800 dark:text-red-200 ${index === 0 ? 'font-semibold text-sm' : 'text-sm mt-1'}`}>
+                    {formatLine(line)}
+                  </p>
+                );
+              })}
             </div>
           </div>
         </div>

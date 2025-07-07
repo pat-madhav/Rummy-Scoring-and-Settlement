@@ -211,3 +211,8 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Center-aligned all leftmost column elements (Round, Status, Total, Points left, Packs, Pack Safe) for consistent table alignment
 - July 07, 2025: Changed top header row background to blue (bg-blue-500/600) with white text for better visual hierarchy and contrast
 - July 07, 2025: Made dark theme the standard theme - removed theme toggle functionality and system theme detection
+- July 07, 2025: Standardized Round column width to w-28 for consistent table layout across all leftmost column elements
+- July 07, 2025: Implemented unified error message system with centered display above bottom buttons across all pages
+- July 07, 2025: Updated error message format - "Invalid Score" with specific underlined text for minimum score (2) and full count (80)
+- July 07, 2025: Converted all toast notifications to consistent error message display pattern in scoring and player names pages
+- July 07, 2025: Added automatic error message clearing when users start typing to fix errors

@@ -17,6 +17,7 @@ export default function PlayerNamesScreen() {
   const [playerNames, setPlayerNames] = useState(
     gameOptions.playerNames || Array(gameOptions.playerCount || 3).fill("")
   );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 
 
@@ -28,6 +29,10 @@ export default function PlayerNamesScreen() {
     newNames[index] = name;
     setPlayerNames(newNames);
     updateGameOptions({ playerNames: newNames });
+    // Clear error message when user starts typing
+    if (errorMessage) {
+      setErrorMessage(null);
+    }
   };
 
   const clearAllNames = () => {
@@ -56,28 +61,17 @@ export default function PlayerNamesScreen() {
       .filter(name => name && name.trim());
     
     if (validNames.length < expectedPlayerCount) {
-      toast({
-        title: "Missing Player Names",
-        description: "Please enter names for all players",
-        variant: "destructive",
-      });
+      setErrorMessage("Missing Player Names\nPlease enter names for all players");
       return;
     }
 
     try {
       updateGameOptions({ playerNames: validNames });
       const game = await startNewGame();
+      setErrorMessage(null); // Clear any error message on success
       setLocation(`/scoring/${game.id}`);
-      toast({
-        title: "Game Started!",
-        description: `New game created with ${validNames.length} players`,
-      });
     } catch (error) {
-      toast({
-        title: "Error Starting Game",
-        description: "Failed to create the game. Please try again.",
-        variant: "destructive",
-      });
+      setErrorMessage("Error Starting Game\nFailed to create the game. Please try again.");
     }
   };
 
@@ -160,6 +154,21 @@ export default function PlayerNamesScreen() {
         </Card>
 
       </main>
+
+      {/* Error Message Display - Centered above bottom buttons */}
+      {errorMessage && (
+        <div className="fixed bottom-24 left-0 right-0 z-40 flex justify-center px-4">
+          <div className="bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4 max-w-md mx-auto shadow-lg">
+            <div className="text-center">
+              {errorMessage.split('\n').map((line, index) => (
+                <p key={index} className={`text-red-800 dark:text-red-200 ${index === 0 ? 'font-semibold text-sm' : 'text-sm mt-1'}`}>
+                  {line}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Fixed Bottom Navigation - Consistent across all pages */}
       <div className="fixed bottom-6 left-0 right-0 z-50">

@@ -881,12 +881,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       >
                         <td className="px-4 py-3 font-medium relative sticky-column-header bg-scoring-light bg-scoring-dark w-28">
                           <div className="flex items-center justify-center w-full h-full relative">
-                            <span className="text-blue-400 font-bold">{roundNumber}</span>
+                            <span className="text-blue-400 text-lg font-bold">{roundNumber}</span>
                             {/* Edit and Remove icons - appear on hover/tap */}
                             {(hoveredRound === roundNumber || isEditing) && (
-                              <div className="absolute right-1 flex flex-col gap-1 h-full justify-center">
+                              <div className="absolute right-[25%] flex flex-col gap-1 h-full justify-center">
                                 <Pencil
-                                  className="w-14 h-14 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
+                                  className="w-20 h-20 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setEditingRound(isEditing ? null : roundNumber);
@@ -894,7 +894,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                                 />
                                 {!isEditing && (
                                   <Trash2
-                                    className="w-14 h-14 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
+                                    className="w-20 h-20 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       handleRemoveRound(roundNumber);
@@ -1040,7 +1040,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   {/* Current round input - only one empty row */}
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
                     <td className="px-4 py-3 font-medium sticky-column-header bg-scoring-light bg-scoring-dark text-center w-28">
-                      <span className="text-blue-400 font-bold">{currentRound}</span>
+                      <span className="text-blue-400 text-lg font-bold">{currentRound}</span>
                     </td>
                     {players.map((player) => {
                       const currentTotalScore = calculatePlayerTotal(player.id);

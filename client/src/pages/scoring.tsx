@@ -720,7 +720,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const playerState = getPlayerState(player.id);
                       
                       return (
-                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-blue-400 w-28 ${playerState.color}`}>
+                        <th key={player.id} className={`px-4 py-3 text-center text-lg font-bold text-blue-400 w-24 ${playerState.color}`}>
                           <div>{player.name}</div>
                           {gameStateQuery.data?.game.reEntryAllowed && (
                             <Button
@@ -750,7 +750,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const playerState = getPlayerState(player.id);
                       
                       return (
-                        <th key={`state-${player.id}`} className={`px-4 py-2 w-28 text-center text-xs font-medium ${playerState.color} text-gray-700 dark:text-gray-300`}>
+                        <th key={`state-${player.id}`} className={`px-4 py-2 w-24 text-center text-xs font-medium ${playerState.color} text-gray-700 dark:text-gray-300`}>
                           {playerState.state}
                         </th>
                       );
@@ -822,7 +822,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                           const isPlayerOutBeforeThisRound = wasPlayerOutBeforeRound(player.id, roundNumber);
                           
                           return (
-                            <td key={player.id} className={`px-4 py-3 w-28 ${getPlayerState(player.id).color}`}>
+                            <td key={player.id} className={`px-4 py-3 w-24 ${getPlayerState(player.id).color}`}>
                               {isEditing ? (
                                 // For editing mode, only show input if player wasn't out before this round
                                 !isPlayerOutBeforeThisRound ? (
@@ -967,7 +967,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const showInput = !wasPlayerOutBeforeCurrentRound;
                       
                       return (
-                        <td key={player.id} className={`px-4 py-3 w-28 ${getPlayerState(player.id).color}`}>
+                        <td key={player.id} className={`px-4 py-3 w-24 ${getPlayerState(player.id).color}`}>
                           {showInput ? (
                             <div className="relative dropdown-container" data-round={currentRound}>
                               <Input
@@ -1097,7 +1097,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       <span className="relative z-10 text-blue-400">Total</span>
                     </td>
                     {players.map((player) => (
-                      <td key={player.id} className={`px-4 py-3 w-28 text-center text-lg font-bold text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
+                      <td key={player.id} className={`px-4 py-3 w-24 text-center text-lg font-bold text-gray-900 dark:text-white ${getPlayerState(player.id).color}`}>
                         {calculatePlayerTotal(player.id)}
                       </td>
                     ))}
@@ -1107,7 +1107,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       <span className="relative z-10 text-blue-400">Points left</span>
                     </td>
                     {players.map((player) => (
-                      <td key={player.id} className={`px-4 py-3 w-28 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
+                      <td key={player.id} className={`px-4 py-3 w-24 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePointsLeft(player.id)}
                       </td>
                     ))}
@@ -1117,7 +1117,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       <span className="relative z-10 text-blue-400">Packs</span>
                     </td>
                     {players.map((player) => (
-                      <td key={player.id} className={`px-4 py-3 w-28 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
+                      <td key={player.id} className={`px-4 py-3 w-24 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                         {calculatePacksRemaining(player.id)}
                       </td>
                     ))}
@@ -1135,7 +1135,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       const isNearMaxPoints = playerTotal >= (maxPoints - 1);
                       
                       return (
-                        <td key={player.id} className={`px-4 py-3 w-28 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
+                        <td key={player.id} className={`px-4 py-3 w-24 text-center text-gray-700 dark:text-gray-300 ${getPlayerState(player.id).color}`}>
                           {!hasScores || isNearMaxPoints ? "" : (!isPlayerOut && packSafePoints === 0 ? "Yes" : packSafePoints)}
                         </td>
                       );

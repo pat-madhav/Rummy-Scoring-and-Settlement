@@ -38,6 +38,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [invalidInputs, setInvalidInputs] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isInvalid
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [confirmedOutPlayers, setConfirmedOutPlayers] = useState<Set<number>>(new Set());
+  const [confirmedCompulsoryPlayers, setConfirmedCompulsoryPlayers] = useState<Set<number>>(new Set());
 
 
   const gameStateQuery = useQuery({
@@ -154,13 +155,24 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       
       // Initialize confirmed out players based on existing scores
       const newConfirmedOutPlayers = new Set<number>();
+      const newConfirmedCompulsoryPlayers = new Set<number>();
+      
       playersWithScoresQuery.data.forEach(player => {
         const playerTotal = player.scores.reduce((total, score) => total + score.score, 0);
         if (playerTotal >= gameStateQuery.data.game.forPoints) {
           newConfirmedOutPlayers.add(player.id);
         }
+        
+        // Check if player has no packs left (compulsory)
+        const pointsLeft = Math.max(0, gameStateQuery.data.game.forPoints - playerTotal - 1);
+        const packsRemaining = Math.floor(pointsLeft / gameStateQuery.data.game.packPoints);
+        if (packsRemaining === 0 && playerTotal < gameStateQuery.data.game.forPoints) {
+          newConfirmedCompulsoryPlayers.add(player.id);
+        }
       });
+      
       setConfirmedOutPlayers(newConfirmedOutPlayers);
+      setConfirmedCompulsoryPlayers(newConfirmedCompulsoryPlayers);
     }
   }, [playersWithScoresQuery.data, gameStateQuery.data?.game]);
 
@@ -276,15 +288,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Close dropdown when user starts typing
     closeDropdown(playerId, roundNumber);
     
+    // Only allow numbers (and empty string for clearing)
+    const numericScore = score.replace(/[^0-9]/g, '');
+    
     // Don't clear invalid state immediately - let validateScore handle it
     
-    // Allow any input while typing
+    // Allow only numeric input while typing
     setScores(prev => {
       const newScores = {
         ...prev,
         [playerId]: {
           ...prev[playerId],
-          [roundNumber]: score,
+          [roundNumber]: numericScore,
         },
       };
       
@@ -305,7 +320,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       // Clear invalid state if score is empty
       setInvalidInputs(prev => ({ ...prev, [key]: false }));
       
-      // Recalculate confirmed out players when score is cleared
+      // Recalculate confirmed out and compulsory players when score is cleared
       setConfirmedOutPlayers(prev => {
         const newConfirmedOutPlayers = new Set(prev);
         const newTotalScore = calculatePlayerTotal(playerId, { 
@@ -316,6 +331,21 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
           newConfirmedOutPlayers.delete(playerId);
         }
         return newConfirmedOutPlayers;
+      });
+      
+      setConfirmedCompulsoryPlayers(prev => {
+        const newConfirmedCompulsoryPlayers = new Set(prev);
+        const newTotalScore = calculatePlayerTotal(playerId, { 
+          ...scores, 
+          [playerId]: { ...scores[playerId], [roundNumber]: "" } 
+        });
+        const newPointsLeft = Math.max(0, game.forPoints - newTotalScore - 1);
+        const newPacksRemaining = Math.floor(newPointsLeft / game.packPoints);
+        
+        if (newPacksRemaining > 0 || newTotalScore >= game.forPoints) {
+          newConfirmedCompulsoryPlayers.delete(playerId);
+        }
+        return newConfirmedCompulsoryPlayers;
       });
       
       // Re-check round advancement when clearing a score (on blur)
@@ -382,6 +412,21 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     if (newTotalScore >= game.forPoints) {
       setConfirmedOutPlayers(prev => new Set(prev).add(playerId));
+    }
+    
+    // Check if player should be marked as "Compulsory" after completing their score entry
+    const newPointsLeft = Math.max(0, game.forPoints - newTotalScore - 1);
+    const newPacksRemaining = Math.floor(newPointsLeft / game.packPoints);
+    
+    if (newPacksRemaining === 0 && newTotalScore < game.forPoints) {
+      setConfirmedCompulsoryPlayers(prev => new Set(prev).add(playerId));
+    } else {
+      // Remove from compulsory if they now have packs remaining
+      setConfirmedCompulsoryPlayers(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(playerId);
+        return newSet;
+      });
     }
     
     // Re-check round advancement after validation passes, with a delay to ensure focus has moved
@@ -499,16 +544,27 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       setEditingRound(null);
       setHoveredRound(null);
       
-      // Recalculate confirmed out players since scores have changed
+      // Recalculate confirmed out and compulsory players since scores have changed
       setTimeout(() => {
         const newConfirmedOutPlayers = new Set<number>();
+        const newConfirmedCompulsoryPlayers = new Set<number>();
+        
         players.forEach(player => {
           const playerTotal = calculatePlayerTotal(player.id);
           if (playerTotal >= game.forPoints) {
             newConfirmedOutPlayers.add(player.id);
           }
+          
+          // Check if player has no packs left (compulsory)
+          const pointsLeft = Math.max(0, game.forPoints - playerTotal - 1);
+          const packsRemaining = Math.floor(pointsLeft / game.packPoints);
+          if (packsRemaining === 0 && playerTotal < game.forPoints) {
+            newConfirmedCompulsoryPlayers.add(player.id);
+          }
         });
+        
         setConfirmedOutPlayers(newConfirmedOutPlayers);
+        setConfirmedCompulsoryPlayers(newConfirmedCompulsoryPlayers);
       }, 0);
       
       toast({
@@ -538,8 +594,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
     }
     
-    // Check if player has "Compulsory" (no packs left)
-    if (packsRemaining === 0) {
+    // Check if player has "Compulsory" (no packs left) - only show if player has been confirmed as compulsory after completing score entry
+    if (confirmedCompulsoryPlayers.has(playerId)) {
       return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
     }
     

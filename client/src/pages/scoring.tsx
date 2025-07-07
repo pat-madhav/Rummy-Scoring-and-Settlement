@@ -493,13 +493,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return { state: "Winner", color: "bg-green-800 dark:bg-green-900" };
     }
     
-    // Check if player is "Out" - use committed total for validation
-    if (committedTotal >= game.forPoints) {
+    // Check if player is "Out" - use current total for immediate validation
+    const currentTotal = calculatePlayerTotal(playerId);
+    if (currentTotal >= game.forPoints) {
       return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
     }
     
     // Check if player has "Compulsory" (no packs left) - use current total for immediate validation
-    const currentTotal = calculatePlayerTotal(playerId);
     const currentPointsLeft = Math.max(0, game.forPoints - currentTotal - 1);
     const currentPacksRemaining = Math.floor(currentPointsLeft / game.packPoints);
     
@@ -1106,6 +1106,20 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 
                 {/* Summary Rows */}
                 <tfoot className="bg-gray-50 dark:bg-gray-700">
+                  {/* Status Row - Shows validation messages */}
+                  <tr className="text-sm">
+                    <td className="px-4 py-3 font-semibold sticky-column-header bg-header-light bg-header-dark text-center w-28">
+                      <span className="relative z-10 text-blue-400">Status</span>
+                    </td>
+                    {players.map((player) => {
+                      const playerState = getPlayerState(player.id);
+                      return (
+                        <td key={player.id} className={`px-4 py-3 w-20 text-center text-sm font-semibold ${playerState.color}`}>
+                          {playerState.state}
+                        </td>
+                      );
+                    })}
+                  </tr>
                   <tr className="font-semibold border-t-4 border-b-4 border-gray-800 dark:border-gray-200">
                     <td className="px-4 py-3 text-lg font-bold sticky-column-header bg-header-light bg-header-dark text-center w-28">
                       <span className="relative z-10 text-blue-400">Total</span>

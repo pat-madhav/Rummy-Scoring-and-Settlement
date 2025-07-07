@@ -104,18 +104,27 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   }, [getDropdownKey]);
 
   const getDropdownPosition = (playerId: number, roundNumber: number) => {
-    // For the rightmost players, position dropdown to the left with top-right corner at bottom-left of score box
+    const baseClasses = "absolute z-50 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
+    
     if (playersWithScores && playersWithScores.length > 0) {
       const playerIndex = playersWithScores.findIndex(p => p.id === playerId);
-      const isRightmostPlayer = playerIndex >= playersWithScores.length - 2;
+      const totalPlayers = playersWithScores.length;
       
+      // Determine horizontal position to avoid blocking same column
+      const isRightmostPlayer = playerIndex >= totalPlayers - 2;
+      
+      // Position dropdown to avoid blocking current round row and same column
       if (isRightmostPlayer) {
-        return "absolute top-full right-0 z-50 mt-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
+        // For rightmost players: position to the left and above to avoid blocking column and row
+        return `${baseClasses} bottom-full right-0 mb-2`;
+      } else {
+        // For leftmost/middle players: position to the right and above to avoid blocking column and row
+        return `${baseClasses} bottom-full left-full ml-2`;
       }
     }
     
-    // Default position: top-left corner of dropdown at bottom-right of score box
-    return "absolute top-full left-0 z-50 mt-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg dropdown-container";
+    // Fallback: position above and to the right
+    return `${baseClasses} bottom-full left-full ml-2`;
   };
 
   // Click outside effect to close dropdowns

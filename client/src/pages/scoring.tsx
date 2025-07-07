@@ -265,14 +265,25 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     // Close dropdown when user starts typing
     closeDropdown(playerId, roundNumber);
     
-    // Clear error message when user starts typing
-    if (errorMessage) {
-      setErrorMessage(null);
+    const key = getDropdownKey(playerId, roundNumber);
+    const player = players.find(p => p.id === playerId);
+    const playerName = player?.name || "Player";
+    
+    // Check for non-numeric characters (allow empty string for ongoing input)
+    if (score !== "" && !/^\d+$/.test(score)) {
+      // Show red border for non-numeric input
+      setInvalidInputs(prev => ({ ...prev, [key]: true }));
+      setErrorMessage(`Invalid Score\nEnter numbers only for ${playerName}`);
+      return; // Don't update scores with invalid input
     }
     
-    // Don't clear invalid state immediately - let validateScore handle it
+    // Clear error message and invalid state when user enters valid input
+    if (errorMessage || invalidInputs[key]) {
+      setErrorMessage(null);
+      setInvalidInputs(prev => ({ ...prev, [key]: false }));
+    }
     
-    // Allow any input while typing
+    // Allow valid numeric input (including empty string)
     setScores(prev => {
       const newScores = {
         ...prev,
@@ -319,15 +330,24 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return true;
     }
     
-    const numScore = parseInt(score);
-    if (isNaN(numScore)) {
-      setInvalidInputs(prev => ({ ...prev, [key]: false }));
-      // Re-check round advancement (on blur)
-      if (roundNumber === currentRound) {
-        checkRoundAdvancement(scores, roundNumber);
-      }
-      return true;
+    // Check for non-numeric characters
+    if (!/^\d+$/.test(score)) {
+      // Clear the invalid score
+      setScores(prev => ({
+        ...prev,
+        [playerId]: {
+          ...prev[playerId],
+          [roundNumber]: "",
+        },
+      }));
+      
+      setErrorMessage(`Invalid Score\nEnter numbers only for ${playerName}`);
+      // Keep invalid state active (red border) until a valid score is entered
+      setInvalidInputs(prev => ({ ...prev, [key]: true }));
+      return false;
     }
+    
+    const numScore = parseInt(score);
     
     // Check minimum score (must be 0 or >= 2)
     if (numScore < 2 && numScore !== 0) {

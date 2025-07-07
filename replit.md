@@ -219,3 +219,6 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Fixed validation timing for Compulsory, Out, and Least validations to work immediately after score entry completion
 - July 07, 2025: Updated Compulsory validation to use previous round scores immediately and current round scores only after commit (onBlur)
 - July 07, 2025: Fixed Least validation to check total scores from all completed rounds, not just Round 1
+- July 07, 2025: Implemented comprehensive number-only validation for all score input boxes with real-time checking, red border indicators, and consistent error messaging
+- July 07, 2025: Enhanced input validation to prevent non-numeric characters while typing and clear invalid scores with appropriate error messages
+- July 07, 2025: Updated both current round and previous round editing inputs to use unified numeric validation system

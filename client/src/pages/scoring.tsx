@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { calculatePlayerStats, validateReEntryConditions, shouldShowSettlement } from "@/lib/game-utils";
 import { ReEntryModal } from "@/components/re-entry-modal";
-import { X, Calculator, RotateCcw, ChevronDown } from "lucide-react";
+import { X, Calculator, RotateCcw, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import type { GameState, PlayerWithScores } from "@shared/schema";
 
 interface ScoringScreenProps {
@@ -862,30 +862,24 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         <td className="px-4 py-3 font-medium relative sticky-column-header bg-scoring-light bg-scoring-dark w-28">
                           <div className="flex items-center justify-center w-full h-full relative">
                             <span className="text-blue-400 font-bold">{roundNumber}</span>
-                            {/* Edit and Remove buttons - appear on hover/tap */}
+                            {/* Edit and Remove icons - appear on hover/tap */}
                             {(hoveredRound === roundNumber || isEditing) && (
-                              <div className="absolute right-1 flex flex-col gap-0.5 h-full justify-center">
-                                <Button
-                                  size="sm"
-                                  className="bg-orange-400 hover:bg-orange-500 text-white text-xs px-1.5 py-0.5 h-4 rounded-full shadow-md transition-all duration-200 border border-white dark:border-gray-800"
+                              <div className="absolute right-1 flex flex-col gap-1 h-full justify-center">
+                                <Pencil
+                                  className="w-4 h-4 text-orange-400 hover:text-orange-500 cursor-pointer transition-colors duration-200"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setEditingRound(isEditing ? null : roundNumber);
                                   }}
-                                >
-                                  {isEditing ? "Save" : "Edit"}
-                                </Button>
+                                />
                                 {!isEditing && (
-                                  <Button
-                                    size="sm"
-                                    className="bg-red-500 hover:bg-red-600 text-white text-xs px-1.5 py-0.5 h-4 rounded-full shadow-md transition-all duration-200 border border-white dark:border-gray-800"
+                                  <Trash2
+                                    className="w-4 h-4 text-red-500 hover:text-red-600 cursor-pointer transition-colors duration-200"
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       handleRemoveRound(roundNumber);
                                     }}
-                                  >
-                                    Remove
-                                  </Button>
+                                  />
                                 )}
                               </div>
                             )}

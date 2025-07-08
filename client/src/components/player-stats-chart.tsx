@@ -117,7 +117,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         </div>
       </div>
       
-      <div className="relative mx-auto" style={{ height: chartHeight + 40, maxWidth: '95%' }}>
+      <div className="relative mx-auto" style={{ height: chartHeight + 40, maxWidth: '98%' }}>
         {/* Chart container */}
         <div className="flex items-end justify-around h-full pb-8 overflow-x-auto">
           <AnimatePresence>

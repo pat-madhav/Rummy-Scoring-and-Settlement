@@ -113,14 +113,17 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
   // relative to the chart's coordinate system
   const targetLinePosition = 32 + (game.forPoints / maxScore) * chartHeight;
   
-  // Debug: Check if positioning is correct
-  console.log('Target line debug:', {
+  // Debug: Compare target line with actual bar calculations
+  console.log('Target line vs bar comparison:', {
     forPoints: game.forPoints,
     maxScore,
     chartHeight,
     targetLinePosition,
-    expectedRelativePosition: (game.forPoints / maxScore) * chartHeight,
-    actualBottomPosition: targetLinePosition
+    pradeepScore: 75,
+    pradeepBarHeight: (75 / maxScore) * chartHeight,
+    pradeepBarTop: 32 + (75 / maxScore) * chartHeight,
+    shouldTargetBeHigher: game.forPoints > 75,
+    visualDifference: targetLinePosition - (32 + (75 / maxScore) * chartHeight)
   });
   
 

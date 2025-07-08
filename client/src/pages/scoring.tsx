@@ -979,24 +979,18 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                         onClick={() => setHoveredRound(roundNumber)} // For mobile tap
                       >
                         <td className="px-4 py-3 font-medium relative sticky-column-header bg-scoring-light bg-scoring-dark w-28">
-                          <div className="flex items-center w-full h-full relative">
+                          <div className="flex items-center justify-between w-full h-full relative">
                             <div className="flex-1 flex justify-center">
-                              <span 
-                                className={`text-blue-400 text-lg font-bold transition-transform duration-300 ease-in-out ${
-                                  hoveredRound === roundNumber || isEditing 
-                                    ? 'transform -translate-x-3' 
-                                    : 'transform translate-x-0'
-                                }`}
-                              >
+                              <span className="text-blue-400 text-lg font-bold">
                                 {roundNumber}
                               </span>
                             </div>
-                            {/* Edit and Remove icons - appear on hover/tap */}
-                            <div className={`flex flex-col gap-1 h-full justify-center absolute right-0 transition-opacity duration-300 ease-in-out ${
+                            {/* Edit and Remove icons - appear on hover/tap between round number and right edge */}
+                            <div className={`flex flex-col gap-1 h-full justify-center transition-opacity duration-300 ease-in-out ${
                               hoveredRound === roundNumber || isEditing 
                                 ? 'opacity-100' 
                                 : 'opacity-0'
-                            }`} style={{ marginRight: '25%' }}>
+                            }`}>
                               <Pencil
                                 className="w-4 h-4 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"
                                 onClick={(e) => {

@@ -17,6 +17,7 @@ import { calculatePlayerStats, validateReEntryConditions, shouldShowSettlement }
 import { ReEntryModal } from "@/components/re-entry-modal";
 import { X, Calculator, RotateCcw, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import type { GameState, PlayerWithScores } from "@shared/schema";
+import PlayerStatsChart from "@/components/player-stats-chart";
 
 interface ScoringScreenProps {
   gameId: string;
@@ -1400,6 +1401,17 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
               </div>
             </CardContent>
           </Card>
+        </div>
+        
+        {/* Player Stats Chart - Positioned below the table */}
+        <div className="max-w-6xl mx-auto px-4 pb-6">
+          <PlayerStatsChart
+            game={game}
+            players={players}
+            scores={scores}
+            currentRound={currentRound}
+            gameComplete={gameComplete}
+          />
         </div>
       </main>
 

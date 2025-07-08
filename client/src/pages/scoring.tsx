@@ -589,8 +589,14 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       return pTotal < game.forPoints && p.isActive;
     });
     
-    // Check if player is the winner (only one active player left) - this overrides all other states
-    if (activePlayers.length === 1 && activePlayers[0].id === playerId) {
+    // Check if current round is fully completed before applying winner status
+    const currentRoundComplete = activePlayers.every(p => {
+      const playerScore = committedScores[p.id]?.[currentRound];
+      return playerScore !== undefined && playerScore !== "";
+    });
+    
+    // Check if player is the winner (only one active player left AND current round is complete) - this overrides all other states
+    if (activePlayers.length === 1 && activePlayers[0].id === playerId && (gameComplete || currentRoundComplete)) {
       return { state: "Winner", color: "bg-green-200/60 dark:bg-green-600/60" };
     }
     

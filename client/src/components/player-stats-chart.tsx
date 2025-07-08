@@ -108,14 +108,22 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
   const maxScore = Math.max(...animatedStats.map(stat => stat.totalScore), game.forPoints) + 10;
   const chartHeight = 200;
   
-  // Debug: Log positioning calculations
-  console.log('Chart Debug:', {
-    maxScore,
+  // Calculate target line position correctly - it should be at forPoints level
+  // The chart area starts at 32px from bottom (pb-8), and the target line should be positioned
+  // relative to the chart's coordinate system
+  const targetLinePosition = 32 + (game.forPoints / maxScore) * chartHeight;
+  
+  // Debug: Check if positioning is correct
+  console.log('Target line debug:', {
     forPoints: game.forPoints,
-    targetPosition: 32 + (game.forPoints / maxScore) * chartHeight,
+    maxScore,
     chartHeight,
-    animatedStats: animatedStats.map(s => s.totalScore)
+    targetLinePosition,
+    expectedRelativePosition: (game.forPoints / maxScore) * chartHeight,
+    actualBottomPosition: targetLinePosition
   });
+  
+
 
   return (
     <div className="w-full bg-gray-800 rounded-lg p-4 border border-gray-700">
@@ -251,14 +259,16 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
           </AnimatePresence>
         </div>
         
-        {/* Horizontal grid lines */}
+        {/* Horizontal grid lines at pack point multiples */}
         <div className="absolute inset-0 pointer-events-none">
-          {[0.25, 0.5, 0.75, 1].map((fraction, index) => (
+          {Array.from({ length: Math.floor(maxScore / game.packPoints) }, (_, i) => (i + 1) * game.packPoints)
+            .filter(packValue => packValue < maxScore)
+            .map((packValue, index) => (
             <div
               key={index}
               className="absolute w-full border-t border-gray-600/30"
               style={{ 
-                bottom: `${32 + (chartHeight * fraction)}px`,
+                bottom: `${32 + (packValue / maxScore) * chartHeight}px`,
               }}
             />
           ))}
@@ -268,7 +278,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         <motion.div
           className="absolute w-full border-t-2 border-dashed border-red-400/60"
           style={{ 
-            bottom: `${32 + (game.forPoints / maxScore) * chartHeight}px`,
+            bottom: `${targetLinePosition}px`,
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

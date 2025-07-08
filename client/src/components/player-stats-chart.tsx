@@ -127,6 +127,22 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
       <div className="relative mx-auto" style={{ height: chartHeight + 40, maxWidth: '98%' }}>
         {/* Chart and Legend container */}
         <div className="flex h-full">
+          {/* Y-axis with points labels */}
+          <div className="flex flex-col justify-between h-full py-8 pr-4 w-16">
+            <div className="text-xs text-gray-400 text-center font-medium">Points</div>
+            <div className="flex-1 flex flex-col justify-between relative">
+              {/* Y-axis labels - from top to bottom */}
+              {Array.from({ length: Math.floor(maxScore / 25) + 1 }, (_, i) => {
+                const value = Math.floor(maxScore / 25) * 25 - (i * 25);
+                return value >= 0 ? (
+                  <div key={value} className="text-xs text-gray-400 text-right">
+                    {value}
+                  </div>
+                ) : null;
+              }).filter(Boolean)}
+            </div>
+          </div>
+          
           {/* Chart container */}
           <div className="flex-1 flex items-end justify-around h-full pb-8 overflow-x-auto">
           <AnimatePresence>

@@ -256,3 +256,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Fixed chart update timing - chart now updates immediately after each individual player's score is committed (onBlur) rather than waiting for entire round completion, providing real-time visual feedback during gameplay
 - July 08, 2025: Fixed critical chart update bug - chart now uses committedScores instead of scores state to prevent live updates while user is typing, ensuring chart only updates after score commitment (onBlur event)
 - July 08, 2025: Fixed target line positioning to align with grid lines coordinate system - added 32px offset plus 20px adjustment to ensure Max Points line appears exactly at the 101 points position on the graph
+- July 08, 2025: Added left Y-axis with points labels - displays "Points" header and scale values at 25-point intervals from 0 to maximum score for better chart readability

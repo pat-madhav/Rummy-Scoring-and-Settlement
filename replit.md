@@ -240,3 +240,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Fixed winner status logic to only apply after round completion - winner status now requires either game completion or current round to be fully finalized for all players
 - July 08, 2025: Fixed edit/remove button animations - removed round number sliding animation, icons now fade in between round number and right edge of left column
 - July 08, 2025: Fixed completed rounds alignment - round numbers are now properly center-aligned within the left column, edit/remove icons positioned at right edge
+- July 08, 2025: Made Compulsory and Least status colors lighter - Compulsory (red-100→red-50, dark red-700/30→red-700/20), Least (green-100→green-50, dark green-700/30→green-700/20)

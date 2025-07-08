@@ -631,7 +631,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Compulsory when packs = 0 and player has entered at least one score
     if (packsRemainingForCompulsory === 0 && totalForCompulsory > 0 && totalForCompulsory < game.forPoints) {
-      return { state: "Compulsory", color: "bg-red-100 dark:bg-red-700/30" };
+      return { state: "Compulsory", color: "bg-red-50 dark:bg-red-700/20" };
     }
     
     // Check if the latest previous round is FULLY COMPLETED (all active players have entered scores)
@@ -666,7 +666,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       }
       
       if (playerTotal === minTotal && playerTotal >= 0) {
-        return { state: "Least", color: "bg-green-100 dark:bg-green-700/30" };
+        return { state: "Least", color: "bg-green-50 dark:bg-green-700/20" };
       }
     }
     

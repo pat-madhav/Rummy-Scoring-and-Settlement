@@ -249,3 +249,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Moved player statistics chart legend from bottom to top of the chart for better visibility and user experience
 - July 08, 2025: Fixed target line positioning issue - target line now correctly aligns with pack point grid lines using same coordinate system (32px from bottom + proportional height), positioning target line at proper level relative to 4th grid quadrant
 - July 08, 2025: Enhanced chart display - score totals above bars now only appear when score > 0, eliminating cluttered "0" labels above empty bars for cleaner visual presentation
+- July 08, 2025: Fixed chart data synchronization - chart now uses committedScores instead of live scores state, ensuring "points left" values match exactly with scoring table data for consistent display across both views

@@ -534,7 +534,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Check if player is "Out" - use committed total only (after onBlur)
     if (committedTotal >= game.forPoints) {
-      return { state: "Out", color: "bg-red-300 dark:bg-red-500" };
+      return { state: "Out", color: "bg-red-100 dark:bg-red-400" };
     }
     
     // Check if player has "Compulsory" (no packs left)

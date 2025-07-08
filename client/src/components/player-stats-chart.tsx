@@ -119,7 +119,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
   return (
     <div className="w-full bg-gray-800 rounded-lg p-4 border border-gray-700">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-white">Player Statistics</h3>
+        <h3 className="text-lg font-semibold text-white">Player Stats</h3>
       </div>
       
       {/* Legend - showing round colors */}

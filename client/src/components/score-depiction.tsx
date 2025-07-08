@@ -48,8 +48,12 @@ export function ScoreDepiction({
   });
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-      <AnimatePresence mode="popLayout">
+    <div className="mt-8 space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 text-center">
+        Player Statistics
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <AnimatePresence mode="popLayout">
         {sortedPlayers.map((player, index) => {
           const stats = calculatePlayerStats(player.id);
           const playerState = getPlayerState(player.id);
@@ -147,11 +151,11 @@ export function ScoreDepiction({
               </div>
 
               {/* Stats grid */}
-              <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-3">
                 {/* Points Left */}
-                <div className="text-center">
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Points Left</div>
-                  <motion.div 
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Points Left</span>
+                  <motion.span 
                     key={stats.pointsLeft}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -161,16 +165,16 @@ export function ScoreDepiction({
                     }`}
                   >
                     {stats.pointsLeft}
-                  </motion.div>
+                  </motion.span>
                 </div>
 
                 {/* Packs */}
-                <div className="text-center">
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mb-1 flex items-center justify-center gap-1">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
                     <Package className="w-3 h-3" />
                     Packs
-                  </div>
-                  <motion.div 
+                  </span>
+                  <motion.span 
                     key={stats.packsRemaining}
                     initial={{ rotateY: 180 }}
                     animate={{ rotateY: 0 }}
@@ -180,29 +184,30 @@ export function ScoreDepiction({
                     }`}
                   >
                     {stats.packsRemaining}
-                  </motion.div>
+                  </motion.span>
                 </div>
 
                 {/* Pack Safe */}
-                <div className="text-center">
-                  <div className="text-xs text-gray-600 dark:text-gray-400 mb-1 flex items-center justify-center gap-1">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
                     <Shield className="w-3 h-3" />
-                    Safe
-                  </div>
-                  <motion.div 
+                    Pack Safe
+                  </span>
+                  <motion.span 
                     key={stats.packSafe}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="text-lg font-semibold text-gray-900 dark:text-gray-100"
                   >
                     {stats.packSafe > 0 && stats.packsRemaining > 0 && stats.total > 0 ? stats.packSafe : '-'}
-                  </motion.div>
+                  </motion.span>
                 </div>
               </div>
             </motion.div>
           );
         })}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

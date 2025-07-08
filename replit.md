@@ -238,3 +238,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Added comprehensive checkGameStateAfterEdit function that monitors score changes in completed games and automatically adjusts game state when edits bring 2+ players back below the point limit
 - July 08, 2025: Updated Winner status color to translucent green (bg-green-200/60) - darker than Least status but translucent to maintain Status row visibility
 - July 08, 2025: Fixed winner status logic to only apply after round completion - winner status now requires either game completion or current round to be fully finalized for all players
+- July 08, 2025: Fixed edit/remove button animations - only round numbers slide left while icons fade in place without sliding motion

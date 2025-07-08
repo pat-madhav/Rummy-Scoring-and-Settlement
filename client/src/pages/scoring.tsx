@@ -992,10 +992,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                               </span>
                             </div>
                             {/* Edit and Remove icons - appear on hover/tap */}
-                            <div className={`flex flex-col gap-1 h-full justify-center absolute right-0 transition-all duration-300 ease-in-out ${
+                            <div className={`flex flex-col gap-1 h-full justify-center absolute right-0 transition-opacity duration-300 ease-in-out ${
                               hoveredRound === roundNumber || isEditing 
-                                ? 'opacity-100 translate-x-0' 
-                                : 'opacity-0 translate-x-4'
+                                ? 'opacity-100' 
+                                : 'opacity-0'
                             }`} style={{ marginRight: '25%' }}>
                               <Pencil
                                 className="w-4 h-4 text-gray-400 hover:text-gray-500 cursor-pointer transition-colors duration-200"

@@ -251,3 +251,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Enhanced chart display - score totals above bars now only appear when score > 0, eliminating cluttered "0" labels above empty bars for cleaner visual presentation
 - July 08, 2025: Fixed points left calculation in chart to match scoring sheet formula - now uses (Max Points - 1) - totalScore instead of Max Points - totalScore for consistent display between chart and scoring table
 - July 08, 2025: Updated chart terminology from "Target" to "Max Points" in both header and target line label for consistent terminology throughout the application
+- July 08, 2025: Removed redundant "Max Points: 101 points" from chart header, keeping only "Player Statistics" title while maintaining max points display on target line label

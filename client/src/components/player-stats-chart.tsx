@@ -120,9 +120,6 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
     <div className="w-full bg-gray-800 rounded-lg p-4 border border-gray-700">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">Player Statistics</h3>
-        <div className="text-sm text-gray-400">
-          Max Points: {game.forPoints} points
-        </div>
       </div>
       
       {/* Legend - showing round colors */}

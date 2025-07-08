@@ -109,11 +109,20 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
   const chartHeight = 200;
   
   // Calculate target line position correctly - it should be at forPoints level
-  // The chart area starts at 32px from bottom (pb-8), and the target line should be positioned
-  // at the exact level where the TOP of a forPoints bar would reach
-  // Since the container height is 240px and chart area is 200px with 32px padding from bottom,
-  // the target line should be positioned from the bottom of the 240px container
-  const targetLinePosition = 40 + (game.forPoints / maxScore) * chartHeight;
+  // Use the same coordinate system as grid lines: 32px from bottom + proportional height
+  const targetLinePosition = 32 + (game.forPoints / maxScore) * chartHeight;
+  
+  // Debug: Check pack points and grid line positioning
+  console.log('Grid and target positioning:', {
+    packPoints: game.packPoints,
+    forPoints: game.forPoints,
+    maxScore,
+    chartHeight,
+    targetLinePosition,
+    fourthGridLine: 32 + (game.packPoints * 4 / maxScore) * chartHeight,
+    expectedGrid4: game.packPoints * 4,
+    shouldBeNearGrid4: Math.abs(game.forPoints - (game.packPoints * 4)) <= 5
+  });
   
 
 

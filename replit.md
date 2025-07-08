@@ -233,4 +233,4 @@ Preferred communication style: Simple, everyday language.
 - July 07, 2025: Updated game complete notification to show winner's name: "Game Complete!\nThe winner is <Player Name>"
 - July 07, 2025: Renamed "error message" system to "notification system" throughout codebase while maintaining all functionality
 - July 07, 2025: Fixed final round completion logic - when game is complete, final round becomes a previous round (shows completed scores) instead of staying as current round with input boxes
-- July 08, 2025: Toned down validation color highlight intensity - Out state (red-600→red-100), Compulsory state (red-200→red-100), Least state (green-200→green-100) for more subtle visual indication
+- July 08, 2025: Toned down validation color highlight intensity - Out state (red-600→red-200/40 translucent), Compulsory state (red-200→red-100), Least state (green-200→green-100) for more subtle visual indication with proper Status row visibility

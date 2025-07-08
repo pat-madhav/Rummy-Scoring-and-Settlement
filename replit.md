@@ -253,3 +253,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Updated chart terminology from "Target" to "Max Points" in both header and target line label for consistent terminology throughout the application
 - July 08, 2025: Removed redundant "Max Points: 101 points" from chart header, keeping only "Player Statistics" title while maintaining max points display on target line label
 - July 08, 2025: Updated chart header from "Player Statistics" to "Player Stats" for more concise title
+- July 08, 2025: Fixed chart update timing - chart now updates immediately after each individual player's score is committed (onBlur) rather than waiting for entire round completion, providing real-time visual feedback during gameplay

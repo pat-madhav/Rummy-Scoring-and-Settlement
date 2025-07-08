@@ -49,13 +49,13 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
       let totalScore = 0;
       const roundScores: { round: number; score: number; color: string }[] = [];
       
-      // Only include completed rounds (not current round unless game is complete)
+      // Include completed rounds and committed scores from current round
       Object.entries(scores[player.id] || {}).forEach(([roundStr, score]) => {
         const roundNum = parseInt(roundStr);
         const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
         
-        // Only animate/show rounds that are complete (before current round, or if game is complete)
-        if (roundNum < currentRound || gameComplete) {
+        // Include: completed rounds OR current round with committed score (not empty/undefined)
+        if (roundNum < currentRound || gameComplete || (roundNum === currentRound && score !== undefined && score !== '')) {
           totalScore += numScore;
           
           // Include all scores (including 0) to show round participation

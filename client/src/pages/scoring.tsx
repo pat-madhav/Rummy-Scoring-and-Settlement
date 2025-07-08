@@ -178,6 +178,51 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     setNotification(null);
   }, [currentRound]);
 
+  // Function to check if game state should be reset after editing
+  const checkGameStateAfterEdit = (newScores: Record<number, Record<number, string>>) => {
+    // Calculate active players based on new scores
+    const playersStillActive = players.filter(p => {
+      let total = 0;
+      Object.entries(newScores[p.id] || {}).forEach(([roundStr, score]) => {
+        const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
+        total += numScore;
+      });
+      return total < game.forPoints && p.isActive;
+    });
+
+    // If game was complete but now has 2+ active players, reset game state
+    if (gameComplete && playersStillActive.length >= 2) {
+      setGameComplete(false);
+      setNotification(null); // Clear any game complete message
+      
+      // Find the highest round with scores and set current round to next
+      let highestRoundWithScores = 0;
+      Object.values(newScores).forEach(playerScores => {
+        Object.keys(playerScores).forEach(roundStr => {
+          const round = parseInt(roundStr);
+          if (!isNaN(round) && round > highestRoundWithScores) {
+            highestRoundWithScores = round;
+          }
+        });
+      });
+      
+      // Set current round to one after the highest round with scores
+      if (highestRoundWithScores > 0) {
+        setCurrentRound(highestRoundWithScores + 1);
+      }
+    }
+    // If only 1 player left, ensure game is marked complete
+    else if (!gameComplete && playersStillActive.length <= 1) {
+      const winner = playersStillActive[0];
+      if (winner) {
+        setNotification(`Game Complete!\nThe winner is ${winner.name}`);
+      } else {
+        setNotification("Game Complete!\nAll rounds finished. Ready for settlement.");
+      }
+      setGameComplete(true);
+    }
+  };
+
 
 
   // Shared function to check if round should advance and validate
@@ -310,6 +355,13 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       // Don't check round advancement while typing
       // Round advancement will be handled on blur
       
+      // If editing a previous round, check if game state should be reset
+      if (roundNumber < currentRound && gameComplete) {
+        setTimeout(() => {
+          checkGameStateAfterEdit(newScores);
+        }, 0);
+      }
+      
       return newScores;
     });
   };
@@ -340,6 +392,10 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       // Re-check round advancement when clearing a score (on blur)
       if (roundNumber === currentRound) {
         checkRoundAdvancement(scores, roundNumber);
+      }
+      // Check if game state should be reset after editing previous rounds
+      else if (roundNumber < currentRound && gameComplete) {
+        checkGameStateAfterEdit(scores);
       }
       return true;
     }
@@ -415,6 +471,12 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     if (roundNumber === currentRound) {
       setTimeout(() => {
         checkRoundAdvancement(scores, roundNumber);
+      }, 100);
+    }
+    // Check if game state should be reset after editing previous rounds
+    else if (roundNumber < currentRound && gameComplete) {
+      setTimeout(() => {
+        checkGameStateAfterEdit(scores);
       }, 100);
     }
     return true;
@@ -775,6 +837,23 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
         [roundNumber]: score,
       },
     }));
+    
+    // Check if game state should be reset after editing previous rounds
+    if (roundNumber < currentRound && gameComplete) {
+      setTimeout(() => {
+        setScores(prev => {
+          const newScores = {
+            ...prev,
+            [playerId]: {
+              ...prev[playerId],
+              [roundNumber]: score,
+            },
+          };
+          checkGameStateAfterEdit(newScores);
+          return prev; // Return previous state since we already updated it
+        });
+      }, 100);
+    }
   };
 
   return (

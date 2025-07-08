@@ -881,7 +881,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
                   {/* Completed rounds */}
-                  {Array.from({ length: currentRound - 1 }, (_, index) => {
+                  {Array.from({ length: gameComplete ? currentRound : currentRound - 1 }, (_, index) => {
                     const roundNumber = index + 1;
                     const isEditing = editingRound === roundNumber;
                     
@@ -1075,6 +1075,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                   })}
                   
                   {/* Current round input - only one empty row */}
+                  {!gameComplete && (
                   <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50 bg-blue-50 dark:bg-blue-900/10">
                     <td className="px-4 py-3 font-medium sticky-column-header bg-scoring-light bg-scoring-dark text-center w-28">
                       <span className="text-blue-400 text-lg font-bold">{currentRound}</span>
@@ -1228,6 +1229,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
                       );
                     })}
                   </tr>
+                  )}
                 </tbody>
                 
                 {/* Summary Rows */}

@@ -107,6 +107,15 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
   // Limit graph at MaxScore + 10, don't scale beyond that
   const maxScore = Math.max(...animatedStats.map(stat => stat.totalScore), game.forPoints) + 10;
   const chartHeight = 200;
+  
+  // Debug: Log positioning calculations
+  console.log('Chart Debug:', {
+    maxScore,
+    forPoints: game.forPoints,
+    targetPosition: 32 + (game.forPoints / maxScore) * chartHeight,
+    chartHeight,
+    animatedStats: animatedStats.map(s => s.totalScore)
+  });
 
   return (
     <div className="w-full bg-gray-800 rounded-lg p-4 border border-gray-700">

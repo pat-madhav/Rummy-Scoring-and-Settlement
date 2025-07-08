@@ -112,17 +112,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
   // Use the same coordinate system as grid lines: 32px from bottom + proportional height
   const targetLinePosition = 32 + (game.forPoints / maxScore) * chartHeight;
   
-  // Debug: Check pack points and grid line positioning
-  console.log('Grid and target positioning:', {
-    packPoints: game.packPoints,
-    forPoints: game.forPoints,
-    maxScore,
-    chartHeight,
-    targetLinePosition,
-    fourthGridLine: 32 + (game.packPoints * 4 / maxScore) * chartHeight,
-    expectedGrid4: game.packPoints * 4,
-    shouldBeNearGrid4: Math.abs(game.forPoints - (game.packPoints * 4)) <= 5
-  });
+
   
 
 
@@ -168,15 +158,17 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  {/* Score value on top */}
-                  <motion.div
-                    className="absolute -top-8 text-sm font-bold text-white"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                  >
-                    {stat.totalScore}
-                  </motion.div>
+                  {/* Score value on top - only show if score > 0 */}
+                  {stat.totalScore > 0 && (
+                    <motion.div
+                      className="absolute -top-8 text-sm font-bold text-white"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.2 }}
+                    >
+                      {stat.totalScore}
+                    </motion.div>
+                  )}
                   
                   {/* Stacked Bar - showing each round's contribution */}
                   <motion.div

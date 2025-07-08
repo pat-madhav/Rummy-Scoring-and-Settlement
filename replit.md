@@ -247,3 +247,5 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Fixed chart issues - corrected points left calculation to match scoring table, limited animations to committed scores only, removed player names from legend, constrained chart width to prevent overflow, fixed target line positioning, and limited graph scaling to MaxScore + 10
 - July 08, 2025: Updated table and chart dimensions - Mobile: 98% viewport width, Desktop: 80% viewport width for both components to ensure consistent responsive design across devices
 - July 08, 2025: Moved player statistics chart legend from bottom to top of the chart for better visibility and user experience
+- July 08, 2025: Fixed target line positioning issue - target line now correctly aligns with pack point grid lines using same coordinate system (32px from bottom + proportional height), positioning target line at proper level relative to 4th grid quadrant
+- July 08, 2025: Enhanced chart display - score totals above bars now only appear when score > 0, eliminating cluttered "0" labels above empty bars for cleaner visual presentation

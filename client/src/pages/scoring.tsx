@@ -15,9 +15,8 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { calculatePlayerStats, validateReEntryConditions, shouldShowSettlement } from "@/lib/game-utils";
 import { ReEntryModal } from "@/components/re-entry-modal";
-import { X, Calculator, RotateCcw, ChevronDown, Pencil, Trash2, BarChart2 } from "lucide-react";
+import { X, Calculator, RotateCcw, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import type { GameState, PlayerWithScores } from "@shared/schema";
-import { ScoreDepiction } from "@/components/score-depiction";
 
 interface ScoringScreenProps {
   gameId: string;
@@ -40,7 +39,6 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isOpen
   const [invalidInputs, setInvalidInputs] = useState<Record<string, boolean>>({}); // playerId-roundNumber -> isInvalid
   const [notification, setNotification] = useState<string | null>(null);
-  const [showScoreDepiction, setShowScoreDepiction] = useState(true); // Default to showing the visualization
 
 
   const gameStateQuery = useQuery({
@@ -917,16 +915,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
               </h1>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowScoreDepiction(!showScoreDepiction)}
-                className="rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
-                title={showScoreDepiction ? "Hide score visualization" : "Show score visualization"}
-              >
-                <BarChart2 className={`h-5 w-5 ${showScoreDepiction ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`} />
-              </Button>
+            <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
                 size="icon"
@@ -1411,17 +1400,6 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
               </div>
             </CardContent>
           </Card>
-          
-          {/* Score Depiction Visualization */}
-          {showScoreDepiction && (
-            <ScoreDepiction
-              players={players}
-              scores={scores}
-              game={game}
-              currentRound={currentRound}
-              getPlayerState={getPlayerState}
-            />
-          )}
         </div>
       </main>
 

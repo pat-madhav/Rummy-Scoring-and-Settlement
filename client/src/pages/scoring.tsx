@@ -1403,8 +1403,8 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
           </Card>
         </div>
         
-        {/* Player Stats Chart - Positioned below the table */}
-        <div className="max-w-6xl mx-auto px-4 pb-6">
+        {/* Player Stats Chart - Positioned below the table with matching width and spacing */}
+        <div className="max-w-6xl mx-auto p-4 pt-6 pb-6">
           <PlayerStatsChart
             game={game}
             players={players}

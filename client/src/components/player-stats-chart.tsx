@@ -17,7 +17,7 @@ interface PlayerStat {
   pointsLeft: number;
   packsRemaining: number;
   percentage: number;
-  color: string;
+  roundScores: { round: number; score: number; color: string }[];
 }
 
 const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
@@ -30,26 +30,37 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
   const [animatedStats, setAnimatedStats] = useState<PlayerStat[]>([]);
   const [prevStats, setPrevStats] = useState<PlayerStat[]>([]);
 
-  // Color palette for players
-  const playerColors = [
-    '#3B82F6', // Blue
-    '#10B981', // Green
-    '#F59E0B', // Yellow
-    '#EF4444', // Red
-    '#8B5CF6', // Purple
-    '#F97316', // Orange
-    '#06B6D4', // Cyan
-    '#EC4899', // Pink
+  // Color palette for rounds - each round gets a different color
+  const roundColors = [
+    '#3B82F6', // Blue - Round 1
+    '#10B981', // Green - Round 2
+    '#F59E0B', // Yellow - Round 3
+    '#EF4444', // Red - Round 4
+    '#8B5CF6', // Purple - Round 5
+    '#F97316', // Orange - Round 6
+    '#06B6D4', // Cyan - Round 7
+    '#EC4899', // Pink - Round 8
+    '#64748B', // Slate - Round 9
+    '#DC2626', // Red alt - Round 10
   ];
 
   const calculatePlayerStats = (): PlayerStat[] => {
     return players.map((player, index) => {
       let totalScore = 0;
+      const roundScores: { round: number; score: number; color: string }[] = [];
       
-      // Calculate total score from all rounds
+      // Calculate scores for each round
       Object.entries(scores[player.id] || {}).forEach(([roundStr, score]) => {
+        const roundNum = parseInt(roundStr);
         const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
         totalScore += numScore;
+        
+        // Include all scores (including 0) to show round participation
+        roundScores.push({
+          round: roundNum,
+          score: numScore,
+          color: roundColors[(roundNum - 1) % roundColors.length]
+        });
       });
 
       const pointsLeft = Math.max(0, game.forPoints - totalScore);
@@ -65,7 +76,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         pointsLeft,
         packsRemaining,
         percentage,
-        color: playerColors[index % playerColors.length]
+        roundScores
       };
     });
   };
@@ -129,11 +140,10 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
                     {stat.totalScore}
                   </motion.div>
                   
-                  {/* Bar */}
+                  {/* Stacked Bar - showing each round's contribution */}
                   <motion.div
-                    className="w-12 rounded-t-lg relative overflow-hidden"
+                    className="w-12 rounded-t-lg relative overflow-hidden flex flex-col-reverse"
                     style={{ 
-                      backgroundColor: stat.color,
                       opacity: stat.totalScore >= game.forPoints ? 0.5 : 1
                     }}
                     initial={{ height: 0 }}
@@ -156,11 +166,45 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
                       </motion.div>
                     )}
                     
-                    {/* Progress gradient */}
-                    <div 
-                      className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/20 to-transparent"
-                      style={{ height: '30%' }}
-                    />
+                    {/* Render each round as a segment */}
+                    {stat.roundScores.map((roundScore, roundIndex) => {
+                      const segmentHeight = stat.totalScore > 0 ? (roundScore.score / stat.totalScore) * barHeight : 0;
+                      return (
+                        <motion.div
+                          key={roundScore.round}
+                          className="w-full border-b border-gray-700/30"
+                          style={{ 
+                            backgroundColor: roundScore.color,
+                            height: segmentHeight,
+                          }}
+                          initial={{ height: 0 }}
+                          animate={{ height: segmentHeight }}
+                          transition={{ 
+                            duration: 0.6, 
+                            ease: "easeOut",
+                            delay: (index * 0.1) + (roundIndex * 0.1)
+                          }}
+                        />
+                      );
+                    })}
+                    
+                    {/* Add a fallback single color bar if no round scores */}
+                    {stat.roundScores.length === 0 && stat.totalScore > 0 && (
+                      <motion.div
+                        className="w-full"
+                        style={{ 
+                          backgroundColor: roundColors[0],
+                          height: barHeight,
+                        }}
+                        initial={{ height: 0 }}
+                        animate={{ height: barHeight }}
+                        transition={{ 
+                          duration: 0.8, 
+                          ease: "easeOut",
+                          delay: index * 0.1 
+                        }}
+                      />
+                    )}
                   </motion.div>
                   
                   {/* Player name */}
@@ -207,18 +251,29 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         </motion.div>
       </div>
       
-      {/* Legend */}
-      <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs">
-        {animatedStats.map((stat, index) => (
-          <div key={stat.id} className="flex items-center gap-1">
-            <div 
-              className="w-3 h-3 rounded-sm"
-              style={{ backgroundColor: stat.color }}
-            />
-            <span className="text-gray-300">{stat.name}</span>
-            <span className="text-gray-400">({stat.totalScore})</span>
-          </div>
-        ))}
+      {/* Legend - showing round colors */}
+      <div className="mt-4 space-y-2">
+        <div className="flex flex-wrap justify-center gap-4 text-xs">
+          {animatedStats.map((stat, index) => (
+            <div key={stat.id} className="flex items-center gap-1">
+              <span className="text-gray-300">{stat.name}</span>
+              <span className="text-gray-400">({stat.totalScore})</span>
+            </div>
+          ))}
+        </div>
+        
+        {/* Round color legend */}
+        <div className="flex flex-wrap justify-center gap-3 text-xs">
+          {Array.from({ length: Math.max(currentRound - 1, 1) }, (_, i) => i + 1).map((round) => (
+            <div key={round} className="flex items-center gap-1">
+              <div 
+                className="w-3 h-3 rounded-sm"
+                style={{ backgroundColor: roundColors[(round - 1) % roundColors.length] }}
+              />
+              <span className="text-gray-300">Round {round}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

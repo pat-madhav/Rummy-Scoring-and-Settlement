@@ -122,24 +122,13 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         <h3 className="text-lg font-semibold text-white">Player Stats</h3>
       </div>
       
-      {/* Legend - showing round colors */}
-      <div className="mb-4">
-        <div className="flex flex-wrap justify-center gap-3 text-xs">
-          {Array.from({ length: Math.max(currentRound - 1, 1) }, (_, i) => i + 1).map((round) => (
-            <div key={round} className="flex items-center gap-1">
-              <div 
-                className="w-3 h-3 rounded-sm"
-                style={{ backgroundColor: roundColors[(round - 1) % roundColors.length] }}
-              />
-              <span className="text-gray-300">Round {round}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+
       
       <div className="relative mx-auto" style={{ height: chartHeight + 40, maxWidth: '98%' }}>
-        {/* Chart container */}
-        <div className="flex items-end justify-around h-full pb-8 overflow-x-auto">
+        {/* Chart and Legend container */}
+        <div className="flex h-full">
+          {/* Chart container */}
+          <div className="flex-1 flex items-end justify-around h-full pb-8 overflow-x-auto">
           <AnimatePresence>
             {animatedStats.map((stat, index) => {
               const barHeight = (stat.totalScore / maxScore) * chartHeight;
@@ -247,10 +236,9 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
               );
             })}
           </AnimatePresence>
-        </div>
-        
-        {/* Horizontal grid lines at pack point multiples */}
-        <div className="absolute inset-0 pointer-events-none">
+          
+          {/* Horizontal grid lines at pack point multiples */}
+          <div className="absolute inset-0 pointer-events-none">
           {Array.from({ length: Math.floor(maxScore / game.packPoints) }, (_, i) => (i + 1) * game.packPoints)
             .filter(packValue => packValue < maxScore)
             .map((packValue, index) => (
@@ -264,20 +252,35 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
           ))}
         </div>
         
-        {/* Target line */}
-        <motion.div
-          className="absolute w-full border-t-2 border-dashed border-red-400/60"
-          style={{ 
-            bottom: `${targetLinePosition}px`,
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-        >
-          <div className="absolute right-2 -top-5 text-xs text-red-400 bg-gray-800 px-2 py-1 rounded">
-            Max Points: {game.forPoints}
+          {/* Target line */}
+          <motion.div
+            className="absolute w-full border-t-2 border-dashed border-red-400/60"
+            style={{ 
+              bottom: `${targetLinePosition}px`,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1 }}
+          >
+            <div className="absolute right-2 -top-5 text-xs text-red-400 bg-gray-800 px-2 py-1 rounded">
+              Max Points: {game.forPoints}
+            </div>
+          </motion.div>
           </div>
-        </motion.div>
+          
+          {/* Legend - showing round colors */}
+          <div className="flex flex-col justify-center items-center ml-4 text-xs">
+            {Array.from({ length: Math.max(currentRound - 1, 1) }, (_, i) => i + 1).map((round) => (
+              <div key={round} className="flex items-center gap-1 mb-2">
+                <div 
+                  className="w-3 h-3 rounded-sm"
+                  style={{ backgroundColor: roundColors[(round - 1) % roundColors.length] }}
+                />
+                <span className="text-gray-300">Round {round}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

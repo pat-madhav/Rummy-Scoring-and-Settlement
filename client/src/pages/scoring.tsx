@@ -591,7 +591,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Check if player is the winner (only one active player left) - this overrides all other states
     if (activePlayers.length === 1 && activePlayers[0].id === playerId) {
-      return { state: "Winner", color: "bg-green-800 dark:bg-green-900" };
+      return { state: "Winner", color: "bg-green-200/60 dark:bg-green-600/60" };
     }
     
     // Check if player is "Out" - use committed total only (after onBlur)

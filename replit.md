@@ -236,3 +236,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Toned down validation color highlight intensity - Out state (red-600→red-200/40 translucent), Compulsory state (red-200→red-100), Least state (green-200→green-100) for more subtle visual indication with proper Status row visibility
 - July 08, 2025: Fixed game completion state handling - when editing previous rounds after game completion, system now properly resets gameComplete state, recalculates current round, and restores normal game functionality if players are brought back into the game
 - July 08, 2025: Added comprehensive checkGameStateAfterEdit function that monitors score changes in completed games and automatically adjusts game state when edits bring 2+ players back below the point limit
+- July 08, 2025: Updated Winner status color to translucent green (bg-green-200/60) - darker than Least status but translucent to maintain Status row visibility

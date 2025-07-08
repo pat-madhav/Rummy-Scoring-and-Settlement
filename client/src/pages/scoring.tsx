@@ -534,7 +534,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Check if player is "Out" - use committed total only (after onBlur)
     if (committedTotal >= game.forPoints) {
-      return { state: "Out", color: "bg-red-600 dark:bg-red-700" };
+      return { state: "Out", color: "bg-red-300 dark:bg-red-500" };
     }
     
     // Check if player has "Compulsory" (no packs left)
@@ -563,7 +563,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     
     // Compulsory when packs = 0 and player has entered at least one score
     if (packsRemainingForCompulsory === 0 && totalForCompulsory > 0 && totalForCompulsory < game.forPoints) {
-      return { state: "Compulsory", color: "bg-red-200 dark:bg-red-800/50" };
+      return { state: "Compulsory", color: "bg-red-100 dark:bg-red-700/30" };
     }
     
     // Check if the latest previous round is FULLY COMPLETED (all active players have entered scores)
@@ -598,7 +598,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       }
       
       if (playerTotal === minTotal && playerTotal >= 0) {
-        return { state: "Least", color: "bg-green-200 dark:bg-green-800/50" };
+        return { state: "Least", color: "bg-green-100 dark:bg-green-700/30" };
       }
     }
     

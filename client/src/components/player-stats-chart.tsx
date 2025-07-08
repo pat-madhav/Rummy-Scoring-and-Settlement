@@ -117,6 +117,21 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         </div>
       </div>
       
+      {/* Legend - showing round colors */}
+      <div className="mb-4">
+        <div className="flex flex-wrap justify-center gap-3 text-xs">
+          {Array.from({ length: Math.max(currentRound - 1, 1) }, (_, i) => i + 1).map((round) => (
+            <div key={round} className="flex items-center gap-1">
+              <div 
+                className="w-3 h-3 rounded-sm"
+                style={{ backgroundColor: roundColors[(round - 1) % roundColors.length] }}
+              />
+              <span className="text-gray-300">Round {round}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
       <div className="relative mx-auto" style={{ height: chartHeight + 40, maxWidth: '98%' }}>
         {/* Chart container */}
         <div className="flex items-end justify-around h-full pb-8 overflow-x-auto">
@@ -254,22 +269,6 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
             Target: {game.forPoints}
           </div>
         </motion.div>
-      </div>
-      
-      {/* Legend - showing round colors */}
-      <div className="mt-4">
-        {/* Round color legend */}
-        <div className="flex flex-wrap justify-center gap-3 text-xs">
-          {Array.from({ length: Math.max(currentRound - 1, 1) }, (_, i) => i + 1).map((round) => (
-            <div key={round} className="flex items-center gap-1">
-              <div 
-                className="w-3 h-3 rounded-sm"
-                style={{ backgroundColor: roundColors[(round - 1) % roundColors.length] }}
-              />
-              <span className="text-gray-300">Round {round}</span>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

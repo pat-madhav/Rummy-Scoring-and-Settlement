@@ -246,3 +246,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Updated chart to use stacked bars with round-specific colors - each round gets a unique color applied to all players for that round, creating visual consistency and making round-by-round progress easy to track, with proper spacing and uniform width matching the scoring table
 - July 08, 2025: Fixed chart issues - corrected points left calculation to match scoring table, limited animations to committed scores only, removed player names from legend, constrained chart width to prevent overflow, fixed target line positioning, and limited graph scaling to MaxScore + 10
 - July 08, 2025: Updated table and chart dimensions - Mobile: 98% viewport width, Desktop: 80% viewport width for both components to ensure consistent responsive design across devices
+- July 08, 2025: Moved player statistics chart legend from bottom to top of the chart for better visibility and user experience

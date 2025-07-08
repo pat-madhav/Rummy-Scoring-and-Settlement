@@ -121,7 +121,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">Player Statistics</h3>
         <div className="text-sm text-gray-400">
-          Target: {game.forPoints} points
+          Max Points: {game.forPoints} points
         </div>
       </div>
       
@@ -278,7 +278,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
           transition={{ duration: 0.5, delay: 1 }}
         >
           <div className="absolute right-2 -top-5 text-xs text-red-400 bg-gray-800 px-2 py-1 rounded">
-            Target: {game.forPoints}
+            Max Points: {game.forPoints}
           </div>
         </motion.div>
       </div>

@@ -250,3 +250,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Fixed target line positioning issue - target line now correctly aligns with pack point grid lines using same coordinate system (32px from bottom + proportional height), positioning target line at proper level relative to 4th grid quadrant
 - July 08, 2025: Enhanced chart display - score totals above bars now only appear when score > 0, eliminating cluttered "0" labels above empty bars for cleaner visual presentation
 - July 08, 2025: Fixed points left calculation in chart to match scoring sheet formula - now uses (Max Points - 1) - totalScore instead of Max Points - totalScore for consistent display between chart and scoring table
+- July 08, 2025: Updated chart terminology from "Target" to "Max Points" in both header and target line label for consistent terminology throughout the application

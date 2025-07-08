@@ -178,6 +178,16 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
     setNotification(null);
   }, [currentRound]);
 
+  // Check game state when editing is finalized
+  useEffect(() => {
+    if (editingRound === null && gameComplete) {
+      // When editing is finished on a completed game, check if it should be reset
+      setTimeout(() => {
+        checkGameStateAfterEdit(scores);
+      }, 100);
+    }
+  }, [editingRound]);
+
   // Function to check if game state should be reset after editing
   const checkGameStateAfterEdit = (newScores: Record<number, Record<number, string>>) => {
     // Calculate active players based on new scores
@@ -200,15 +210,39 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
       Object.values(newScores).forEach(playerScores => {
         Object.keys(playerScores).forEach(roundStr => {
           const round = parseInt(roundStr);
-          if (!isNaN(round) && round > highestRoundWithScores) {
+          if (!isNaN(round) && round > highestRoundWithScores && playerScores[roundStr] !== "") {
             highestRoundWithScores = round;
           }
         });
       });
       
       // Set current round to one after the highest round with scores
+      const newCurrentRound = highestRoundWithScores + 1;
       if (highestRoundWithScores > 0) {
-        setCurrentRound(highestRoundWithScores + 1);
+        setCurrentRound(newCurrentRound);
+        
+        // Clear any scores that might exist for the new current round
+        // This ensures the new current round appears as editable inputs
+        setScores(prev => {
+          const clearedScores = { ...prev };
+          Object.keys(clearedScores).forEach(playerId => {
+            if (clearedScores[playerId] && clearedScores[playerId][newCurrentRound]) {
+              delete clearedScores[playerId][newCurrentRound];
+            }
+          });
+          return clearedScores;
+        });
+        
+        // Also clear committed scores for the new current round
+        setCommittedScores(prev => {
+          const clearedCommitted = { ...prev };
+          Object.keys(clearedCommitted).forEach(playerId => {
+            if (clearedCommitted[playerId] && clearedCommitted[playerId][newCurrentRound]) {
+              delete clearedCommitted[playerId][newCurrentRound];
+            }
+          });
+          return clearedCommitted;
+        });
       }
     }
     // If only 1 player left, ensure game is marked complete

@@ -241,3 +241,4 @@ Preferred communication style: Simple, everyday language.
 - July 08, 2025: Fixed edit/remove button animations - removed round number sliding animation, icons now fade in between round number and right edge of left column
 - July 08, 2025: Fixed completed rounds alignment - round numbers are now properly center-aligned within the left column, edit/remove icons positioned at right edge
 - July 08, 2025: Made Compulsory and Least status colors lighter - Compulsory (red-100→red-50, dark red-700/30→red-700/20), Least (green-100→green-50, dark green-700/30→green-700/20)
+- July 08, 2025: Fixed critical game state transition bug - when editing a completed game brings it back to incomplete state, the new current round now properly appears as editable inputs instead of showing edit/remove buttons, ensuring scores for the new round are cleared and game flow continues naturally

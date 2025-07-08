@@ -1409,7 +1409,7 @@ export default function ScoringScreen({ gameId }: ScoringScreenProps) {
             <PlayerStatsChart
               game={game}
               players={players}
-              scores={committedScores}
+              scores={scores}
               currentRound={currentRound}
               gameComplete={gameComplete}
             />

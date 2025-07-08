@@ -67,7 +67,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         }
       });
 
-      const pointsLeft = Math.max(0, game.forPoints - totalScore);
+      const pointsLeft = Math.max(0, (game.forPoints - 1) - totalScore);
       const packsRemaining = Math.floor(pointsLeft / game.packPoints);
       
       // Calculate percentage based on progress towards forPoints

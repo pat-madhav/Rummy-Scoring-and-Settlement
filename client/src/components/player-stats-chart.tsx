@@ -109,8 +109,8 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
   const chartHeight = 200;
   
   // Calculate target line position correctly - it should be at forPoints level
-  // Use the same coordinate system as bars: proportional height from bottom
-  const targetLinePosition = (game.forPoints / maxScore) * chartHeight;
+  // Use the same coordinate system as grid lines: 32px offset + proportional height from bottom
+  const targetLinePosition = 32 + (game.forPoints / maxScore) * chartHeight;
   
 
   

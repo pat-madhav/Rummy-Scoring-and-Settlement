@@ -49,18 +49,22 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
       let totalScore = 0;
       const roundScores: { round: number; score: number; color: string }[] = [];
       
-      // Calculate scores for each round
+      // Only include completed rounds (not current round unless game is complete)
       Object.entries(scores[player.id] || {}).forEach(([roundStr, score]) => {
         const roundNum = parseInt(roundStr);
         const numScore = typeof score === 'string' ? parseInt(score) || 0 : score;
-        totalScore += numScore;
         
-        // Include all scores (including 0) to show round participation
-        roundScores.push({
-          round: roundNum,
-          score: numScore,
-          color: roundColors[(roundNum - 1) % roundColors.length]
-        });
+        // Only animate/show rounds that are complete (before current round, or if game is complete)
+        if (roundNum < currentRound || gameComplete) {
+          totalScore += numScore;
+          
+          // Include all scores (including 0) to show round participation
+          roundScores.push({
+            round: roundNum,
+            score: numScore,
+            color: roundColors[(roundNum - 1) % roundColors.length]
+          });
+        }
       });
 
       const pointsLeft = Math.max(0, game.forPoints - totalScore);
@@ -100,7 +104,8 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
     setAnimatedStats(initialStats);
   }, []);
 
-  const maxScore = Math.max(...animatedStats.map(stat => stat.totalScore), 1);
+  // Limit graph at MaxScore + 10, don't scale beyond that
+  const maxScore = Math.max(...animatedStats.map(stat => stat.totalScore), game.forPoints) + 10;
   const chartHeight = 200;
 
   return (
@@ -112,12 +117,12 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         </div>
       </div>
       
-      <div className="relative" style={{ height: chartHeight + 40 }}>
+      <div className="relative mx-auto" style={{ height: chartHeight + 40, maxWidth: '95%' }}>
         {/* Chart container */}
-        <div className="flex items-end justify-around h-full pb-8">
+        <div className="flex items-end justify-around h-full pb-8 overflow-x-auto">
           <AnimatePresence>
             {animatedStats.map((stat, index) => {
-              const barHeight = (stat.totalScore / Math.max(maxScore, game.forPoints)) * chartHeight;
+              const barHeight = (stat.totalScore / maxScore) * chartHeight;
               const isWinner = gameComplete && stat.totalScore <= game.forPoints && 
                               animatedStats.filter(s => s.totalScore <= game.forPoints).length === 1 &&
                               stat.totalScore === Math.min(...animatedStats.filter(s => s.totalScore <= game.forPoints).map(s => s.totalScore));
@@ -239,7 +244,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
         <motion.div
           className="absolute w-full border-t-2 border-dashed border-red-400/60"
           style={{ 
-            bottom: `${32 + (game.forPoints / Math.max(maxScore, game.forPoints)) * chartHeight}px`,
+            bottom: `${32 + (game.forPoints / maxScore) * chartHeight}px`,
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -252,16 +257,7 @@ const PlayerStatsChart: React.FC<PlayerStatsChartProps> = ({
       </div>
       
       {/* Legend - showing round colors */}
-      <div className="mt-4 space-y-2">
-        <div className="flex flex-wrap justify-center gap-4 text-xs">
-          {animatedStats.map((stat, index) => (
-            <div key={stat.id} className="flex items-center gap-1">
-              <span className="text-gray-300">{stat.name}</span>
-              <span className="text-gray-400">({stat.totalScore})</span>
-            </div>
-          ))}
-        </div>
-        
+      <div className="mt-4">
         {/* Round color legend */}
         <div className="flex flex-wrap justify-center gap-3 text-xs">
           {Array.from({ length: Math.max(currentRound - 1, 1) }, (_, i) => i + 1).map((round) => (
